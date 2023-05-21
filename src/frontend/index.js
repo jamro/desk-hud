@@ -14,18 +14,19 @@ function addCircle(x, y, scale=1) {
   app.stage.addChild(circle);
 }
 
-addCircle(0, 0.5)
-addCircle(0.49, 0.5)
-addCircle(0.63, 0.25, 0.6)
-addCircle(0.63, 0.75, 0.6)
-addCircle(0.73, 0.25, 0.6)
-addCircle(0.73, 0.75, 0.6)
-addCircle(0.82, 0.16, 0.4)
-addCircle(0.82, 0.50, 0.4)
-addCircle(0.82, 0.84, 0.4)
-addCircle(0.89, 0.16, 0.4)
-addCircle(0.89, 0.50, 0.4)
-addCircle(0.89, 0.84, 0.4)
-addCircle(0.96, 0.16, 0.4)
-addCircle(0.96, 0.50, 0.4)
-addCircle(0.96, 0.84, 0.4)
+
+let panel = PIXI.Sprite.from('assets/panel.png');
+panel.anchor.set(0.5)
+panel.x = app.view.width*0.25
+panel.y = app.view.height*0.5
+app.stage.addChild(panel);
+
+addCircle(0.03, 0.5)
+addCircle(0.55, 0.5)
+addCircle(0.73, 0.5)
+addCircle(0.86, 0.25, 0.5)
+addCircle(0.86, 0.75, 0.5)
+addCircle(0.95, 0.25, 0.5)
+addCircle(0.95, 0.75, 0.5)
+
+
