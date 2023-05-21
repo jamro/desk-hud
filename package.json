@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "provision-remote": "pm2 deploy production setup",
+    "deploy": "pm2 deploy production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

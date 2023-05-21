@@ -3,6 +3,7 @@
 
 # Configuration of Raspberry PI
 
+- [RPI] Expand filesystem `sudo raspi-config` > `Advanced Options` > `Expand Filesystem`
 - [RPI] Enable ssh `sudo raspi-config`
 - [local] generate public and private keys `ssh-keygen`
 - [local] copy public key to remote host `ssh-copy-id -i ~/.ssh/id_rsa.pub pi@raspberrypi.local`
@@ -20,4 +21,6 @@ sudo apt-get install -y nodejs
 sudo mkdir /var/www
 sudo chown pi /var/www
 ```
-- [local] provision remote host `pm2 deploy production setup`
+- [local] provision remote host `npm run provision-remote`
+- [local] deploy `npm run deploy`
+- [RPI] provision remote host `npm run provision-remote`
