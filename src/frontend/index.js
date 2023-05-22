@@ -1,6 +1,7 @@
 import GravityField from "./GravityField.js";
 import Widget from "./Widget.js"
 import FontFaceObserver from 'fontfaceobserver'
+import DateTimeWidget from "./widgets/DateTimeWidget.js";
 
 var font = new FontFaceObserver('MajorMonoDisplay-Regular');
 font.load().then(function () {
@@ -22,7 +23,7 @@ app.stage.addChild(gravityField)
 
 
 gravityField.addWidget(new Widget("Blinds"))
-gravityField.addWidget(new Widget("Date & Time"))
+gravityField.addWidget(new DateTimeWidget())
 gravityField.addWidget(new Widget("Todos"))
 gravityField.addWidget(new Widget("Calendar"))
 gravityField.addWidget(new Widget("Weather"))
