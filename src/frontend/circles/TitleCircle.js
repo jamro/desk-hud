@@ -9,12 +9,44 @@ export default class TitleCircle extends PIXI.Container {
     this._label.text = `|> ${title} <|`
     this.addChild(this._canvas)
     this.addChild(this._label)
-    this.progress = 0
-    this.size = 1
+    this._progress = 0
+    this._size = 1
+    this._updated = true
+    this._stealTime = 0
+  }
+
+  set progress(v) {
+    this._updated = this._updated || (this._progress !== v)
+    if(this._updated) {
+      this.cacheAsBitmap = false
+    }
+    this._progress = v
+  }
+
+  get progress() {
+    return this._progress
+  }
+
+  set size(v) {
+    this._updated = this._updated || (this._size !== v)
+    if(this._updated) {
+      this.cacheAsBitmap = false
+    }
+    this._size = v
+  }
+
+  get size() {
+    return this._size
   }
 
   render(renderer) {
     super.render(renderer)
+    if(!this._updated) {
+      this._stealTime++
+      this.cacheAsBitmap = this._stealTime > 10
+      return 
+    }
+
     this._label.progress = this.progress
     this._canvas.clear()
 
@@ -48,7 +80,8 @@ export default class TitleCircle extends PIXI.Container {
       r * Math.sin(endAngle + angleDistance * this.progress),
       -r * Math.cos(endAngle + angleDistance * this.progress)
     )
-
+    this._updated = false
+    this._stealTime = 0 
   }
 
 }

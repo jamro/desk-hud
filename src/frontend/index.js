@@ -1,3 +1,4 @@
+import GravityField from "./GravityField.js";
 import Widget from "./Widget.js"
 import FontFaceObserver from 'fontfaceobserver'
 
@@ -11,30 +12,18 @@ font.load().then(function () {
 const app = new PIXI.Application({
     width: 1480,
     height: 320,
-    antialias: true,
+    antialias: false,
+    useContextAlpha: false
 })
 document.body.appendChild(app.view)
 
-function addCircle(x, y, scale=1) {
-  setTimeout(() => {
-    const widget = new Widget()
-    widget.x = app.view.width*x
-    widget.y = app.view.height*y
-    widget.size = scale
-    app.stage.addChild(widget);
-  }, 500)
-}
+const gravityField = new GravityField()
+app.stage.addChild(gravityField)
 
 
-let panel = PIXI.Sprite.from('assets/panel.png');
-panel.anchor.set(0.5)
-panel.x = app.view.width*0.25
-panel.y = app.view.height*0.5
-app.stage.addChild(panel);
-
-addCircle(0.55, 0.5)
-addCircle(0.73, 0.5)
-addCircle(0.86, 0.25, 0.5)
-addCircle(0.86, 0.75, 0.5)
-addCircle(0.95, 0.25, 0.5)
-addCircle(0.95, 0.75, 0.5)
+gravityField.addWidget(new Widget("Blinds"))
+gravityField.addWidget(new Widget("Date & Time"))
+gravityField.addWidget(new Widget("Todos"))
+gravityField.addWidget(new Widget("Calendar"))
+gravityField.addWidget(new Widget("Weather"))
+gravityField.addWidget(new Widget("Pomodoro"))
