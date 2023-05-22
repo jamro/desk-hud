@@ -100,7 +100,7 @@ export default class DateTimeWidget extends Widget {
       day.radius = this.size * 94
       day.fontSize = 4 + this.size * 5
       day.alpha = i == now.getDay() ? 1 : 0.4
-      day.visible = (this.size > 0.9)
+      day.visible = (this.size > 0.9 && this.progress > ((i+6) % 7)/7)
     }
   }
 }

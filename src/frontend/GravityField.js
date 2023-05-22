@@ -1,4 +1,5 @@
 import GravityContainer from "./GravityContainer"
+import SleepToggle from "./SleepToggle"
 
 export default class GravityField extends PIXI.Container {
 
@@ -14,6 +15,13 @@ export default class GravityField extends PIXI.Container {
     ]
 
     this._widgets = []
+    this._sleep = false
+
+    this._sleepToggle = new SleepToggle()
+    this._sleepToggle.x = 40
+    this._sleepToggle.y = 280
+    this.addChild(this._sleepToggle)
+    this._sleepToggle.on('pointertap', () => this._sleep = !this._sleep)
   }
 
   addWidget(widget) {
@@ -48,6 +56,11 @@ export default class GravityField extends PIXI.Container {
       const slot = this._slots[i]
       const widget = this._widgets[i]
       widget.applyGravityForce(slot.x, slot.y)
+      if(this._sleep) {
+        widget.content.progress = Math.max(0, widget.content.progress - 0.01)
+      } else {
+        widget.content.progress = Math.min(1, widget.content.progress + 0.01)
+      }
     }
   }
 }

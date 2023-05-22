@@ -27,10 +27,17 @@ export default class Widget extends PIXI.Container {
     });
   }
 
+  get progress() {
+    return this._progress
+  }
+
+  set progress(v) {
+    this._progress = v
+  }
+
   render(r) {
     super.render(r)
     this._bg.scale.set(this.size)
-    this._progress = Math.min(1, this._progress + 0.01)
     this._frame.size = this.size
     this._frame.progress = this._progress
   }
