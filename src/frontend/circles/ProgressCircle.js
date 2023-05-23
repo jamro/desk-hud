@@ -10,6 +10,7 @@ export default class ProgressCircle extends PIXI.Container {
     this._presentedValue = 0
     this._size = 1
     this.color = 0xffffff
+    this._lastUpdateHash = ''
   }
 
   set progress(v) {
@@ -30,6 +31,14 @@ export default class ProgressCircle extends PIXI.Container {
 
   render(renderer) {
     super.render(renderer)
+
+    this._presentedValue += (this.value - this._presentedValue)/30
+
+    const updateHash = this.size.toFixed(3) + '|' + this.progress.toFixed(3) + '|' + this._presentedValue.toFixed(3) + '|' + this.color.toString(16)
+    if(updateHash === this._lastUpdateHash) {
+      return;
+    }
+    this._lastUpdateHash = updateHash
     this._canvas.clear()
 
     const r = 100*this.size
@@ -46,7 +55,7 @@ export default class ProgressCircle extends PIXI.Container {
       alpha: 0.7
     })
 
-    this._presentedValue += (this.value - this._presentedValue)/30
+
 
     for(let a=0; a <= Math.PI * 2 * this._presentedValue * this.progress; a+=da) {
       this._canvas.lineTo(
