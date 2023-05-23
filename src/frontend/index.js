@@ -2,6 +2,7 @@ import GravityField from "./GravityField.js";
 import Widget from "./Widget.js"
 import FontFaceObserver from 'fontfaceobserver'
 import DateTimeWidget from "./widgets/DateTimeWidget.js";
+import PomodoroWidget from "./widgets/PomodoroWidget.js";
 
 var font = new FontFaceObserver('MajorMonoDisplay-Regular');
 font.load().then(function () {
@@ -21,10 +22,9 @@ document.body.appendChild(app.view)
 const gravityField = new GravityField()
 app.stage.addChild(gravityField)
 
-
-gravityField.addWidget(new Widget("Blinds"))
+gravityField.addWidget(new PomodoroWidget())
 gravityField.addWidget(new DateTimeWidget())
+gravityField.addWidget(new Widget("Blinds"))
 gravityField.addWidget(new Widget("Todos"))
 gravityField.addWidget(new Widget("Calendar"))
 gravityField.addWidget(new Widget("Weather"))
-gravityField.addWidget(new Widget("Pomodoro"))

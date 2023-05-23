@@ -11,6 +11,7 @@ export default class ArchText extends PIXI.Container {
     this._alignOffset = 0.5
     this._positionOffset = 0
     this._updated = true
+    this._color = 0xffffff
   }
 
   set progress(v) {
@@ -43,6 +44,18 @@ export default class ArchText extends PIXI.Container {
       this.cacheAsBitmap = false
     }
     this._text = v
+  }
+
+  get color() {
+    return this._color
+  }
+
+  set color(v) {
+    this._updated = this._updated || (this._color !== v)
+    if(this._updated) {
+      this.cacheAsBitmap = false
+    }
+    this._color = v
   }
 
   get text() {
@@ -120,8 +133,8 @@ export default class ArchText extends PIXI.Container {
       const char = new PIXI.Text('X', {
         fontFamily: 'MajorMonoDisplay-Regular',
         fontSize: this._fontSize,
-        fill: '#ffffff',
-        stroke: "#ffffff",
+        fill: this.color,
+        stroke: this.color,
         strokeThickness: 0.5,
         align: 'center',
       });

@@ -57,9 +57,9 @@ export default class GravityField extends PIXI.Container {
       const widget = this._widgets[i]
       widget.applyGravityForce(slot.x, slot.y)
       if(this._sleep) {
-        widget.content.progress = Math.max(0, widget.content.progress - 0.01)
+        widget.content.progress = Math.max(0, widget.content.progress - 0.02)
       } else {
-        widget.content.progress = Math.min(1, widget.content.progress + 0.01)
+        widget.content.progress = Math.min(1, widget.content.progress + 0.02)
       }
     }
   }
