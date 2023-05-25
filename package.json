@@ -23,7 +23,9 @@
   },
   "homepage": "https://github.com/jamro/desk-hud#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.8",

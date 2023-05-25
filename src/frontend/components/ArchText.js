@@ -39,11 +39,12 @@ export default class ArchText extends PIXI.Container {
   }
 
   set text(v) {
-    this._updated = this._updated || (this._text !== v)
+    const str = String(v)
+    this._updated = this._updated || (this._text !== str)
     if(this._updated) {
       this.cacheAsBitmap = false
     }
-    this._text = v
+    this._text = str
   }
 
   get color() {

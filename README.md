@@ -5,6 +5,7 @@
 
 - [RPI] Expand filesystem `sudo raspi-config` > `Advanced Options` > `Expand Filesystem`
 - [RPI] Enable ssh `sudo raspi-config`
+- [RPI] Disable screen saver ` xset s off`
 - [local] generate public and private keys `ssh-keygen`
 - [local] copy public key to remote host `ssh-copy-id -i ~/.ssh/id_rsa.pub pi@raspberrypi.local`
 - [local] add key to ssh: `ssh-add`

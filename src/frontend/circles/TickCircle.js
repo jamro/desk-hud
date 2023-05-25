@@ -8,6 +8,7 @@ export default class TickCircle extends PIXI.Container {
     this.progress = 0
     this.count = 10
     this.length = 0.5
+    this.countMax = 100000
 
     this._updateHash = ''
   }
@@ -15,7 +16,7 @@ export default class TickCircle extends PIXI.Container {
   render(renderer) {
     super.render(renderer)
 
-    const hash = `${this.size.toFixed(3)}|${this.progress.toFixed(3)}|${this.length.toFixed(3)}|${this.count.toFixed(0)}`
+    const hash = `${this.size.toFixed(3)}|${this.progress.toFixed(3)}|${this.length.toFixed(3)}|${this.count.toFixed(0)}|${this.countMax.toFixed(0)}`
     if(this._updateHash === hash) return
     this._updateHash = hash
 
@@ -30,7 +31,7 @@ export default class TickCircle extends PIXI.Container {
     const l2 = 100*this.size
     const l1 = this.progress * 100*this.size*(1-this.length) + (1-this.progress) * l2
 
-    for(let i=0; i < this.count; i++) {
+    for(let i=0; i < this.countMax && i < this.count; i++) {
       this._lines.moveTo(
         l1*Math.sin(i*a),
         -l1*Math.cos(i*a),

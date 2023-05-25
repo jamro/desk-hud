@@ -25,7 +25,6 @@ export default class PomodoroWidget extends Widget {
     this.addChildAt(this._redLight, 0)
     
     this._history = this._loadHistory()
-    console.log(this._history)
     this._timerStart = Number(localStorage.getItem('Pomodoro_timerStart')) || null
     this._timerStop = Number(localStorage.getItem('Pomodoro_timerStop')) || null
     this._mode = localStorage.getItem('Pomodoro_mode') || 'work'
@@ -184,7 +183,7 @@ export default class PomodoroWidget extends Widget {
     dt = this. _getCurrentTimeLimit() - dt
     
     this._playButton.scale.set(this.progress*2*Math.max(0, this.size-0.5))
-    this._playButton.visible = (this.size > 0.5)
+    this._playButton.visible = (this.size > 0.8)
     this._playButton.x = -100*this.size * Math.cos(Math.PI*0.25)
     this._playButton.y = 100*this.size * Math.sin(Math.PI*0.25)
 
@@ -255,11 +254,11 @@ export default class PomodoroWidget extends Widget {
     this._ticks.progress = this.progress
     this._dots.size = this.size*1.1
     this._dots.progress = this.progress
-    this._dots.visible = (this.size > 0.5)
+    this._dots.visible = (this.size > 0.8)
     this._dotLabel.progress = this.progress
     this._dotLabel.radius = this.size * 113
     this._dotLabel.fontSize = 12 * this.size
-    this._dotLabel.visible = (this.size > 0.5)
+    this._dotLabel.visible = (this.size > 0.8)
     const dayStart = Math.floor(now / (1000*60*60*24))*(1000*60*60*24)
     this._dots.countMax = Math.min(10, this._history.filter(p => p > dayStart ).length)
     this._dotLabel.alpha = this._dots.countMax > 0 ? 1 : 0

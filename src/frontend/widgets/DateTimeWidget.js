@@ -78,12 +78,12 @@ export default class DateTimeWidget extends Widget {
     this._dateLabel.style.fontSize = 2 + this.size * 18
     this._dateLabel.text = `${months[now.getMonth()]} ${now.getDate()}` 
     this._dateLabel.y = + this.size * 15
-    this._dateLabel.visible = (this.size > 0.5)
+    this._dateLabel.visible = (this.size > 0.8)
     this._dateLabel.progress = this._progress
 
     this._secPointer.value = now.getSeconds()/60
     this._secPointer.progress = this._progress
-    this._secPointer.size = this.size*((this.size > 0.5) ? 0.86 : 0.80)
+    this._secPointer.size = this.size*((this.size > 0.8) ? 0.86 : 0.80)
 
     this._minPointer.value = now.getMinutes()/60
     this._minPointer.progress = this._progress

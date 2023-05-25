@@ -4,6 +4,7 @@ export default class TextField extends PIXI.Text {
     super('', style)
     this._progress = 0
     this._origText = txt
+    this.anchor.set(0.5)
   }
 
   set progress(v) {
