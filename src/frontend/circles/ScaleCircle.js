@@ -83,6 +83,6 @@ export default class ScaleCircle extends PIXI.Container {
     const minPos = (this.valueMin - this._scaleMin)/scaleRange
     this._rangeIndicator.rotation =  this._angleRange * minPos
     this._rangeIndicator.value = tickGrow*((this.valueMax - this._scaleMin)/scaleRange - minPos)
-    this._rangeIndicator.visible = (this.size > 0.8)
+    this._rangeIndicator.visible = (this.size  === 1)
   }
 }

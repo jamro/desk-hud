@@ -60,6 +60,7 @@ export default class CalendarWidget extends Widget {
     this._clockAlert.beginFill(0xff0000)
     this._clockAlert.drawCircle(0, 0, 40)
     this._meetingClock.addChild(this._clockAlert)
+    this._clockAlert.visible = false
 
     this._clockScale = new TickCircle()
     this._clockScale.count = 60
@@ -86,6 +87,7 @@ export default class CalendarWidget extends Widget {
     })
     this._clockCenter.drawCircle(0, 0, 10)
     this._clockCenter.drawCircle(0, 0, 1)
+    this._clockCenter.alpha = 0
     this._meetingClock.addChild(this._clockCenter)
 
     this._clockTitle = new ArchText()
@@ -141,7 +143,7 @@ export default class CalendarWidget extends Widget {
         const mm = (eventTime.getMinutes()).toString().padStart(2, '0')
         this._nextMeetingLabel.visible = true
         this._nextMeetingLabel.radius = this.size * 105 + 5
-        this._nextMeetingLabel.text = `${hh}:${mm} ${this.size > 0.8 ? upcomingMeetings[0].summary.substring(0, 40) : ''}`
+        this._nextMeetingLabel.text = `${hh}:${mm} ${this.size === 1 ? upcomingMeetings[0].summary.substring(0, 40) : ''}`
         this._nextMeetingLabel.progress = this.progress * this._dataLoadProgress
         this._nextMeetingLabel.positionOffset = -Math.PI * 0.52 - 0.5*(1 - this.size)
         this._nextLabel.visible = true

@@ -183,7 +183,7 @@ export default class PomodoroWidget extends Widget {
     dt = this. _getCurrentTimeLimit() - dt
     
     this._playButton.scale.set(this.progress*2*Math.max(0, this.size-0.5))
-    this._playButton.visible = (this.size > 0.8)
+    this._playButton.visible = (0.8)
     this._playButton.x = -100*this.size * Math.cos(Math.PI*0.25)
     this._playButton.y = 100*this.size * Math.sin(Math.PI*0.25)
 
@@ -209,7 +209,7 @@ export default class PomodoroWidget extends Widget {
     const ms = dt % 1000
 
     let timeText = `${mm.toString().padStart(2, '0')}:${ss.toString().padStart(2, '0')}`
-    if(this.size > 0.8) {
+    if(this.size === 1) {
       timeText += `.${ms.toString().padStart(3, '0')}`
     }
     this._timeLabel.text = timeText
@@ -234,12 +234,12 @@ export default class PomodoroWidget extends Widget {
     this._workLabel.progress = this.progress
     this._workLabel.fontSize = 12 * this.size
     this._workLabel.alpha = this._mode === 'work' ? 1 : 0.25
-    this._workLabel.visible = (this.size > 0.65)
+    this._workLabel.visible = (this.size === 1)
     this._breakLabel.radius = 110*this.size
     this._breakLabel.progress = this.progress
     this._breakLabel.fontSize = 12 * this.size
     this._breakLabel.alpha = this._mode === 'break' ? 1 : 0.25
-    this._breakLabel.visible = (this.size > 0.65)
+    this._breakLabel.visible = (this.size === 1)
 
     this._pointer.progress = this.progress
     this._pointer.size = this.size*0.8
@@ -254,11 +254,11 @@ export default class PomodoroWidget extends Widget {
     this._ticks.progress = this.progress
     this._dots.size = this.size*1.1
     this._dots.progress = this.progress
-    this._dots.visible = (this.size > 0.8)
+    this._dots.visible = (this.size === 1)
     this._dotLabel.progress = this.progress
     this._dotLabel.radius = this.size * 113
     this._dotLabel.fontSize = 12 * this.size
-    this._dotLabel.visible = (this.size > 0.8)
+    this._dotLabel.visible = (this.size === 1)
     const dayStart = Math.floor(now / (1000*60*60*24))*(1000*60*60*24)
     this._dots.countMax = Math.min(10, this._history.filter(p => p > dayStart ).length)
     this._dotLabel.alpha = this._dots.countMax > 0 ? 1 : 0

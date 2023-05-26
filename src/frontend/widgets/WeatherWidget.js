@@ -130,12 +130,12 @@ export default class WeatherWidget extends Widget {
     this._currentDescriotionLabel.progress = this.progress*this._dataLoadProgress
     this._currentDescriotionLabel.text = this.data.currentDescription === null ? '' : this.data.currentDescription.substring(0, 17)
     this._currentDescriotionLabel.y = 15*this.size
-    this._currentDescriotionLabel.visible = (this.size > 0.8)
+    this._currentDescriotionLabel.visible = (this.size === 1)
     this._currentDescriotionLabel.style.fontSize = this.size * 12
 
     this._currentTempScale.size = this.size
     this._currentTempScale.progress = this.progress*this._dataLoadProgress
-    this._currentTempScale.visible = (this.size > 0.8)
+    this._currentTempScale.visible = (this.size === 1)
     if(this.data.currentTemperature !== null) {
       this._currentTempScale.value = Math.max(-30, Math.min(30, this.data.currentTemperature))
     }
@@ -153,12 +153,12 @@ export default class WeatherWidget extends Widget {
       rainClock += Math.floor(rainTimeLeft/(60*60)).toString().padStart(2, '0') + ':'
       rainClock += (Math.floor(rainTimeLeft/60) % 60).toString().padStart(2, '0') + ':'
       rainClock += (rainTimeLeft % 60).toString().padStart(2, '0')
-      this._rainLabel.text = rainTimeLeft ? 'rain in ' + rainClock : 'raining'
+      this._rainLabel.text = rainTimeLeft ? 'rain in ' + rainClock : ''
     } else {
       this._rainLabel.text = ''
     }
 
-    this._rainLabel.visible = (this.size > 0.8)
+    this._rainLabel.visible = (this.size === 1)
     this._rainLabel.progress = this.progress*this._dataLoadProgress
     this._rainLabel.size = this.size
     this._rainLabel.radius = 110*this.size

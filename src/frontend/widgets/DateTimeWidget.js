@@ -78,29 +78,29 @@ export default class DateTimeWidget extends Widget {
     this._dateLabel.style.fontSize = 2 + this.size * 18
     this._dateLabel.text = `${months[now.getMonth()]} ${now.getDate()}` 
     this._dateLabel.y = + this.size * 15
-    this._dateLabel.visible = (this.size > 0.8)
+    this._dateLabel.visible = (this.size === 1)
     this._dateLabel.progress = this._progress
 
     this._secPointer.value = now.getSeconds()/60
     this._secPointer.progress = this._progress
-    this._secPointer.size = this.size*((this.size > 0.8) ? 0.86 : 0.80)
+    this._secPointer.size = this.size*((this.size === 1) ? 0.86 : 0.80)
 
     this._minPointer.value = now.getMinutes()/60
     this._minPointer.progress = this._progress
     this._minPointer.size = this.size*0.83
-    this._minPointer.visible = (this.size > 0.75)
+    this._minPointer.visible = (this.size === 1)
 
     this._hourPointer.value = now.getHours()/24
     this._hourPointer.progress = this._progress
     this._hourPointer.size = this.size*0.80
-    this._hourPointer.visible = (this.size > 0.75)
+    this._hourPointer.visible = (this.size === 1)
 
     for(let i=0; i < this._weekDays.length; i++) {
       const day = this._weekDays[i]
       day.radius = this.size * 94
       day.fontSize = 4 + this.size * 5
       day.alpha = i == now.getDay() ? 1 : 0.4
-      day.visible = (this.size > 0.9 && this.progress > ((i+6) % 7)/7)
+      day.visible = (this.size === 1 && this.progress > ((i+6) % 7)/7)
     }
   }
 }
