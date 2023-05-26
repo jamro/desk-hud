@@ -16,7 +16,7 @@ console.log("Createing Google API client")
 const jwtClient = new google.auth.JWT(
   getEnv('DHUD_GOOGLE_CLIENT_EMAIL'),
   null,
-  getEnv('DHUD_GOOGLE_PRIVATE_KEY'),
+  getEnv('DHUD_GOOGLE_PRIVATE_KEY').split(String.raw`\n`).join('\n'),
   'https://www.googleapis.com/auth/calendar.readonly'
 );
 
