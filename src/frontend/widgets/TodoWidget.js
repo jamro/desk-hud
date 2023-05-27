@@ -5,16 +5,15 @@ import DotCluster from '../components/DotCluster.js'
 import ScaleCircle from '../circles/ScaleCircle.js'
 import ProgressCircle from '../circles/ProgressCircle.js'
 
-export default class PomodoroWidget extends Widget {
+export default class TaskWidget extends Widget {
   constructor() {
-    super("Tasks")
+    super('todo', "Tasks")
     this._dataLoadProgress = 0
     this.data = {
       lastUpdate: null,
       inboxList: null,
       actionList: null,
     }
-    this.updateData()
 
     this._scaleLarge = new TickCircle()
     this._scaleLarge.count = 8
@@ -44,10 +43,7 @@ export default class PomodoroWidget extends Widget {
 
   }
 
-  async updateData() {
-
-    const todoResponse = await fetch("/api/todo");
-    const tasks = await todoResponse.json();
+  onMessage(tasks) {
 
     this.data.lastUpdate = new Date().getTime()
     this.data.inboxList = tasks.inbox

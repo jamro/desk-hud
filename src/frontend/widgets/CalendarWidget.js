@@ -7,7 +7,7 @@ import TextField from '../components/TextField.js';
 
 export default class CalendarWidget extends Widget {
   constructor() {
-    super("Calendar")
+    super('calendar', "Calendar")
     this._dataLoadProgress = 0
     this.data = {
       lastUpdate: null,
@@ -15,7 +15,6 @@ export default class CalendarWidget extends Widget {
       todayEvents: null,
       todayEventsLeft: null,
     }
-    this.updateData()
 
     this._statsTitle = new TextField('completed\ntoday', {
       fontFamily: 'MajorMonoDisplay-Regular',
@@ -95,11 +94,7 @@ export default class CalendarWidget extends Widget {
 
   }
 
-  async updateData() {
-
-    const calendarResponse = await fetch("/api/calendar");
-    const events = await calendarResponse.json();
-
+  onMessage(events) {
     const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
 
     this.data.allEvents = events.filter(e => e.start < today + 7*24*60*60*1000)
@@ -108,9 +103,6 @@ export default class CalendarWidget extends Widget {
     this.data.lastUpdate = new Date().getTime()
 
     console.log( this.data )
-
-    setTimeout(() => this.updateData(), 1000*60*5)
-    
   }
 
   render(renderer) {

@@ -11,7 +11,7 @@ const BREAK_DURATION = 1000 * 5 * 60
 
 export default class PomodoroWidget extends Widget {
   constructor() {
-    super("Pomodoro")
+    super('pomodoro', "Pomodoro")
 
     this._ticks = new TickCircle()
     this._ticks.count = 25

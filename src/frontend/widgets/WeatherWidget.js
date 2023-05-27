@@ -15,10 +15,9 @@ const icons = {
   '50d': '',    '50n': '',
 }
 
-
 export default class WeatherWidget extends Widget {
   constructor() {
-    super("Weather")
+    super('weather', "Weather")
     this.data = {
       lastUpdate: null,
       currentTemperature: null,
@@ -29,7 +28,6 @@ export default class WeatherWidget extends Widget {
       rainTime: null
     }
     this._dataLoadProgress = 0
-    this.updateData()
 
     this._currentTempScale = new ScaleCircle(-10, 30, '°c', 5, Math.PI*0.8)
     this._currentTempScale.rotation = Math.PI*0.3 + Math.PI/2
@@ -72,12 +70,10 @@ export default class WeatherWidget extends Widget {
     this._rainLabel.positionOffset = -Math.PI*0.45
     this.addChild(this._rainLabel)
   }
-
-  async updateData() {
-    const currentResponse = await fetch("/api/weather/current");
-    const forecastResponse = await fetch("/api/weather/forecast");
-    const currentJsonData = await currentResponse.json();
-    const forecastJsonData = await forecastResponse.json();
+  
+  onMessage(msg) {
+    const currentJsonData = msg.current
+    const forecastJsonData = msg.forecast
     this.data.lastUpdate = new Date().getTime()
     this.data.currentTemperature = currentJsonData.main.temp
     this.data.currentIcon = currentJsonData.weather[0].icon
@@ -105,9 +101,6 @@ export default class WeatherWidget extends Widget {
     this.data.rainTime = rain ? rain[0].dt*1000 : null
 
     console.log(this.data)
-   
-    setTimeout(() => this.updateData(), 1000*60*15)
-    
   }
 
   render(renderer) {

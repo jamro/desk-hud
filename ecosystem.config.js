@@ -2,7 +2,7 @@ require('dotenv').config()
 
 module.exports = {
   apps : [{
-    name: "deck-hud",
+    name: "desk-hud",
     script: 'src/backend/index.js',
     watch: '.'
   }],

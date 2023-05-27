@@ -1,16 +1,17 @@
+require('dotenv').config()
 const express = require('express')
 const path = require('path')
 const livereload = require("livereload");
 const connectLiveReload = require("connect-livereload");
-const fetch = require('node-fetch');
-const { google } = require('googleapis');
-const roomRouter = require('./routes/room.js')
-const weatherRouter = require('./routes/weather.js')
-const calendarRouter = require('./routes/calendar.js')
-const tasksRouter = require('./routes/tasks.js')
-const getEnv = require('./getEnv.js')
+const http = require('http');
+const { Server } = require("socket.io");
+const WeatherService = require('./services/WeatherService.js')
+const CalendarService = require('./services/CalendarService.js');
+const TodoService = require('./services/TodoService.js');
 
 const app = express()
+const server = http.createServer(app);
+const io = new Server(server);
 const port = 3000
 
 const liveReloadServer = livereload.createServer();
@@ -23,12 +24,19 @@ liveReloadServer.server.once("connection", () => {
 app.use(connectLiveReload());
 app.use(express.static(path.join(__dirname, 'www')))
 
-app.use('/api/todo', tasksRouter)
-app.use('/api/calendar', calendarRouter)
-app.use('/api/weather', weatherRouter)
-app.use('/api/room', roomRouter)
+const services = [
+  new WeatherService(io),
+  new CalendarService(io),
+  new TodoService(io),
+]
+services.forEach(s => s.start())
 
-app.listen(port, () => {
+io.on('connection', async (socket) => {
+  console.log("Client connected")
+  Promise.all(services.map(s => s.welcomeClient(socket)))
+});
+
+server.listen(port, () => {
   console.log(`app listening on port ${port}`)
 })
 

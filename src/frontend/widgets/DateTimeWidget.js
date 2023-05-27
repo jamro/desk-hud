@@ -8,7 +8,7 @@ const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
 
 export default class DateTimeWidget extends Widget {
   constructor() {
-    super("Date & Time")
+    super('dateTime', "Date & Time")
 
     this._secPointer = new ProgressCircle()
     this._secPointer.color = 0xff0000

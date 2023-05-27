@@ -70,13 +70,15 @@ export default class GravityContainer extends PIXI.Container {
     this.x += this._vx
     this.y += this._vy
 
-    if(this.content.isMoving && Math.max( Math.abs(this._vx), Math.abs(this._vy)) === 0) {
+    if(this.content.isMoving && Math.max( Math.abs(this._vx), Math.abs(this._vy)) < 10) {
       this.content.isMoving = false
     }
     this.size += (this._targetSize - this.size)/5
 
     if(Math.abs(this._targetSize - this.size) < 0.01) this.size = this._targetSize
     super.render(renderer)
+
+
   }
   
 }

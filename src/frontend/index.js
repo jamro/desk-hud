@@ -20,6 +20,7 @@ function loadFont(name) {
 loadFont('weathericons-regular-webfont')
 loadFont('MajorMonoDisplay-Regular')
 
+const socket = io();
 
 const app = new PIXI.Application({
     width: 1480,
@@ -32,10 +33,25 @@ document.body.appendChild(app.view)
 const gravityField = new GravityField()
 app.stage.addChild(gravityField)
 
-
 gravityField.addWidget(new TodoWidget())
 gravityField.addWidget(new CalendarWidget())
 gravityField.addWidget(new WeatherWidget())
 gravityField.addWidget(new PomodoroWidget())
 gravityField.addWidget(new DateTimeWidget())
 gravityField.addWidget(new Widget("Room"))
+
+socket.on('connect', () => {
+  gravityField.online = true
+})
+socket.on('disconnect', () => {
+  gravityField.online = false
+})
+
+socket.on('widget', function(data) {
+  const {
+    widgetId,
+    payload
+  } = data
+
+  gravityField.routeMessage(widgetId, payload)
+});

@@ -14,8 +14,10 @@ export default class GravityField extends PIXI.Container {
       { x: 1400,   y: 240,   size: 0.5},
     ]
 
-    this._widgets = []
+    this._containers = []
+    this._widgets = {}
     this._sleep = false
+    this._online = false
 
     this._sleepToggle = new SleepToggle()
     this._sleepToggle.x = 40
@@ -24,10 +26,24 @@ export default class GravityField extends PIXI.Container {
     this._sleepToggle.on('pointertap', () => this._sleep = !this._sleep)
   }
 
+  set online(v) {
+    this._online = v
+    this._sleepToggle.pulse = !v
+  }
+
+  get online() {
+    return this._online
+  }
+
+  routeMessage(widgetId, msg) {
+    this._widgets[widgetId].onMessage(msg)
+  }
+
   addWidget(widget) {
-    const index = this._widgets.length
+    this._widgets[widget.id] = widget
+    const index = this._containers.length
     const container = new GravityContainer(widget)
-    this._widgets[index] = container
+    this._containers[index] = container
     container.x = this._slots[index].x
     container.y = this._slots[index].y
     container.targetX = container.x
@@ -40,19 +56,19 @@ export default class GravityField extends PIXI.Container {
   }
 
   _activate(widget) {
-    const index = this._widgets.indexOf(widget)
-    this._widgets.splice(index, 1)
-    this._widgets.unshift(widget)
+    const index = this._containers.indexOf(widget)
+    this._containers.splice(index, 1)
+    this._containers.unshift(widget)
 
-    for(let i=0; i < this._widgets.length; i++) {
-      this._widgets[i].targetSize = this._slots[i].size
+    for(let i=0; i < this._containers.length; i++) {
+      this._containers[i].targetSize = this._slots[i].size
     }
   }
 
   render(renderer) {
-    for(let i=0; i < this._widgets.length; i++) {
+    for(let i=0; i < this._containers.length; i++) {
       const slot = this._slots[i]
-      const widget = this._widgets[i]
+      const widget = this._containers[i]
       widget.applyGravityForce(slot.x, slot.y)
       if(this._sleep) {
         widget.content.progress = Math.max(0, widget.content.progress - 0.03)

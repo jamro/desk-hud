@@ -88,7 +88,7 @@ export default class DotCluster extends PIXI.Container {
 
     for(let i=0; i< this._dots.length; i++) {
       this._dots[i].visible = this.progress > (i/this._dots.length)
-      this._dots[i].alpha = (i < this.count) ? 1 : 0.4
+      this._dots[i].alpha = (i < this.count) ? 1 : 0.25
     }
     this._label.progress = this.progress
     this._label.text = this.count > 0 ? `${this.title}:${this.count}` : this.title

@@ -2,8 +2,9 @@ import TitleCircle from "./circles/TitleCircle"
 
 export default class Widget extends PIXI.Container {
 
-  constructor(title) {
+  constructor(id, title) {
     super()
+    this._id = id
     this._container = new PIXI.Container()
     super.addChild(this._container)
     this._title = title
@@ -29,6 +30,10 @@ export default class Widget extends PIXI.Container {
         lastClickTime = 0
       }
     });
+  }
+
+  get id() {
+    return this._id
   }
 
   set isMoving(v) {
@@ -73,6 +78,10 @@ export default class Widget extends PIXI.Container {
     if(this._isMoving) {
       this._container.scale.set(this.size/this._preMoveSize)
     }
+  }
+
+  onMessage(msg) {
+    console.log(`Widget "${this._id}" received a message:`, msg)
   }
 
   toString() {
