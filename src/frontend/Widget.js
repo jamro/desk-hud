@@ -4,7 +4,11 @@ export default class Widget extends PIXI.Container {
 
   constructor(title) {
     super()
+    this._container = new PIXI.Container()
+    super.addChild(this._container)
     this._title = title
+    this._isMoving = false
+    this._preMoveSize = 1
     this._frame = new TitleCircle(title)
     this.addChild(this._frame)
     this._progress = 0
@@ -27,6 +31,31 @@ export default class Widget extends PIXI.Container {
     });
   }
 
+  set isMoving(v) {
+    if(this._isMoving === v) return 
+    this._container.cacheAsBitmap = v
+    this._isMoving = v
+    if(!v) {
+      this._container.scale.set(1)
+    } else {
+      this._preMoveSize = this.size
+    }
+  }
+
+  get isMoving() {
+    return this._isMoving
+  }
+
+  addChild(c) {
+    this._container.addChild(c)
+  }
+  addChildAt(c, n) {
+    this._container.addChildAt(c, n)
+  }
+  removeChild(c) {
+    this._container.removeChild(c)
+  }
+
   get progress() {
     return this._progress
   }
@@ -40,6 +69,10 @@ export default class Widget extends PIXI.Container {
     this._bg.scale.set(this.size)
     this._frame.size = this.size
     this._frame.progress = this._progress
+
+    if(this._isMoving) {
+      this._container.scale.set(this.size/this._preMoveSize)
+    }
   }
 
   toString() {

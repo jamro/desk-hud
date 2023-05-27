@@ -25,7 +25,6 @@ export default class DotCircle extends PIXI.Container {
 
     const a = 2 * Math.PI / this.count
 
-
     for(let i=0; i < this.countMax && i < this.count; i++) {
       this._shapes.drawCircle(
         this.size*100*Math.sin(i*a),

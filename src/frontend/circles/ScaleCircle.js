@@ -14,6 +14,7 @@ export default class ScaleCircle extends PIXI.Container {
     this._angleRange = angleRange
     this.size = 1
     this.progress = 1
+    this._lastHash= ''
     const scaleRange = scaleMax - scaleMin
 
     this._rangeIndicator = new ProgressCircle()
@@ -54,6 +55,10 @@ export default class ScaleCircle extends PIXI.Container {
 
   render(renderer) {
     super.render(renderer)
+
+    const hash = `${this.size.toFixed(3)}|${this.progress.toFixed(3)}|${this.value.toFixed(1)}|${this.valueMin.toFixed(1)}|${this.valueMax.toFixed(1)}|`
+    if(this._lastHash === hash) return 
+    this._lastHash = hash
 
     this._ticksSmall.size = this.size
     this._ticksSmall.progress = Math.min(1, this.progress*2)

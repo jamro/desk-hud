@@ -64,7 +64,7 @@ export default class DateTimeWidget extends Widget {
 
     this._timeLabel.style.fontSize = 2 + this.size * 20
     let clockText = `${hh}:${mm}` 
-    if(this.size > 0.5) {
+    if(this.size === 1) {
       clockText += `:${ss}`
       this._timeLabel.y = - this.size * 15
     } else {

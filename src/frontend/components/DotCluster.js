@@ -6,6 +6,7 @@ export default class DotCluster extends PIXI.Container {
     this.progress = 0
     this.count = 0
     this.title = 'Count'
+    this._lastHash = ''
 
     this._dots = []
     
@@ -80,6 +81,10 @@ export default class DotCluster extends PIXI.Container {
 
   render(renderer) {
     super.render(renderer)
+
+    const hash = `${this.title}|${this.count.toFixed(0)}|${this.progress.toFixed(3)}`
+    if(this._lastHash === hash) return
+    this._lastHash = hash
 
     for(let i=0; i< this._dots.length; i++) {
       this._dots[i].visible = this.progress > (i/this._dots.length)

@@ -77,6 +77,8 @@ export default class TimelineCircle extends PIXI.Container {
     this.now = startTime
     this.size = 1
     this.progress = 0
+    this._dataVersion = 0
+    this._lastHash = ''
 
     this._dots = []
   }
@@ -94,10 +96,15 @@ export default class TimelineCircle extends PIXI.Container {
       this.addChild(dot)
       this._dots.push(dot)
     }
+    this._dataVersion++
   }
 
   render(renderer) {
     super.render(renderer)
+
+    const hash = `${this._dataVersion.toFixed(0)}|${this.size.toFixed(3)}|${this.progress.toFixed(3)}|${Math.round(this.now/1000)}`
+    if(this._lastHash === hash) return
+    this._lastHash = hash
 
     let incompleteIndex = 0
     for(let i=0; i < this._dots.length; i++) {
