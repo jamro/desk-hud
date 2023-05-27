@@ -5,6 +5,7 @@ import DateTimeWidget from "./widgets/DateTimeWidget.js";
 import PomodoroWidget from "./widgets/PomodoroWidget.js";
 import WeatherWidget from "./widgets/WeatherWidget.js";
 import CalendarWidget from "./widgets/CalendarWidget.js";
+import TodoWidget from "./widgets/TodoWidget.js";
 
 
 function loadFont(name) {
@@ -32,9 +33,9 @@ const gravityField = new GravityField()
 app.stage.addChild(gravityField)
 
 
+gravityField.addWidget(new TodoWidget())
 gravityField.addWidget(new CalendarWidget())
 gravityField.addWidget(new WeatherWidget())
 gravityField.addWidget(new PomodoroWidget())
 gravityField.addWidget(new DateTimeWidget())
-gravityField.addWidget(new Widget("Blinds"))
-gravityField.addWidget(new Widget("Todos"))
+gravityField.addWidget(new Widget("Room"))

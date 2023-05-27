@@ -100,7 +100,7 @@ export default class CalendarWidget extends Widget {
     const calendarResponse = await fetch("/api/calendar");
     const events = await calendarResponse.json();
 
-    const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24)
+    const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
 
     this.data.allEvents = events.filter(e => e.start < today + 7*24*60*60*1000)
     this.data.todayEvents = this.data.allEvents.filter(e => e.start < today + 24*60*60*1000 && !e.allDay)
@@ -117,7 +117,7 @@ export default class CalendarWidget extends Widget {
     super.render(renderer)
 
     if(this.data.lastUpdate && this._dataLoadProgress < 1) {
-      this._dataLoadProgress = Math.min(1, this._dataLoadProgress + 0.05)
+      this._dataLoadProgress = Math.min(1, this._dataLoadProgress + 0.02)
     }
 
     const now = new Date().getTime()

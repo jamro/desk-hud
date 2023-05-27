@@ -114,7 +114,7 @@ export default class WeatherWidget extends Widget {
     super.render(renderer)
 
     if(this.data.lastUpdate && this._dataLoadProgress < 1) {
-      this._dataLoadProgress = Math.min(1, this._dataLoadProgress + 0.05)
+      this._dataLoadProgress = Math.min(1, this._dataLoadProgress + 0.02)
     }
 
     this._currentTempLabel.progress = this.progress*this._dataLoadProgress

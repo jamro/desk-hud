@@ -12,21 +12,15 @@ function getEnv(name) {
   return result
 }
 
-console.log("Createing Google API client")
-const jwtClient = new google.auth.JWT(
-  getEnv('DHUD_GOOGLE_CLIENT_EMAIL'),
-  null,
-  getEnv('DHUD_GOOGLE_PRIVATE_KEY').split(String.raw`\n`).join('\n'),
-  'https://www.googleapis.com/auth/calendar.readonly'
-);
+const auth = google.auth.fromJSON({
+  type: "authorized_user",
+  client_id: getEnv('DHUD_GOOGLE_CLIENT_ID'),
+  client_secret: getEnv('DHUD_GOOGLE_CLIENT_SECRET'),
+  refresh_token: getEnv('DHUD_GOOGLE_CLIENT_TOKEN'),
+})
 
-console.log("Createing Google API Calendar")
-const calendar = google.calendar({
-  version: 'v3',
-  project: getEnv('DHUD_GOOGLE_PROJECT_NUMBER'),
-  auth: jwtClient
-});
-
+const calendar = google.calendar({ version: 'v3', auth });
+const tasks = google.tasks({ version: 'v1', auth });
 
 const app = express()
 const port = 3000
@@ -77,7 +71,7 @@ app.get(`/api/calendar`, async (req, res) => {
 
   const calIds = getEnv('DHUD_GOOGLE_CALENDAR_IDS').split(',')
 
-  const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24)
+  const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
 
   const params = {
     timeMin: (new Date(today)).toISOString(),
@@ -112,6 +106,34 @@ app.get(`/api/calendar`, async (req, res) => {
     res.json({error: err})
   }
 
+})
+
+app.get(`/api/todo`, async (req, res) => {
+  
+  const queryTodo = async (id) => {
+    const response = await tasks.tasks.list({
+      tasklist: getEnv(id)
+    });
+
+    return response.data.items
+      .map(t => ({
+        id: t.id,
+        title: t.title,
+        updated: new Date(t.updated).getTime(),
+        position: t.position,
+        status: t.status,
+        completed: new Date(t.completed).getTime() || null,
+        due: new Date(t.due).getTime() || null,
+      }))
+      .sort((a, b) => String(a.position).localeCompare(String(b.position)))
+  }
+  const inbox = await queryTodo('DHUD_GOOGLE_INBOX_TASKLIST_ID')
+  const action = await queryTodo('DHUD_GOOGLE_ACTION_TASKLIST_ID')
+  const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
+  res.json({
+    inbox: inbox.filter(t => !t.completed && !t.due),
+    action: action.filter(t => !t.due && (!t.completed || t.completed > today)),
+  })
 })
 
 app.listen(port, () => {
