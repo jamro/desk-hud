@@ -62,6 +62,7 @@ export default class RoomPreview extends PIXI.Container{
       }
     ]
     this.covers = this._windows.map(() => 0)
+    this._coversActual = this._windows.map(() => 0)
 
     // back wall
     this._bg.addLine(-backWallWidth/2, -backWallHeight/2, -backWallWidth/2, backWallHeight/2, 1, color)
@@ -86,7 +87,11 @@ export default class RoomPreview extends PIXI.Container{
     this._bg.size = this.size
     this._bg.progress = this.progress
 
-    const hash = this.covers.map(c => c.toFixed(3)).join('|') + `|${this.size}|${this.progress}`
+    for(let i=0; i < this.covers.length; i++) {
+      this._coversActual[i] += (this.covers[i] - this._coversActual[i])/100
+    }
+
+    const hash = this._coversActual .map(c => c.toFixed(3)).join('|') + `|${this.size}|${this.progress}`
     if(hash === this._lastHash) {
       return 
     }
@@ -97,13 +102,13 @@ export default class RoomPreview extends PIXI.Container{
     this._coverCanvas.alpha = this.progress
     
     const drawCover = ({x1, x2, x3, x4, y1, y2, y3, y4}, position) => {
-      const p = (0.05 + 0.95*position)*this.progress
+      const p = (0.1 + 0.9*position)*this.progress
       this._coverCanvas.moveTo(x1*this.size, y1*this.size)
       this._coverCanvas.lineTo(x2*this.size, y2*this.size)
       this._coverCanvas.lineTo(x4*this.size, (y4*p + y2*(1-p))*this.size)
       this._coverCanvas.lineTo(x3*this.size, (y3*p + y1*(1-p))*this.size)
     }
-    this._windows.forEach((w, i) => drawCover(w, this.covers[i]))
+    this._windows.forEach((w, i) => drawCover(w, this._coversActual[i]))
 
 
   }
