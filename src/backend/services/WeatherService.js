@@ -8,7 +8,7 @@ class WeatherService extends Service {
     this._loop = null
   }
 
-  start() {
+  async start() {
     if(this._loop) {
       clearInterval(this._loop)
     }

@@ -84,7 +84,12 @@ export default class Widget extends PIXI.Container {
     console.log(`Widget "${this._id}" received a message:`, msg)
   }
 
+  sendMessage(payload) {
+    this.emit('service', {serviceId: this._id, payload})
+  }
+
   toString() {
     return `[Widget title="${this._title}"]`
   }
+
 }

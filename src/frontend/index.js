@@ -8,51 +8,59 @@ import CalendarWidget from "./widgets/CalendarWidget.js";
 import TodoWidget from "./widgets/TodoWidget.js";
 import RoomWidget from "./widgets/RoomWidget.js";
 
-
-function loadFont(name) {
-  var font = new FontFaceObserver(name)
-  font.load().then(function () {
+(async () => {
+  async function loadFont(name) {
+    var font = new FontFaceObserver(name)
+    await font.load()
     console.log(name + ' has loaded.')
-  }).catch(function (e) {
-    console.log(name + ' failed to load.', e)
+  }
+  
+  await loadFont('weathericons-regular-webfont')
+  await loadFont('MajorMonoDisplay-Regular')
+  await loadFont('Material Symbols Outlined')
+  
+  const socket = io();
+  
+  const app = new PIXI.Application({
+      width: 1480,
+      height: 320,
+      antialias: false,
+      useContextAlpha: false
+  })
+  document.body.appendChild(app.view)
+  
+  const gravityField = new GravityField()
+  app.stage.addChild(gravityField)
+  
+  const widgets = [
+    new RoomWidget(),
+    new PomodoroWidget(),
+    new TodoWidget(),
+    new CalendarWidget(),
+    new WeatherWidget(),
+    new DateTimeWidget()
+  ]
+  
+  widgets.forEach((w) => {
+    gravityField.addWidget(w)
+    w.on('service', (msg) => {
+      socket.emit('service', msg)
+    })
+  })
+  
+  socket.on('connect', () => {
+    gravityField.online = true
+  })
+  socket.on('disconnect', () => {
+    gravityField.online = false
+  })
+  
+  socket.on('widget', function(data) {
+    const {
+      widgetId,
+      payload
+    } = data
+  
+    gravityField.routeMessage(widgetId, payload)
   });
-}
-
-loadFont('weathericons-regular-webfont')
-loadFont('MajorMonoDisplay-Regular')
-
-const socket = io();
-
-const app = new PIXI.Application({
-    width: 1480,
-    height: 320,
-    antialias: false,
-    useContextAlpha: false
-})
-document.body.appendChild(app.view)
-
-const gravityField = new GravityField()
-app.stage.addChild(gravityField)
-
-gravityField.addWidget(new TodoWidget())
-gravityField.addWidget(new CalendarWidget())
-gravityField.addWidget(new WeatherWidget())
-gravityField.addWidget(new PomodoroWidget())
-gravityField.addWidget(new DateTimeWidget())
-gravityField.addWidget(new RoomWidget())
-
-socket.on('connect', () => {
-  gravityField.online = true
-})
-socket.on('disconnect', () => {
-  gravityField.online = false
-})
-
-socket.on('widget', function(data) {
-  const {
-    widgetId,
-    payload
-  } = data
-
-  gravityField.routeMessage(widgetId, payload)
-});
+})()

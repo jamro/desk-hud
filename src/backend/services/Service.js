@@ -5,10 +5,18 @@ class Service {
     this._io = io
   }
 
+  get id() {
+    return this._id
+  }
+
   getConfig(name) {
     const result = process.env[name]
     if(!result) throw new Error(`Env ${name} not found`)
     return result
+  }
+
+  async onMessage(payload) {
+    console.log(`Service "${this._id}" received a message`, payload)
   }
 
   async welcomeClient(socket) {
@@ -19,7 +27,7 @@ class Service {
     (socket || this._io).emit('widget', { widgetId: this._id, payload })
   }
 
-  start() {
+  async start() {
 
   }
 

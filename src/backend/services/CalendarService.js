@@ -10,7 +10,7 @@ class CalendarService extends GoogleService {
     this.calendar = google.calendar({ version: 'v3', auth: this.auth });
   }
 
-  start() {
+  async start() {
     if(this._loop) {
       clearInterval(this._loop)
     }

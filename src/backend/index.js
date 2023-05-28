@@ -10,35 +10,44 @@ const CalendarService = require('./services/CalendarService.js');
 const TodoService = require('./services/TodoService.js');
 const RoomService = require('./services/RoomService.js');
 
-const app = express()
-const server = http.createServer(app);
-const io = new Server(server);
-const port = 3000
-
-const liveReloadServer = livereload.createServer();
-liveReloadServer.server.once("connection", () => {
-  setTimeout(() => {
-    liveReloadServer.refresh("/");
-  }, 100);
-});
-
-app.use(connectLiveReload());
-app.use(express.static(path.join(__dirname, 'www')))
-
-const services = [
-  new WeatherService(io),
-  new CalendarService(io),
-  new TodoService(io),
-  new RoomService(io),
-]
-services.forEach(s => s.start())
-
-io.on('connection', async (socket) => {
-  console.log("Client connected")
-  Promise.all(services.map(s => s.welcomeClient(socket)))
-});
-
-server.listen(port, () => {
-  console.log(`app listening on port ${port}`)
-})
-
+(async () => {
+  const app = express()
+  const server = http.createServer(app);
+  const io = new Server(server);
+  const port = 3000
+  
+  const liveReloadServer = livereload.createServer();
+  liveReloadServer.server.once("connection", () => {
+    setTimeout(() => {
+      liveReloadServer.refresh("/");
+    }, 100);
+  });
+  
+  app.use(connectLiveReload());
+  app.use(express.static(path.join(__dirname, 'www')))
+  
+  const services = [
+    new WeatherService(io),
+    new CalendarService(io),
+    new TodoService(io),
+    new RoomService(io),
+  ]
+  await Promise.all(services.map(s => s.start()))
+  
+  io.on('connection', async (socket) => {
+    console.log("Client connected")
+    await Promise.all(services.map(s => s.welcomeClient(socket)))
+    socket.on('service', async ({serviceId, payload}) => {
+      const service = services.find(s => s.id === serviceId)
+      if(service) {
+        await service.onMessage(payload)
+      }
+    })
+  });
+  
+  server.listen(port, () => {
+    console.log(`app listening on port ${port}`)
+  })
+  
+  
+})()

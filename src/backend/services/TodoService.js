@@ -10,7 +10,7 @@ class TodoService extends GoogleService {
     this.tasks = google.tasks({ version: 'v1', auth: this.auth });
   }
 
-  start() {
+  async start() {
     if(this._loop) {
       clearInterval(this._loop)
     }
