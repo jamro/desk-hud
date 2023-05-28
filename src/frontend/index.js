@@ -6,6 +6,7 @@ import PomodoroWidget from "./widgets/PomodoroWidget.js";
 import WeatherWidget from "./widgets/WeatherWidget.js";
 import CalendarWidget from "./widgets/CalendarWidget.js";
 import TodoWidget from "./widgets/TodoWidget.js";
+import RoomWidget from "./widgets/RoomWidget.js";
 
 
 function loadFont(name) {
@@ -38,7 +39,7 @@ gravityField.addWidget(new CalendarWidget())
 gravityField.addWidget(new WeatherWidget())
 gravityField.addWidget(new PomodoroWidget())
 gravityField.addWidget(new DateTimeWidget())
-gravityField.addWidget(new Widget("Room"))
+gravityField.addWidget(new RoomWidget())
 
 socket.on('connect', () => {
   gravityField.online = true

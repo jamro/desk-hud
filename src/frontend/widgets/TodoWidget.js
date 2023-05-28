@@ -67,7 +67,7 @@ export default class TaskWidget extends Widget {
       this._dataLoadProgress = Math.min(1, this._dataLoadProgress + 0.02)
     }
 
-    this._dotCluster.count = this.data.todayLeft ? this.data.todayLeft.length : 0
+    this._dotCluster.count = this.data.inboxList ? this.data.inboxList.length : 0
     this._dotCluster.progress = this.progress * this._dataLoadProgress
 
     this._timeline.progress = this.progress * this._dataLoadProgress

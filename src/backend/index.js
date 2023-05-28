@@ -8,6 +8,7 @@ const { Server } = require("socket.io");
 const WeatherService = require('./services/WeatherService.js')
 const CalendarService = require('./services/CalendarService.js');
 const TodoService = require('./services/TodoService.js');
+const RoomService = require('./services/RoomService.js');
 
 const app = express()
 const server = http.createServer(app);
@@ -28,6 +29,7 @@ const services = [
   new WeatherService(io),
   new CalendarService(io),
   new TodoService(io),
+  new RoomService(io),
 ]
 services.forEach(s => s.start())
 
