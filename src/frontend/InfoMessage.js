@@ -19,7 +19,7 @@ export default class InfoMessage extends PIXI.Container {
   }
 
   set text(txt) {
-    this._text = txt
+    this._text = String(txt)
     this._clearTime = 100
   }
 
@@ -42,13 +42,16 @@ export default class InfoMessage extends PIXI.Container {
       let targetCode = String(t).charCodeAt(0)
       let currentCode = String(c).charCodeAt(0)
       let distance = targetCode - currentCode
-      while(distance < 0) {
-        distance += (MAX - MIN + 1)
-      }
+      let direction = distance > 0 ? +1 : -1
+      distance = Math.abs(distance)
+      direction *= (distance > 20) ? 10 : 1
 
-      let nextCode = currentCode + (distance > 20 ? 10 : 1)
+      let nextCode = currentCode + direction
       if(nextCode > MAX) {
         nextCode = MIN
+      }
+      if(nextCode < MIN) {
+        nextCode = MAX
       }
       return String.fromCharCode(nextCode)
     }
