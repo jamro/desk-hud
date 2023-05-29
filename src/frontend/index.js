@@ -1,5 +1,4 @@
 import GravityField from "./GravityField.js";
-import Widget from "./Widget.js"
 import FontFaceObserver from 'fontfaceobserver'
 import DateTimeWidget from "./widgets/DateTimeWidget.js";
 import PomodoroWidget from "./widgets/PomodoroWidget.js";
