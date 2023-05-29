@@ -32,13 +32,14 @@ class TodoService extends GoogleService {
     const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
     return {
       inbox: inbox.filter(t => !t.completed && !t.due),
-      action: action.filter(t => !t.due && (!t.completed || t.completed > today)),
+      action: action.filter(t => ((!t.due || (t.due >= today && t.due <= today + 24*60*60*1000)) && (!t.completed || t.completed > today))),
     }
   }
 
   async _queryTodo(id) {
     const response = await this.tasks.tasks.list({
-      tasklist: id
+      tasklist: id,
+      maxResults: 100
     });
 
     return response.data.items
