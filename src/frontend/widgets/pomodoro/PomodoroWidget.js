@@ -1,10 +1,10 @@
-import Widget from '../Widget.js'
-import DotCircle from '../circles/DotCircle.js'
-import TickCircle from '../circles/TickCircle.js'
-import ArchText from '../components/ArchText.js'
-import GaugePointer from '../components/GaugePointer.js'
-import PlayButton from '../components/PlayButton.js'
-import TextField from '../components/TextField.js'
+import Widget from '../../Widget.js'
+import DotCircle from '../../circles/DotCircle.js'
+import TickCircle from '../../circles/TickCircle.js'
+import ArchText from '../../components/ArchText.js'
+import GaugePointer from '../../components/GaugePointer.js'
+import PlayButton from '../../components/PlayButton.js'
+import TextField from '../../components/TextField.js'
 
 const WORK_DURATION= 1000 * 25 * 60
 const BREAK_DURATION = 1000 * 5 * 60

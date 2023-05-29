@@ -1,11 +1,11 @@
 import GravityField from "./GravityField.js";
 import FontFaceObserver from 'fontfaceobserver'
-import DateTimeWidget from "./widgets/DateTimeWidget.js";
-import PomodoroWidget from "./widgets/PomodoroWidget.js";
-import WeatherWidget from "./widgets/WeatherWidget.js";
-import CalendarWidget from "./widgets/CalendarWidget.js";
-import TodoWidget from "./widgets/TodoWidget.js";
-import RoomWidget from "./widgets/RoomWidget.js";
+import DateTimeWidget from "./widgets/dateTime/DateTimeWidget.js";
+import PomodoroWidget from "./widgets/pomodoro/PomodoroWidget.js";
+import WeatherWidget from "./widgets/weather/WeatherWidget.js";
+import CalendarWidget from "./widgets/calendar/CalendarWidget.js";
+import TodoWidget from "./widgets/todo/TodoWidget.js";
+import RoomWidget from "./widgets/room/RoomWidget.js";
 
 (async () => {
   async function loadFont(name) {

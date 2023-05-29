@@ -21,7 +21,7 @@ export default class GravityField extends PIXI.Container {
 
     this._containers = []
     this._widgets = {}
-    this._sleep = false
+    this._sleep = !(localStorage.getItem('isAwake') || false)
     this._online = false
 
     this._sleepToggle = new SleepToggle()
@@ -32,8 +32,10 @@ export default class GravityField extends PIXI.Container {
       this._sleep = !this._sleep
       if(this._sleep) {
         this._infoMessage.text = BYE[Math.floor(Math.random()*BYE.length)]
+        localStorage.setItem('isAwake', false)
       } else {
         this._infoMessage.text = HELLO[Math.floor(Math.random()*HELLO.length)]
+        localStorage.setItem('isAwake', true)
       }
     })
 
@@ -41,7 +43,6 @@ export default class GravityField extends PIXI.Container {
     this._infoMessage.x = 55
     this._infoMessage.y = 278
     this.addChild(this._infoMessage)
-    this._infoMessage.text = HELLO[Math.floor(Math.random()*HELLO.length)]
   }
 
   set online(v) {

@@ -1,7 +1,7 @@
-import Widget from '../Widget.js'
-import ProgressCircle from '../circles/ProgressCircle.js';
-import ArchText from '../components/ArchText.js';
-import TextField from '../components/TextField.js';
+import Widget from '../../Widget.js'
+import ProgressCircle from '../../circles/ProgressCircle.js';
+import ArchText from '../../components/ArchText.js';
+import TextField from '../../components/TextField.js';
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']

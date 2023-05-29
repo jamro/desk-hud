@@ -1,9 +1,9 @@
-import Widget from '../Widget.js'
-import TimelineCircle from '../circles/TimelineCircle.js'
-import TickCircle from '../circles/TickCircle.js'
-import DotCluster from '../components/DotCluster.js'
-import ScaleCircle from '../circles/ScaleCircle.js'
-import ProgressCircle from '../circles/ProgressCircle.js'
+import Widget from '../../Widget.js'
+import TimelineCircle from '../../circles/TimelineCircle.js'
+import TickCircle from '../../circles/TickCircle.js'
+import DotCluster from '../../components/DotCluster.js'
+import ScaleCircle from '../../circles/ScaleCircle.js'
+import ProgressCircle from '../../circles/ProgressCircle.js'
 
 export default class TaskWidget extends Widget {
   constructor() {

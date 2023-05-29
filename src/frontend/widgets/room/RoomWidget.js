@@ -1,9 +1,9 @@
-import Widget from '../Widget.js'
-import Button from '../components/Button.js'
-import IconButton from '../components/IconButton.js'
-import LineArt from '../components/LineArt.js'
-import RoomPreview from '../components/RoomPreview.js'
-import TextField from '../components/TextField.js'
+import Widget from '../../Widget.js'
+import Button from '../../components/Button.js'
+import IconButton from '../../components/IconButton.js'
+import LineArt from '../../components/LineArt.js'
+import RoomPreview from '../../components/RoomPreview.js'
+import TextField from '../../components/TextField.js'
 
 export default class RoomWidget extends Widget {
   constructor() {

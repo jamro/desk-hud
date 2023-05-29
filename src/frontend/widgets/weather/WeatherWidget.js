@@ -1,7 +1,7 @@
-import Widget from '../Widget.js'
-import ScaleCircle from '../circles/ScaleCircle.js'
-import ArchText from '../components/ArchText.js'
-import TextField from '../components/TextField.js'
+import Widget from '../../Widget.js'
+import ScaleCircle from '../../circles/ScaleCircle.js'
+import ArchText from '../../components/ArchText.js'
+import TextField from '../../components/TextField.js'
 
 const icons = {
   '01d': '',    '01n': '',
