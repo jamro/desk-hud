@@ -3,8 +3,8 @@ const { google } = require('googleapis');
 
 class CalendarService extends GoogleService {
 
-  constructor(io) {
-    super(io, 'calendar')
+  constructor(config, io) {
+    super(config, io, 'calendar')
     this._loop = null
 
     this.calendar = google.calendar({ version: 'v3', auth: this.auth });
@@ -27,7 +27,7 @@ class CalendarService extends GoogleService {
   }
 
   async fetchAll() {
-    const calIds = this.getConfig('DHUD_GOOGLE_CALENDAR_IDS').split(',')
+    const calIds = this.config.getProp('google.calendars')
     const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
     const params = {
       timeMin: (new Date(today)).toISOString(),

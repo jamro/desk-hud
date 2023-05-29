@@ -3,6 +3,7 @@ const path = require('path');
 const process = require('process');
 const {authenticate} = require('@google-cloud/local-auth');
 const {google} = require('googleapis');
+const Config = require('./src/backend/Config.js')
 
 // https://developers.google.com/tasks/quickstart/nodejs
 
@@ -14,15 +15,16 @@ const SCOPES = [
 const ENV_PATH = path.join(__dirname, '.env');
 const CREDENTIALS_PATH = path.join(process.cwd(), 'credentials.json');
 
+const config = new Config()
 
 async function loadSavedCredentialsIfExist() {
+  console.log('loading existing settings')
   try {
-    const content = await fs.readFile(ENV_PATH);
-    if(!content) return null
-    const envVars = content.toString().split('\n')
-    const clientId = envVars.find(r => r.substring(0, 22) === 'DHUD_GOOGLE_CLIENT_ID=')
-    const clientSecret = envVars.find(r => r.substring(0, 26) === 'DHUD_GOOGLE_CLIENT_SECRET=')
-    const clientToken = envVars.find(r => r.substring(0, 25) === 'DHUD_GOOGLE_CLIENT_TOKEN=')
+    await config.load()
+   
+    const clientId = config.getProp('google.clientId')
+    const clientSecret = config.getProp('google.clientSecret')
+    const clientToken = config.getProp('google.clientToken')
 
     if(!clientId || !clientSecret || !clientToken) return null
 
@@ -38,6 +40,7 @@ async function loadSavedCredentialsIfExist() {
 }
 
 async function saveCredentials(client) {
+  console.log('updating settings')
   const content = await fs.readFile(CREDENTIALS_PATH);
   const keys = JSON.parse(content);
   const key = keys.installed || keys.web;
@@ -46,30 +49,20 @@ async function saveCredentials(client) {
   const clientSecret = key.client_secret
   const token = client.credentials.refresh_token
 
-  let envContent
-  try {
-    envContent =  await fs.readFile(ENV_PATH)
-    envContent = envContent.toString()
-  } catch(err) {
-    envContent = ''
-  }
+  await config.load()
 
-  envContent = envContent.replace(/DHUD_GOOGLE_CLIENT_ID=.*(\n|$)/, '')
-  envContent = envContent.replace(/DHUD_GOOGLE_CLIENT_SECRET=.*(\n|$)/, '')
-  envContent = envContent.replace(/DHUD_GOOGLE_CLIENT_TOKEN=.*(\n|$)/, '')
+  config.setProp('google.clientId', clientId)
+  config.setProp('google.clientSecret', clientSecret)
+  config.setProp('google.clientToken', token)
 
-  envContent += `\nDHUD_GOOGLE_CLIENT_ID=${clientId}`
-  envContent += `\nDHUD_GOOGLE_CLIENT_SECRET=${clientSecret}`
-  envContent += `\nDHUD_GOOGLE_CLIENT_TOKEN=${token}`
-
-  envContent = envContent.replace(/\n\n/g, '\n')
-
-  await fs.writeFile(ENV_PATH, envContent);
+  await config.save()
 }
 
 async function authorize() {
+  console.log('Authorization...')
   let client = await loadSavedCredentialsIfExist();
   if (client) {
+    console.log('Already authorized')
     return client;
   }
   client = await authenticate({
@@ -81,6 +74,5 @@ async function authorize() {
   }
   return client;
 }
-
 
 authorize().then(() => console.log('done')).catch(console.error);

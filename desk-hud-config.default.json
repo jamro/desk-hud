@@ -1,0 +1,34 @@
+{
+  "core": {
+    "port": 3000
+  },
+  "weather": {
+    "apiKey": "...",
+    "lat": 51.489389447148035, 
+    "lon": -0.1485535284481777
+  },
+  "hass": {
+    "url": "http://192.168.1.100:8123",
+    "token": "...",
+    "entities": {
+      "ac": "climate...",
+      "cover1": "cover...",
+      "cover2": "cover...",
+      "cover3": "cover...",
+      "cover4": "cover...",
+      "cover5": "cover..."
+    }
+  },
+  "google": {
+    "clientId": "...",
+    "clientSecret": "...",
+    "clientToken": "...",
+    "tasks": {
+      "inboxId": "...",
+      "actionsId": "..."
+    },
+    "calendars": [
+      "contact@gmail.com",
+    ]
+  }
+}

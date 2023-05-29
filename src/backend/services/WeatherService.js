@@ -3,8 +3,8 @@ const fetch = require('node-fetch');
 
 class WeatherService extends Service {
 
-  constructor(io) {
-    super(io, 'weather')
+  constructor(config, io) {
+    super(config, io, 'weather')
     this._loop = null
   }
 
@@ -25,9 +25,9 @@ class WeatherService extends Service {
   }
 
   async fetchAll() {
-    const apiKey = this.getConfig('DHUD_OPEN_WEATHER_API_KEY')
-    const lon = this.getConfig('DHUD_GEO_LON')
-    const lat = this.getConfig('DHUD_GEO_LAT')
+    const apiKey = this.config.getProp('weather.apiKey')
+    const lon = this.config.getProp('weather.lon')
+    const lat = this.config.getProp('weather.lat')
 
     const current = await this._fetchCurrent(apiKey, lat, lon)
     const forecast = await this._fetchForecast(apiKey, lat, lon)

@@ -3,8 +3,8 @@ const { google } = require('googleapis');
 
 class TodoService extends GoogleService {
 
-  constructor(io) {
-    super(io, 'todo')
+  constructor(config, io) {
+    super(config, io, 'todo')
     this._loop = null
 
     this.tasks = google.tasks({ version: 'v1', auth: this.auth });
@@ -27,8 +27,8 @@ class TodoService extends GoogleService {
   }
 
   async fetchAll() {
-    const inbox = await this._queryTodo('DHUD_GOOGLE_INBOX_TASKLIST_ID')
-    const action = await this._queryTodo('DHUD_GOOGLE_ACTION_TASKLIST_ID')
+    const inbox = await this._queryTodo(this.config.getProp('google.tasks.inboxId'))
+    const action = await this._queryTodo(this.config.getProp('google.tasks.actionsId'))
     const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
     return {
       inbox: inbox.filter(t => !t.completed && !t.due),
@@ -38,7 +38,7 @@ class TodoService extends GoogleService {
 
   async _queryTodo(id) {
     const response = await this.tasks.tasks.list({
-      tasklist: this.getConfig(id)
+      tasklist: id
     });
 
     return response.data.items

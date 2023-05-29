@@ -1,6 +1,5 @@
 # desk-hud
 
-
 # Configuration of Google API
 
 - In the Google Cloud console, go to Menu `APIs & Services` > `Credentials`.
@@ -17,37 +16,15 @@
 - Clone reporistory `git clone https://github.com/jamro/desk-hud.git`
 - Enter project folter `cd desk-hud`
 - Install dependencies `init i`
+- Rename `desk-hud-config.default.json` to `desk-hud-config.json` and fill missing data. You can leave google auth info empty for now. It will be filled by auth sript in next steps
 - Move `credentials.json` file downloaded in previous steps to `./desk-hud` folder
 - Authorize in Google `node google_auth.js`. The script will create/populate `./.env` file
-- Add extra variables to `./.env` file
-```
-DHUD_OPEN_WEATHER_API_KEY=...
-DHUD_GEO_LAT=...
-DHUD_GEO_LON=...
-DHUD_HA_ACCESS_TOKEN=...
-DHUD_GOOGLE_INBOX_TASKLIST_ID=...
-DHUD_GOOGLE_ACTION_TASKLIST_ID=...
-DHUD_GOOGLE_CALENDAR_IDS=...,...
-```
 
 # Configuration of Raspberry PI
 
 - [RPI] Expand filesystem `sudo raspi-config` > `Advanced Options` > `Expand Filesystem`
 - [RPI] Enable ssh `sudo raspi-config`
 - [RPI] Disable screen saver ` xset s off`
-- [RPI] setup env vars and copy them from your local `./.env` file: `sudo nano /etc/environment`
-```
-DHUD_OPEN_WEATHER_API_KEY=...
-DHUD_GEO_LAT=...
-DHUD_GEO_LON=...
-DHUD_HA_ACCESS_TOKEN=...
-DHUD_GOOGLE_INBOX_TASKLIST_ID=...
-DHUD_GOOGLE_ACTION_TASKLIST_ID=...
-DHUD_GOOGLE_CALENDAR_IDS=...,...
-DHUD_GOOGLE_CLIENT_ID=...
-DHUD_GOOGLE_CLIENT_SECRET=...
-DHUD_GOOGLE_CLIENT_TOKEN=...
-```
 - [local] generate public and private keys `ssh-keygen`
 - [local] copy public key to remote host `ssh-copy-id -i ~/.ssh/id_rsa.pub pi@raspberrypi.local`
 - [local] add key to ssh: `ssh-add`
@@ -64,6 +41,11 @@ sudo apt-get install -y nodejs
 sudo mkdir /var/www
 sudo chown pi /var/www
 ```
+- [RPI] setup env vars and copy them from your local `./.env` file: `sudo nano /etc/environment`
+```
+DHUD_CONFIG=/home/pi/desk-hud-config.json 
+```
+- [local] copy config to Raspberry PI: `scp desk-hud-config.json pi@raspberrypi.local:/home/pi/desk-hud-config.json `
 - [local] provision remote host `npm run provision-remote`
 - [local] deploy `npm run deploy`
 - [RPI] provision remote host `npm run provision-remote`

@@ -3,19 +3,18 @@ const { google } = require('googleapis');
 
 class GoogleService extends Service {
 
-  constructor(io, id) {
-    super(io, id)
+  constructor(config, io, id) {
+    super(config, io, id)
     this._loop = null
 
     this.auth = google.auth.fromJSON({
       type: "authorized_user",
-      client_id: this.getConfig('DHUD_GOOGLE_CLIENT_ID'),
-      client_secret: this.getConfig('DHUD_GOOGLE_CLIENT_SECRET'),
-      refresh_token: this.getConfig('DHUD_GOOGLE_CLIENT_TOKEN'),
+      client_id: this.config.getProp('google.clientId'),
+      client_secret: this.config.getProp('google.clientSecret'),
+      refresh_token: this.config.getProp('google.clientToken'),
     })
     
   }
-
 
 }
 

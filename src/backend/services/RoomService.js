@@ -5,8 +5,8 @@ globalThis.WebSocket = require("ws");
 
 class RoomService extends Service {
 
-  constructor(io) {
-    super(io, 'room')
+  constructor(config, io) {
+    super(config, io, 'room')
     this._loop = null
     this._entities = {}
     this._connection = null
@@ -15,17 +15,17 @@ class RoomService extends Service {
   async start() {
 
     const auth = hass.createLongLivedTokenAuth(
-      this.getConfig('DHUD_HA_URL'),
-      this.getConfig('DHUD_HA_ACCESS_TOKEN')
+      this.config.getProp('hass.url'),
+      this.config.getProp('hass.token')
     );
 
     const myEntitiesMap = {}
-    myEntitiesMap[this.getConfig('DHUD_HA_AC_ENTITY_ID')] = 'ac'
-    myEntitiesMap[ this.getConfig('DHUD_HA_COVER_1_ENTITY_ID')] = 'cover1'
-    myEntitiesMap[ this.getConfig('DHUD_HA_COVER_2_ENTITY_ID')] = 'cover2'
-    myEntitiesMap[ this.getConfig('DHUD_HA_COVER_3_ENTITY_ID')] = 'cover3'
-    myEntitiesMap[ this.getConfig('DHUD_HA_COVER_4_ENTITY_ID')] = 'cover4'
-    myEntitiesMap[ this.getConfig('DHUD_HA_COVER_5_ENTITY_ID')] = 'cover5'
+    myEntitiesMap[ this.config.getProp('hass.entities.ac')] = 'ac'
+    myEntitiesMap[ this.config.getProp('hass.entities.cover1')] = 'cover1'
+    myEntitiesMap[ this.config.getProp('hass.entities.cover2')] = 'cover2'
+    myEntitiesMap[ this.config.getProp('hass.entities.cover3')] = 'cover3'
+    myEntitiesMap[ this.config.getProp('hass.entities.cover4')] = 'cover4'
+    myEntitiesMap[ this.config.getProp('hass.entities.cover5')] = 'cover5'
 
     this._connection = await hass.createConnection({ auth });
     hass.subscribeEntities(this._connection, (entities) => {

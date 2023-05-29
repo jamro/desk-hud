@@ -9,12 +9,16 @@ const WeatherService = require('./services/WeatherService.js')
 const CalendarService = require('./services/CalendarService.js');
 const TodoService = require('./services/TodoService.js');
 const RoomService = require('./services/RoomService.js');
+const Config = require('./Config.js');
 
 (async () => {
+  const config = new Config()
+  await config.load()
+
   const app = express()
   const server = http.createServer(app);
   const io = new Server(server);
-  const port = 3000
+  const port = config.getProp('core.port')
   
   const liveReloadServer = livereload.createServer();
   liveReloadServer.server.once("connection", () => {
@@ -27,10 +31,10 @@ const RoomService = require('./services/RoomService.js');
   app.use(express.static(path.join(__dirname, 'www')))
   
   const services = [
-    new WeatherService(io),
-    new CalendarService(io),
-    new TodoService(io),
-    new RoomService(io),
+    new WeatherService(config, io),
+    new CalendarService(config, io),
+    new TodoService(config, io),
+    new RoomService(config, io),
   ]
   await Promise.all(services.map(s => s.start()))
   

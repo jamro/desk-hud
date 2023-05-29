@@ -1,18 +1,17 @@
 class Service {
 
-  constructor(io, id) {
+  constructor(config, io, id) {
     this._id = id
     this._io = io
+    this._config = config
   }
 
   get id() {
     return this._id
   }
 
-  getConfig(name) {
-    const result = process.env[name]
-    if(!result) throw new Error(`Env ${name} not found`)
-    return result
+  get config() {
+    return this._config
   }
 
   async onMessage(payload) {
