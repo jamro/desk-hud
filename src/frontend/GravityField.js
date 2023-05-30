@@ -52,7 +52,7 @@ export default class GravityField extends PIXI.Container {
       this._sleep = true
       this._infoMessage.text = BYE[Math.floor(Math.random()*BYE.length)]
       localStorage.removeItem('isAwake')
-    } else if(v < 100 && this._sleep) {
+    } else if(v < 150 && this._sleep) {
       // wake up
       this._sleep = false
       this._infoMessage.text = HELLO[Math.floor(Math.random()*HELLO.length)]
