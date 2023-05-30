@@ -9,6 +9,7 @@ const WeatherService = require('./services/WeatherService.js')
 const CalendarService = require('./services/CalendarService.js');
 const TodoService = require('./services/TodoService.js');
 const RoomService = require('./services/RoomService.js');
+const DistanceService = require('./services/DistanceService.js');
 const Config = require('./Config.js');
 
 (async () => {
@@ -35,6 +36,7 @@ const Config = require('./Config.js');
     new CalendarService(config, io),
     new TodoService(config, io),
     new RoomService(config, io),
+    new DistanceService(config, io),
   ]
   try{
     await Promise.all(services.map(s => s.start()))
