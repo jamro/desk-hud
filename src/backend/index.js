@@ -36,8 +36,12 @@ const Config = require('./Config.js');
     new TodoService(config, io),
     new RoomService(config, io),
   ]
-  await Promise.all(services.map(s => s.start()))
-  
+  try{
+    await Promise.all(services.map(s => s.start()))
+  } catch(err) {
+    console.error('Unable to start services')
+    console.error(err)
+  }
   io.on('connection', async (socket) => {
     console.log("Client connected")
     await Promise.all(services.map(s => s.welcomeClient(socket)))
