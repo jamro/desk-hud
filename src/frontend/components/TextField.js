@@ -16,7 +16,7 @@ export default class TextField extends PIXI.Text {
   }
 
   set text(v) {
-    this._origText = v
+    this._origText = String(v)
   }
 
   get text() {

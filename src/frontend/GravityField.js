@@ -1,4 +1,3 @@
-import GravityContainer from "./GravityContainer"
 import InfoMessage from "./InfoMessage"
 import SleepToggle from "./SleepToggle"
 
@@ -11,28 +10,28 @@ export default class GravityField extends PIXI.Container {
   constructor() {
     super()
     this._slots = [
-      { x: 810,    y: 165,   size: 1},
-      { x: 1080,   y: 155,   size: 1},
-      { x: 1275,   y: 80,    size: 0.5},
-      { x: 1265,   y: 240,   size: 0.5},
-      { x: 1410,   y: 80,    size: 0.5},
-      { x: 1400,   y: 240,   size: 0.5},
+      { index: 0, x: 810,    y: 165,   size: 1},
+      { index: 1, x: 1080,   y: 155,   size: 1},
+      { index: 2, x: 1275,   y: 80,    size: 0.5},
+      { index: 3, x: 1265,   y: 240,   size: 0.5},
+      { index: 4, x: 1410,   y: 80,    size: 0.5},
+      { index: 5, x: 1400,   y: 240,   size: 0.5},
     ]
 
-    this._containers = []
     this._widgets = {}
-    this._sleep = !(localStorage.getItem('isAwake') || false)
+    this._widgetList = []
+    this._sleep = !localStorage.getItem('isAwake')
     this._online = false
 
     this._sleepToggle = new SleepToggle()
-    this._sleepToggle.x = 40
-    this._sleepToggle.y = 280
+    this._sleepToggle.x = 30
+    this._sleepToggle.y = 300
     this.addChild(this._sleepToggle)
     this._sleepToggle.on('pointertap', () => {
       this._sleep = !this._sleep
       if(this._sleep) {
         this._infoMessage.text = BYE[Math.floor(Math.random()*BYE.length)]
-        localStorage.setItem('isAwake', false)
+        localStorage.removeItem('isAwake')
       } else {
         this._infoMessage.text = HELLO[Math.floor(Math.random()*HELLO.length)]
         localStorage.setItem('isAwake', true)
@@ -41,7 +40,7 @@ export default class GravityField extends PIXI.Container {
 
     this._infoMessage = new InfoMessage()
     this._infoMessage.x = 55
-    this._infoMessage.y = 278
+    this._infoMessage.y = 298
     this.addChild(this._infoMessage)
   }
 
@@ -59,40 +58,40 @@ export default class GravityField extends PIXI.Container {
   }
 
   addWidget(widget) {
+    const index = this._widgetList.length
+    this._widgetList.push(widget)
     this._widgets[widget.id] = widget
-    const index = this._containers.length
-    const container = new GravityContainer(widget)
-    this._containers[index] = container
-    container.x = this._slots[index].x
-    container.y = this._slots[index].y
-    container.targetX = container.x
-    container.targetY = container.y
-    container.size = this._slots[index].size
-    container.targetSize = container.size
-    this.addChild(container)
 
-    widget.on('activate', () => this._activate(container))
+    widget.x = this._slots[index].x
+    widget.y = this._slots[index].y
+    widget.index = this._slots[index].index
+    widget.size = this._slots[index].size
+    this.addChild(widget)
+
+    widget.main.x = 350
+    widget.main.y = 160
+    this.addChild(widget.main)
+
+    widget.on('activate', () => this._activate(widget))
   }
 
   _activate(widget) {
-    const index = this._containers.indexOf(widget)
-    this._containers.splice(index, 1)
-    this._containers.unshift(widget)
+    const index = this._widgetList.indexOf(widget)
+    this._widgetList.splice(index, 1)
+    this._widgetList.unshift(widget)
 
-    for(let i=0; i < this._containers.length; i++) {
-      this._containers[i].targetSize = this._slots[i].size
+    for(let i=0; i < this._widgetList.length; i++) {
+      this._widgetList[i].moveTo(this._slots[i])
     }
   }
 
   render(renderer) {
-    for(let i=0; i < this._containers.length; i++) {
-      const slot = this._slots[i]
-      const widget = this._containers[i]
-      widget.applyGravityForce(slot.x, slot.y)
+    for(let i=0; i < this._widgetList.length; i++) {
+      const widget = this._widgetList[i]
       if(this._sleep) {
-        widget.content.progress = Math.max(0, widget.content.progress - 0.03)
+        widget.progress = Math.max(0, widget.progress - 0.08)
       } else {
-        widget.content.progress = Math.min(1, widget.content.progress + 0.03)
+        widget.progress = Math.min(1, widget.progress + 0.08)
       }
     }
     if(this._sleepToggle.pulse) {
