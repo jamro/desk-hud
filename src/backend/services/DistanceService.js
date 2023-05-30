@@ -67,7 +67,6 @@ class DistanceService extends Service {
   }
 
   async fetchAll() {
-
     let sum = 0
     let count = 0
     let max = this._queue[0]
@@ -97,6 +96,7 @@ class DistanceService extends Service {
       sum -= min
       count--
     }
+    if(count <= 0) return null
 
     return {distance: Math.round(sum/count)}
   }

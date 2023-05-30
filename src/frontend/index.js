@@ -63,6 +63,6 @@ import RoomWidget from "./widgets/room/RoomWidget.js";
     gravityField.routeMessage(widgetId, payload)
   });
   socket.on('distance', async (payload) => {
-    gravityField._infoMessage.text = payload.distance + "cm"
+    gravityField.distance = payload.distance
   })
 })()

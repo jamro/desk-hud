@@ -33,7 +33,7 @@ try:
             pulse_duration = pulse_end_time - pulse_start_time
             current = round(pulse_duration * 17150, 2)
             current = min(300, max(30, current))
-            print (round(current))
+            print (round(current), flush=True)
 
 finally:
       GPIO.cleanup()
