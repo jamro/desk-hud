@@ -9,7 +9,6 @@ export default class Widget extends PIXI.Container {
     this._container = new PIXI.Container()
     super.addChild(this._container)
     this._title = title
-    this._preMoveSize = 1
     this._frame = new TitleCircle(title)
     this.addChild(this._frame)
     this._progress = 0
@@ -70,7 +69,6 @@ export default class Widget extends PIXI.Container {
   }
 
   moveTo(slot) {
-    this._preMoveSize = this.size
     this.movement.timeLeft = 1
     this.movement.x1 = this.x
     this.movement.y1 = this.y
@@ -93,10 +91,9 @@ export default class Widget extends PIXI.Container {
 
     if(this.movement.timeLeft > 0) {
       const {x1, y1, size1, x2, y2, size2} = this.movement
-      this.movement.timeLeft = Math.max(0, this.movement.timeLeft - 0.01)
+      this.movement.timeLeft = Math.max(0, this.movement.timeLeft - 0.04)
       const timeLeft = this.movement.timeLeft 
 
-      
       const t1 = rescaleTime(timeLeft, 0, 0.4)
       const t2 = rescaleTime(timeLeft, 0.4, 0.6)
       const t3 = rescaleTime(timeLeft, 0.6, 1)
@@ -107,6 +104,7 @@ export default class Widget extends PIXI.Container {
 
       if(this.movement.index2 === 0) {
         this.main.progress = (1-t1) * this.progress
+        this.alpha = (t3 > 0) ? 0.2+0.8*Math.random() : 1
       }
       if(this.movement.index1 === 0) {
         this.main.progress = t3 * this.progress

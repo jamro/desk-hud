@@ -77,6 +77,7 @@ export default class GravityField extends PIXI.Container {
 
   _activate(widget) {
     const index = this._widgetList.indexOf(widget)
+    if(index === 0) return
     this._widgetList.splice(index, 1)
     this._widgetList.unshift(widget)
 
