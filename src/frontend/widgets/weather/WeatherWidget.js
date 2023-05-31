@@ -98,7 +98,7 @@ export default class WeatherWidget extends Widget {
     this.data.currentTemperatureMax = temperature24.max
 
     let rain = forecastJsonData.list.filter(d => d.rain)
-    this.data.rainTime = (rain || rain.length > 0) ? rain[0].dt*1000 : null
+    this.data.rainTime = (rain && rain.length > 0) ? rain[0].dt*1000 : null
 
     console.log(this.data)
   }
