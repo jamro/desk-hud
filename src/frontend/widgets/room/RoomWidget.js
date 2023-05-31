@@ -93,7 +93,7 @@ export default class RoomWidget extends Widget {
   onMessage(entities) {
     console.log(entities)
     this.data.lastUpdate = new Date().getTime()
-    this.data.currentTemperature = entities.ac.attributes.current_temperature
+    this.data.currentTemperature = Number(entities.temp.state)
     this.data.acState =  entities.ac.state === 'off' ? 'off' : entities.ac.attributes.temperature + '°c'
     this.data.covers = [
       1-entities.cover1.attributes.current_position/100,

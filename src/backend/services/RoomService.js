@@ -21,6 +21,7 @@ class RoomService extends Service {
 
     const myEntitiesMap = {}
     myEntitiesMap[ this.config.getProp('hass.entities.ac')] = 'ac'
+    myEntitiesMap[ this.config.getProp('hass.entities.temp')] = 'temp'
     myEntitiesMap[ this.config.getProp('hass.entities.cover1')] = 'cover1'
     myEntitiesMap[ this.config.getProp('hass.entities.cover2')] = 'cover2'
     myEntitiesMap[ this.config.getProp('hass.entities.cover3')] = 'cover3'
