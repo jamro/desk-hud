@@ -11,6 +11,7 @@ class DistanceService extends Service {
     this._proc = null
     this._queue = []
     this._lastSensorDataTime = 10000
+    this._isAwake = false
   }
 
   async start() {
@@ -126,7 +127,17 @@ class DistanceService extends Service {
     }
     if(count <= 0) return null
 
-    return {distance: Math.round(sum/count)}
+    const distance = Math.round(sum/count)
+    if(distance < this.config.getProp('core.distance.wakeUp') && !this._isAwake) {
+      // wake up
+      this._isAwake = true
+      return {distance, action: 'wakeUp'}
+    } else if(distance > this.config.getProp('core.distance.goSleep') && this._isAwake) {
+      // wake up
+      this._isAwake = false
+      return {distance, action: 'goSleep'}
+    }
+    
   }
 
   emit(payload, socket=null) {

@@ -30,11 +30,9 @@ export default class GravityField extends PIXI.Container {
     this._sleepToggle.on('pointertap', () => {
       this._sleep = !this._sleep
       if(this._sleep) {
-        this._infoMessage.text = BYE[Math.floor(Math.random()*BYE.length)]
-        localStorage.removeItem('isAwake')
+        this.goSleep()
       } else {
-        this._infoMessage.text = HELLO[Math.floor(Math.random()*HELLO.length)]
-        localStorage.setItem('isAwake', true)
+        this.wakeUp()
       }
     })
 
@@ -42,27 +40,21 @@ export default class GravityField extends PIXI.Container {
     this._infoMessage.x = 55
     this._infoMessage.y = 298
     this.addChild(this._infoMessage)
-    this._distance = 0
   }
 
-  set distance(v) {
-    this._distance = v
-    if(v > 250 && !this._sleep) {
-      // go to sleep
-      this._sleep = true
-      this._infoMessage.text = BYE[Math.floor(Math.random()*BYE.length)]
-      localStorage.removeItem('isAwake')
-    } else if(v < 150 && this._sleep) {
-      // wake up
-      this._sleep = false
-      this._infoMessage.text = HELLO[Math.floor(Math.random()*HELLO.length)]
-      localStorage.setItem('isAwake', true)
-    }
+
+  goSleep() {
+    this._sleep = true
+    this._infoMessage.text = BYE[Math.floor(Math.random()*BYE.length)]
+    localStorage.removeItem('isAwake')
   }
 
-  get distance() {
-    return this._distance
+  wakeUp() {
+    this._sleep = false
+    this._infoMessage.text = HELLO[Math.floor(Math.random()*HELLO.length)]
+    localStorage.setItem('isAwake', true)
   }
+
 
   set online(v) {
     this._online = v

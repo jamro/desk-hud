@@ -1,6 +1,14 @@
 const data = `77
 69
 60
+57
+54
+50
+55
+61
+64
+68
+73
 77
 76
 77
@@ -299,5 +307,5 @@ setInterval(() => {
     console.log(data[i])
   }
   i++
-  //i = i % data.length
+  i = i % data.length
 }, 50)

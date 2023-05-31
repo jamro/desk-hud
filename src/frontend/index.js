@@ -63,6 +63,11 @@ import RoomWidget from "./widgets/room/RoomWidget.js";
     gravityField.routeMessage(widgetId, payload)
   });
   socket.on('distance', async (payload) => {
-    gravityField.distance = payload.distance
+    console.log(payload)
+    if(payload.action === 'goSleep') {
+      gravityField.goSleep()
+    } else if(payload.action === 'wakeUp') {
+      gravityField.wakeUp()
+    } 
   })
 })()

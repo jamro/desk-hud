@@ -1,6 +1,10 @@
 {
   "core": {
-    "port": 3000
+    "port": 3000,
+    "distance": {
+      "wakeUp": 150,
+      "goSleep": 250
+    }
   },
   "weather": {
     "apiKey": "...",
@@ -28,7 +32,7 @@
       "actionsId": "..."
     },
     "calendars": [
-      "contact@gmail.com",
+      "contact@gmail.com"
     ]
   }
 }
