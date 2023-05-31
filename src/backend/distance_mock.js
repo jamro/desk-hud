@@ -302,6 +302,8 @@ const data = `77
 let i = 0
 
 setInterval(() => {
+  console.log(0)
+  return
   //if(Math.random() > 0.99) throw new Error('Some test error')
   if(data[i]) {
     console.log(data[i])
