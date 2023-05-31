@@ -44,13 +44,18 @@ class CalendarService extends GoogleService {
     for(let calId of calIds) {
       const result = await this.calendar.events.list({...params, calendarId: calId})
       if(result.data.items.length) {
-        const events = result.data.items.map(e => ({
-          id: e.id,
-          summary: e.summary,
-          start: obj2timestamp(e.start),
-          end: obj2timestamp(e.end),
-          allDay: !!e.start.date
-        }))
+
+        const events = result.data.items.map(e => {
+          const start = obj2timestamp(e.start)
+          const end = obj2timestamp(e.end)
+          return {
+            id: e.id, 
+            summary: e.summary,
+            start,
+            end,
+            allDay: !!e.start.date || ((end - start) > 23*60*60*1000)
+          }
+        })
         allEvents.push(...events)
       }
     }
