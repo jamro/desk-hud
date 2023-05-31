@@ -59,5 +59,4 @@ const Config = require('./Config.js');
     console.log(`app listening on port ${port}`)
   })
   
-  
 })()

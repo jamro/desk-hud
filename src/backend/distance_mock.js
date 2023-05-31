@@ -294,8 +294,10 @@ const data = `77
 let i = 0
 
 setInterval(() => {
-  if(Math.random() > 0.99) throw new Error('Some test error')
-  console.log(data[i])
+  //if(Math.random() > 0.99) throw new Error('Some test error')
+  if(data[i]) {
+    console.log(data[i])
+  }
   i++
-  i = i % data.length
+  //i = i % data.length
 }, 50)

@@ -8,6 +8,10 @@ class Config {
     this._json = {}
   }
 
+  get isDevMode() {
+    return process.env.DHUD_ENV === 'development'
+  }
+
   _getConfigPath() {
     let configPath = process.env.DHUD_CONFIG
     if(!configPath) {

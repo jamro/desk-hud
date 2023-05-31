@@ -10,6 +10,7 @@ class DistanceService extends Service {
     this._loop = null
     this._proc = null
     this._queue = []
+    this._lastSensorDataTime = 10000
   }
 
   async start() {
@@ -24,7 +25,17 @@ class DistanceService extends Service {
 
   _respawn() {
     try {
-      this._proc = spawn('python', [path.resolve(__dirname, '..', 'distance.py')]);
+      console.log(`spawning distance monitor (${this.config.isDevMode ? 'dev' : 'prod'})...`)
+      if(this._proc) {
+        console.log("process alrady exists. killing")
+        this._proc.noRespawn = true
+        this._proc.kill()
+      }
+      if(this.config.isDevMode) {
+        this._proc = spawn('node', [path.resolve(__dirname, '..', 'distance_mock.js')]);
+      } else  {
+        this._proc = spawn('python', [path.resolve(__dirname, '..', 'distance.py')]);
+      }
     } catch(err) {
       console.log('Unable to spawn distance script', err)
       return 
@@ -33,6 +44,7 @@ class DistanceService extends Service {
       const txt = data.toString()
       if(!isNaN(txt)) {
         this._queue.push(Number(txt))
+        this._lastSensorDataTime = performance.now()
       } else {
         console.log('stdout: ' + txt);
       }
@@ -45,10 +57,13 @@ class DistanceService extends Service {
       console.error('error: ' + data.toString());
     });
     
+    let proc = this._proc
     this._proc.on('exit', (code) => {
-      console.log('child process exited with code ' + code.toString());
-      console.log('respawn in 5sec...')
-      setTimeout(() => this._respawn(), 5000)
+      console.log('child process exited with code ' + (code || 0).toString());
+      if(!proc.noRespawn) {
+        console.log('respawn in 5sec...')
+        setTimeout(() => this._respawn(), 5000)
+      }
     });
   }
 
@@ -67,6 +82,19 @@ class DistanceService extends Service {
   }
 
   async fetchAll() {
+    if(this._queue.length === 0) {
+      return {}
+    }
+    const dataAge = Math.max(0, performance.now() - this._lastSensorDataTime)
+    if(dataAge > 3000) {
+      console.log("Sensor data is outdated. skipping")
+      this._queue = []
+      this._lastSensorDataTime = performance.now()
+      if(this._proc) {
+        this._respawn()
+      }
+      return null;
+    }
     let sum = 0
     let count = 0
     let max = this._queue[0]

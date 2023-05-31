@@ -4,7 +4,13 @@ module.exports = {
   apps : [{
     name: "desk-hud",
     script: 'src/backend/index.js',
-    watch: '.'
+    watch: '.',
+    env: {
+      DHUD_ENV: "development"
+    },
+    env_production : {
+      DHUD_ENV: "production"
+    }
   }],
 
   deploy : {
