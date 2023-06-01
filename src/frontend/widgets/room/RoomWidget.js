@@ -13,7 +13,8 @@ export default class RoomWidget extends Widget {
       lastUpdate: null,
       currentTemperature: null,
       acState: null,
-      covers: null
+      covers: null,
+      doors: null
     }
 
     this._currentTempLabel = new TextField('', {
@@ -102,6 +103,11 @@ export default class RoomWidget extends Widget {
       1-entities.cover4.attributes.current_position/100,
       1-entities.cover5.attributes.current_position/100,
     ]
+    this.data.doors = [
+      entities.door1.state !== 'off',
+      entities.door2.state !== 'off',
+      entities.door3.state !== 'off',
+    ]
 
     console.log( this.data )
   }
@@ -132,6 +138,9 @@ export default class RoomWidget extends Widget {
     this._roomView.progress = this.progress*this._dataLoadProgress
     if(this.data.covers) {
       this._roomView.covers = this.data.covers
+    }
+    if(this.data.doors) {
+      this._roomView.doors = this.data.doors
     }
 
     this._dayButton.x = -100*this.size * Math.cos(Math.PI*0.25)

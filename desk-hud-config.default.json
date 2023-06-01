@@ -17,6 +17,9 @@
     "entities": {
       "temp":"sensor...",
       "ac": "climate...",
+      "door1": "binary_sensor...",
+      "door2": "binary_sensor...",
+      "door3": "binary_sensor...",
       "cover1": "cover...",
       "cover2": "cover...",
       "cover3": "cover...",

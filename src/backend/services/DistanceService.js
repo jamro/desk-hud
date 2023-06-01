@@ -10,6 +10,7 @@ class DistanceService extends Service {
     this._loop = null
     this._proc = null
     this._queue = []
+    this._distance = 0
     this._lastSensorDataTime = 10000
     this._isAwake = false
   }
@@ -69,10 +70,8 @@ class DistanceService extends Service {
   }
 
   async welcomeClient(socket) {
-    const result = await this.fetchAll()
-    if(result) {
-      this.emit(result, socket)
-    }
+    const result = await this.fetchAll() || {}
+      this.emit({...result, distance: this._distance, sensorDataAge: Math.max(0, performance.now() - this._lastSensorDataTime)}, socket)
   }
 
   async update() {
@@ -135,6 +134,7 @@ class DistanceService extends Service {
     } else if(distance > this.config.getProp('core.distance.goSleep') && this._isAwake) {
       // wake up
       this._isAwake = false
+      this._distance = distance
       return {distance, action: 'goSleep'}
     }
     

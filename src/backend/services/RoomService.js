@@ -27,6 +27,9 @@ class RoomService extends Service {
     myEntitiesMap[ this.config.getProp('hass.entities.cover3')] = 'cover3'
     myEntitiesMap[ this.config.getProp('hass.entities.cover4')] = 'cover4'
     myEntitiesMap[ this.config.getProp('hass.entities.cover5')] = 'cover5'
+    myEntitiesMap[ this.config.getProp('hass.entities.door1')] = 'door1'
+    myEntitiesMap[ this.config.getProp('hass.entities.door2')] = 'door2'
+    myEntitiesMap[ this.config.getProp('hass.entities.door3')] = 'door3'
 
     this._connection = await hass.createConnection({ auth });
     hass.subscribeEntities(this._connection, (entities) => {
@@ -60,19 +63,34 @@ class RoomService extends Service {
     });
   }
 
-  async onMessage({target, value}) {
+  async setCoverPos(target, value) {
     if(!this._entities[target]) throw new Error(`Unknown target: '${target}'`)
     if(!this._connection) throw new Error('Not connected')
-    const entityId = this._entities[target].entity_id
+    const coverIndex = Number(target.replace(/^cover/, ''))
+    const doorTarget = 'door' + coverIndex
+
+    const coverEntity = this._entities[target]
+    const doorEntity = this._entities[doorTarget] || null
+
+    if(doorEntity && doorEntity.state === 'on') {
+      console.log(`Door of ${target} open. skipping...`)
+      return
+    }
+  
     await this._connection.sendMessagePromise({
       "type": "call_service",
       "domain": "cover",
       "service": "set_cover_position",
       "service_data": {
-          "entity_id": entityId,
-          "position": value
+        "entity_id": coverEntity.entity_id,
+        "position": value
       }
     })
+
+  }
+
+  async onMessage({target, value}) {
+    await this.setCoverPos(target, value)
   }
 
   async welcomeClient(socket) {

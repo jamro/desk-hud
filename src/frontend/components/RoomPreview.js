@@ -11,7 +11,9 @@ export default class RoomPreview extends PIXI.Container{
     this.addChild(this._bg)
 
     this._coverCanvas = new PIXI.Graphics()
+    this._doorsCanvas = new PIXI.Graphics()
     this.addChild(this._coverCanvas)
+    this.addChild(this._doorsCanvas)
 
     const backWallWidth = 80
     const backWallHeight = 40
@@ -24,7 +26,6 @@ export default class RoomPreview extends PIXI.Container{
     }
 
     const drawWindow = ({x1, x2, x3, x4, y1, y2, y3, y4})=> {
-      //this._bg.addLine(x1, y1, x2, y2, 2, color)
       this._bg.addLine(x3, y3, x1, y1, 2, color)
       this._bg.addLine(x4, y4, x2, y2, 2, color)
     }
@@ -62,6 +63,7 @@ export default class RoomPreview extends PIXI.Container{
       }
     ]
     this.covers = this._windows.map(() => 0)
+    this.doors = this._windows.map(() => false)
     this._coversActual = this._windows.map(() => 0)
 
     // back wall
@@ -91,7 +93,7 @@ export default class RoomPreview extends PIXI.Container{
       this._coversActual[i] += (this.covers[i] - this._coversActual[i])/100
     }
 
-    const hash = this._coversActual .map(c => c.toFixed(3)).join('|') + `|${this.size}|${this.progress}`
+    const hash = this._coversActual .map(c => c.toFixed(3)).join('|') + `|${this.size}|${this.progress}|` + this.doors.map(c => (c ? 1 : 0)).join('|')
     if(hash === this._lastHash) {
       return 
     }
@@ -100,6 +102,10 @@ export default class RoomPreview extends PIXI.Container{
     this._coverCanvas.clear()
     this._coverCanvas.beginFill(0xffffff)
     this._coverCanvas.alpha = this.progress
+
+    this._doorsCanvas.clear()
+    this._doorsCanvas.beginFill(0xff0000)
+    this._doorsCanvas.alpha = this.progress
     
     const drawCover = ({x1, x2, x3, x4, y1, y2, y3, y4}, position) => {
       const p = (0.1 + 0.9*position)*this.progress
@@ -108,7 +114,18 @@ export default class RoomPreview extends PIXI.Container{
       this._coverCanvas.lineTo(x4*this.size, (y4*p + y2*(1-p))*this.size)
       this._coverCanvas.lineTo(x3*this.size, (y3*p + y1*(1-p))*this.size)
     }
+    const drawDoor = ({x1, x2, x3, x4, y1, y2, y3, y4}) => {
+      this._doorsCanvas.moveTo(x1*this.size, y1*this.size)
+      this._doorsCanvas.lineTo(x2*this.size, y2*this.size)
+      this._doorsCanvas.lineTo(x4*this.size, y4*this.size)
+      this._doorsCanvas.lineTo(x3*this.size, y3*this.size)
+    }
     this._windows.forEach((w, i) => drawCover(w, this._coversActual[i]))
+    this._windows.forEach((w, i) => {
+      if(this.doors[i]) {
+        drawDoor(w)
+      }
+    })
 
 
   }
