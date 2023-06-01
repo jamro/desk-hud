@@ -72,7 +72,7 @@ export default class ScaleCircle extends PIXI.Container {
     for(let label of this._labels) {
       label.progress = this.progress
       label.radius = this.size*110
-      label.fontSize = this.size * 9
+      label.fontSize = this.size * 4 + 5
     }
 
     const tickGrow = (this._angleRange/(Math.PI*2))
@@ -88,6 +88,6 @@ export default class ScaleCircle extends PIXI.Container {
     const minPos = (this.valueMin - this._scaleMin)/scaleRange
     this._rangeIndicator.rotation =  this._angleRange * minPos
     this._rangeIndicator.value = tickGrow*((this.valueMax - this._scaleMin)/scaleRange - minPos)
-    this._rangeIndicator.visible = (this.size  === 1)
+    this._rangeIndicator.visible = (this.size > 0.7)
   }
 }

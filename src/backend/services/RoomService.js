@@ -89,8 +89,37 @@ class RoomService extends Service {
 
   }
 
-  async onMessage({target, value}) {
-    await this.setCoverPos(target, value)
+  async setTemperature(value) {
+    await this._connection.sendMessagePromise({
+      "type": "call_service",
+      "domain": "climate",
+      "service": "set_temperature",
+      "service_data": {
+          "entity_id": this._entities.ac.entity_id,
+          "temperature": value
+      }
+    })
+  }
+
+  async setAcState(isOn) {
+    await this._connection.sendMessagePromise({
+      "type": "call_service",
+      "domain": "climate",
+      "service": isOn ? "turn_on" : "turn_off",
+      "service_data": {
+          "entity_id": this._entities.ac.entity_id,
+      }
+    })
+  }
+
+  async onMessage({action, target, value}) {
+    switch(action) {
+      case 'cover': return await this.setCoverPos(target, value)
+      case 'temperature': return await this.setTemperature(value)
+      case 'acState': return await this.setAcState(!!value)
+      default: console.warn(`Unknown action ${action}`)
+    }
+    
   }
 
   async welcomeClient(socket) {

@@ -20,17 +20,10 @@ export default class Widget extends PIXI.Container {
     this.addChild(this._bg)
     this.interactive = true
 
-    this.main = new MainScreen()
+    this.main = this.createMainScreen()
 
-    let lastClickTime = 0
     this.on('pointertap', () => {
-      const now = performance.now()
-      const dt = now - lastClickTime
-      lastClickTime = now
-      if(dt < 500) {
-        this.emit('activate')
-        lastClickTime = 0
-      }
+      this.emit('activate')
     });
     this.movement = {
       timeLeft: 0,
@@ -44,6 +37,12 @@ export default class Widget extends PIXI.Container {
       size2: 1,
       flickTime: 0
     }
+  }
+
+  createMainScreen() {
+    const main = new MainScreen()
+    main.visible = false
+    return main
   }
 
   get id() {
@@ -112,6 +111,15 @@ export default class Widget extends PIXI.Container {
 
       if(timeLeft === 0) {
         this.index = this.movement.index2
+        if(this.index !== 0 && this.main.parent) {
+          const toRemove = this.main
+          setTimeout(() => {
+            if(toRemove.parent) {
+              toRemove.parent.removeChild(toRemove)
+            }
+          })
+          
+        }
       }
     } else {
       if(this.index === 0) {
@@ -120,9 +128,7 @@ export default class Widget extends PIXI.Container {
         this.main.progress = 0
       }
     }
-
     super.render(renderer)
-   
   }
 
   onMessage(msg) {

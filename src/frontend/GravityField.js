@@ -2,8 +2,8 @@ import InfoMessage from "./InfoMessage"
 import SleepToggle from "./SleepToggle"
 
 
-const HELLO = ['hi', 'hello', 'hey there', 'what\'s up?', 'how is it going?', 'howdy', 'greetings', 'what\'s going on?', 'how\'s everything?', 'good to see you', 'nice to see you', 'what\'s new?', 'how are you feeling today?', 'look who it is?', 'sup?', 'yo!', 'hello my friend', 'good day']
-const BYE = ['bye, bye...', 'see ya!', 'goodbye', 'have a nice day', 'have a great rest of your day', 'it was a pleasure seeing you', 'take care', 'cheers', 'keep in touch', 'have fun', 'have a good one', 'ciao', 'adios', 'peace out', 'catch you later', 'take it easy', 'see ya later, alligator']
+const HELLO = ['hi', 'hello', 'hey there', 'what\'s up?', 'howdy', 'greetings', 'what\'s going on?', 'how\'s everything?', 'good to see you', 'nice to see you', 'what\'s new?', 'look who it is?', 'yo!', 'hello my friend', 'good day']
+const BYE = ['bye, bye...', 'see ya!', 'goodbye', 'have a nice day', 'take care', 'cheers', 'keep in touch', 'have fun', 'have a good one', 'ciao', 'adios', 'peace out', 'catch you later', 'take it easy']
 
 export default class GravityField extends PIXI.Container {
 
@@ -41,7 +41,6 @@ export default class GravityField extends PIXI.Container {
     this._infoMessage.y = 298
     this.addChild(this._infoMessage)
   }
-
 
   goSleep() {
     this._sleep = true
@@ -82,7 +81,9 @@ export default class GravityField extends PIXI.Container {
 
     widget.main.x = 350
     widget.main.y = 160
-    this.addChild(widget.main)
+    if(index === 0) {
+      this.addChild(widget.main)
+    }
 
     widget.on('activate', () => this._activate(widget))
   }
@@ -92,6 +93,8 @@ export default class GravityField extends PIXI.Container {
     if(index === 0) return
     this._widgetList.splice(index, 1)
     this._widgetList.unshift(widget)
+
+    this.addChild(widget.main)
 
     for(let i=0; i < this._widgetList.length; i++) {
       this._widgetList[i].moveTo(this._slots[i])

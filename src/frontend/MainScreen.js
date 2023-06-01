@@ -1,3 +1,4 @@
+import DiamondButton from './components/DiamondButton.js'
 import LineArt from './components/LineArt.js'
 import TextField from './components/TextField.js'
 
@@ -12,11 +13,11 @@ export default class MainScreen extends PIXI.Container {
     this._frame = new LineArt()
    
     this._frame.addSequence([
-      295, -100,
+      295, -90,
       295, 120,
       -295, 120,
-      -295, -100,
-      295, -100
+      -295, -90,
+      295, -90
     ], 1, 0xffffff, 0.1)
 
     this._frame.addLine(90, -120, -90, -120, 3, 0xffffff, 1, 0.5)
@@ -43,17 +44,17 @@ export default class MainScreen extends PIXI.Container {
     this._frame.addSequence([
       330, 0,
       300, 0,
-      300, 110+20,
-      260+5, 110+20,
-      245+5, 95+20,
-      150, 95+20,
-      125, 120+20,
+      300, 110+10,
+      260+5, 110+10,
+      245+5, 95+10,
+      150, 95+10,
+      125, 120+10,
 
-      -125+150, 120+20,
-      -150+150, 95+20,
-      -245, 95+20,
-      -260, 80+20,
-      -300, 80+20,
+      -125+150, 120+10,
+      -150+150, 95+10,
+      -245, 95+10,
+      -260, 80+10,
+      -300, 80+10,
       -300, 100+15,
       -280, 100+15,
     ])
@@ -71,7 +72,6 @@ export default class MainScreen extends PIXI.Container {
     ], 1, 0xffffff, 1, 0.4, 1)
 
     this._frame.addLine(-300, -60, -300, 60, 1, 0xffffff, 1, 0.5)
-
 
     this._frame.addSequence([
       330, -20,
@@ -101,7 +101,7 @@ export default class MainScreen extends PIXI.Container {
       strokeThickness: 0.5,
       align: 'center',
     });
-    this._statusLeftLabel.alpha = 0.2
+    this._statusLeftLabel.alpha = 0.4
     this._statusLeftLabel.x = -210
     this._statusLeftLabel.y = -111
     this.addChild(this._statusLeftLabel)
@@ -114,10 +114,60 @@ export default class MainScreen extends PIXI.Container {
       strokeThickness: 0.5,
       align: 'center',
     });
-    this._statusRightLabel.alpha = 0.2
+    this._statusRightLabel.alpha = 0.4
     this._statusRightLabel.x = 210
     this._statusRightLabel.y = -111
     this.addChild(this._statusRightLabel)
+
+    this._tabButtons = [];
+    this._tabButtons[0] = new DiamondButton()
+    this._tabButtons[0].x = 200
+    this._tabButtons[0].y = 130
+    this._tabButtons[1] = new DiamondButton()
+    this._tabButtons[1].x = 75
+    this._tabButtons[1].y = 103
+    this._tabButtons[2] = new DiamondButton()
+    this._tabButtons[2].x = -50
+    this._tabButtons[2].y = 130
+    this._tabButtons.forEach((button, i) => {
+      this.addChild(button)
+      button.on('activate', () => this.activateTab(i))
+      button.visible = false
+    })
+    
+    this._pages = [
+      new PIXI.Container(),
+      new PIXI.Container(),
+      new PIXI.Container(),
+    ]
+    this._pages.forEach(p => p.y = 10)
+    this._page = null
+    this.activateTab(0)
+  }
+
+  activateTab(index) {
+    this._tabButtons.forEach((t, i) => t.active = (i === index))
+    if(this._page) {
+      this.removeChild(this._page)
+    }
+    this._page = this._pages[index]
+    this.addChild(this._page)
+  }
+
+  getPage(i) {
+    return this._pages[i]
+  }
+
+  getTabButton(i) {
+    return this._tabButtons[i]
+  }
+
+  get title() {
+    return this._titleLabel.text
+  }
+
+  set title(v) {
+    this._titleLabel.text = v
   }
 
   render(renderer) {
@@ -130,6 +180,10 @@ export default class MainScreen extends PIXI.Container {
 
     this._statusLeftLabel.text = (this.statusLeftText !== null) ? this.statusLeftText : '0x'+(837231*Math.round(performance.now()*1000) % 0xffffffffff).toString(16).padStart(10, 'X')
     this._statusRightLabel.text = (this.statusRightText !== null) ? this.statusRightText : '0x'+(837231*Math.round(performance.now()*1000) % 0xffffffffff).toString(16).padStart(10, 'X')
+
+    this._tabButtons.forEach(t => {
+      t.progress = this.progress
+    })
   }
 
 }

@@ -1,9 +1,11 @@
+import MainScreen from '../../MainScreen.js'
 import Widget from '../../Widget.js'
 import Button from '../../components/Button.js'
 import IconButton from '../../components/IconButton.js'
 import LineArt from '../../components/LineArt.js'
 import RoomPreview from '../../components/RoomPreview.js'
 import TextField from '../../components/TextField.js'
+import ClimateScreen from './ClimateScreen.js'
 
 export default class RoomWidget extends Widget {
   constructor() {
@@ -12,6 +14,7 @@ export default class RoomWidget extends Widget {
     this.data = {
       lastUpdate: null,
       currentTemperature: null,
+      targetTemperature: null,
       acState: null,
       covers: null,
       doors: null
@@ -57,27 +60,27 @@ export default class RoomWidget extends Widget {
 
     this._dayButton.on('pointertap', (e) => {
       e.stopPropagation();
-      this.sendMessage({target: 'cover1', value: 100})
-      this.sendMessage({target: 'cover2', value: 100})
-      this.sendMessage({target: 'cover3', value: 100})
-      this.sendMessage({target: 'cover4', value: 100})
-      this.sendMessage({target: 'cover5', value: 100})
+      this.sendMessage({action: 'cover', target: 'cover1', value: 100})
+      this.sendMessage({action: 'cover', target: 'cover2', value: 100})
+      this.sendMessage({action: 'cover', target: 'cover3', value: 100})
+      this.sendMessage({action: 'cover', target: 'cover4', value: 100})
+      this.sendMessage({action: 'cover', target: 'cover5', value: 100})
     })
     this._callButton.on('pointertap', (e) => {
       e.stopPropagation();
-      this.sendMessage({target: 'cover1', value: 100})
-      this.sendMessage({target: 'cover2', value: 100})
-      this.sendMessage({target: 'cover3', value: 30})
-      this.sendMessage({target: 'cover4', value: 0})
-      this.sendMessage({target: 'cover5', value: 0})
+      this.sendMessage({action: 'cover', target: 'cover1', value: 100})
+      this.sendMessage({action: 'cover', target: 'cover2', value: 100})
+      this.sendMessage({action: 'cover', target: 'cover3', value: 30})
+      this.sendMessage({action: 'cover', target: 'cover4', value: 0})
+      this.sendMessage({action: 'cover', target: 'cover5', value: 0})
     })
     this._nightButton.on('pointertap', (e) => {
       e.stopPropagation();
-      this.sendMessage({target: 'cover1', value: 0})
-      this.sendMessage({target: 'cover2', value: 0})
-      this.sendMessage({target: 'cover3', value: 0})
-      this.sendMessage({target: 'cover4', value: 0})
-      this.sendMessage({target: 'cover5', value: 0})
+      this.sendMessage({action: 'cover', target: 'cover1', value: 0})
+      this.sendMessage({action: 'cover', target: 'cover2', value: 0})
+      this.sendMessage({action: 'cover', target: 'cover3', value: 0})
+      this.sendMessage({action: 'cover', target: 'cover4', value: 0})
+      this.sendMessage({action: 'cover', target: 'cover5', value: 0})
     })
 
     this._scenesLabel = new TextField('SceNes', {
@@ -91,11 +94,53 @@ export default class RoomWidget extends Widget {
     this.addChild(this._scenesLabel)
   }
 
+  createMainScreen() {
+    const screen = new MainScreen()
+    screen.title = "room"
+    const acTab = screen.getTabButton(0)
+    const acPage = screen.getPage(0)
+    acTab.visible = true
+    acTab.text = "Climate"
+    const coversTab = screen.getTabButton(1)
+    const coversPage = screen.getPage(1)
+    coversTab.visible = true
+    coversTab.text = "Covers"
+
+    this._climateScreen = new ClimateScreen()
+    acPage.addChild(this._climateScreen)
+
+    this._climateScreen.on('heatUp', () => {
+      if(this.data.targetTemperature === null) {
+        this.sendMessage({action: 'acState', value: true})
+      } else {
+        this.data.targetTemperature++
+        this.sendMessage({action: 'temperature', value: this.data.targetTemperature})
+      }
+    })
+    this._climateScreen.on('coolDown', () => {
+      if(this.data.targetTemperature === null) {
+        this.sendMessage({action: 'acState', value: true})
+      } else {
+        this.data.targetTemperature--
+        this.sendMessage({action: 'temperature', value: this.data.targetTemperature})
+      }
+    })
+    this._climateScreen.on('acOff', () => {
+      if(this.data.targetTemperature !== null) {
+        this.data.targetTemperature = null
+        this.sendMessage({action: 'acState', value: false})
+      }
+    })
+
+    return screen
+  }
+
   onMessage(entities) {
     console.log(entities)
     this.data.lastUpdate = new Date().getTime()
     this.data.currentTemperature = Number(entities.temp.state)
     this.data.acState =  entities.ac.state === 'off' ? 'off' : entities.ac.attributes.temperature + '°c'
+    this.data.targetTemperature = entities.ac.state === 'off' ? null : entities.ac.attributes.temperature
     this.data.covers = [
       1-entities.cover1.attributes.current_position/100,
       1-entities.cover2.attributes.current_position/100,
@@ -121,6 +166,8 @@ export default class RoomWidget extends Widget {
 
     this._currentTempLabel.progress = this.progress * this._dataLoadProgress
     this._currentTempLabel.text = this.data.currentTemperature === null ? '' : Math.round(this.data.currentTemperature) + '°c'
+    this._climateScreen.targetTemperature = this.data.targetTemperature
+    this._climateScreen.currentTemperature = this.data.currentTemperature
     this._currentTempLabel.y = -60*this.size
     this._currentTempLabel.style.fontSize = this.size * 8 + 7
 
@@ -163,6 +210,10 @@ export default class RoomWidget extends Widget {
     this._scenesLabel.progress = this.progress
     this._scenesLabel.y = 35
     this._scenesLabel.visible = this.size === 1
+
+    if(this._climateScreen && this.main) {      
+      this._climateScreen.progress = this.main.progress
+    }
 
   }
 }

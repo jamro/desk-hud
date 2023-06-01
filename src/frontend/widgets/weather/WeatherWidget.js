@@ -133,10 +133,10 @@ export default class WeatherWidget extends Widget {
       this._currentTempScale.value = Math.max(-30, Math.min(30, this.data.currentTemperature))
     }
     if(this.data.currentTemperatureMin !== null) {
-      this._currentTempScale.valueMin = Math.max(-30, Math.min(30, this.data.currentTemperatureMin))
+      this._currentTempScale.valueMin = Math.max(-10, Math.min(30, this.data.currentTemperatureMin))
     }
     if(this.data.currentTemperatureMax !== null) {
-      this._currentTempScale.valueMax = Math.max(-30, Math.min(30, this.data.currentTemperatureMax))
+      this._currentTempScale.valueMax = Math.max(-10, Math.min(30, this.data.currentTemperatureMax))
     }
 
     if(this.data.rainTime) {
