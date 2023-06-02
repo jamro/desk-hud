@@ -101,22 +101,34 @@ class RoomService extends Service {
     })
   }
 
-  async setAcState(isOn) {
-    await this._connection.sendMessagePromise({
-      "type": "call_service",
-      "domain": "climate",
-      "service": isOn ? "turn_on" : "turn_off",
-      "service_data": {
+  async setAcMode(mode) {
+    if(mode === 'off') {
+      await this._connection.sendMessagePromise({
+        "type": "call_service",
+        "domain": "climate",
+        "service": "turn_off",
+        "service_data": {
           "entity_id": this._entities.ac.entity_id,
-      }
-    })
+        }
+      })
+    } else {
+      await this._connection.sendMessagePromise({
+        "type": "call_service",
+        "domain": "climate",
+        "service": "set_hvac_mode",
+        "service_data": {
+          "hvac_mode": mode,
+          "entity_id": this._entities.ac.entity_id
+        }
+      })
+    }
   }
 
   async onMessage({action, target, value}) {
     switch(action) {
       case 'cover': return await this.setCoverPos(target, value)
       case 'temperature': return await this.setTemperature(value)
-      case 'acState': return await this.setAcState(!!value)
+      case 'acMode': return await this.setAcMode(value)
       default: console.warn(`Unknown action ${action}`)
     }
     

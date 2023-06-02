@@ -16,6 +16,7 @@ export default class RoomWidget extends Widget {
       currentTemperature: null,
       targetTemperature: null,
       acState: null,
+      acMode: null,
       covers: null,
       doors: null
     }
@@ -125,11 +126,11 @@ export default class RoomWidget extends Widget {
         this.sendMessage({action: 'temperature', value: this.data.targetTemperature})
       }
     })
-    this._climateScreen.on('acOff', () => {
-      if(this.data.targetTemperature !== null) {
+    this._climateScreen.on('acMode', (mode) => {
+      if(mode === 'off') {
         this.data.targetTemperature = null
-        this.sendMessage({action: 'acState', value: false})
       }
+      this.sendMessage({action: 'acMode', value: mode})
     })
 
     return screen
@@ -139,7 +140,8 @@ export default class RoomWidget extends Widget {
     console.log(entities)
     this.data.lastUpdate = new Date().getTime()
     this.data.currentTemperature = Number(entities.temp.state)
-    this.data.acState =  entities.ac.state === 'off' ? 'off' : entities.ac.attributes.temperature + '°c'
+    this.data.acState = entities.ac.state === 'off' ? 'off' : entities.ac.attributes.temperature + '°c'
+    this.data.acMode = entities.ac.state
     this.data.targetTemperature = entities.ac.state === 'off' ? null : entities.ac.attributes.temperature
     this.data.covers = [
       1-entities.cover1.attributes.current_position/100,
@@ -168,6 +170,7 @@ export default class RoomWidget extends Widget {
     this._currentTempLabel.text = this.data.currentTemperature === null ? '' : Math.round(this.data.currentTemperature) + '°c'
     this._climateScreen.targetTemperature = this.data.targetTemperature
     this._climateScreen.currentTemperature = this.data.currentTemperature
+    this._climateScreen.acMode = this.data.acMode
     this._currentTempLabel.y = -60*this.size
     this._currentTempLabel.style.fontSize = this.size * 8 + 7
 

@@ -1,5 +1,6 @@
 import ScaleCircle from "../../circles/ScaleCircle"
 import TitleCircle from "../../circles/TitleCircle"
+import Icon from "../../components/Icon"
 import TextField from "../../components/TextField"
 import ArrowButton from "./ArrowButton"
 
@@ -7,11 +8,43 @@ export default class ClimateScreen extends PIXI.Container {
   constructor() {
     super()
     this.progress = 0
+    this.acMode = 'off'
     this.targetTemperature = null
     this.currentTemperature = null
 
+    this._icons = new PIXI.Container()
+    this._icons.x = -230
+    this.addChild(this._icons)
+
+    this._autoModeIcon = new Icon(0xe663)
+    this._autoModeIcon.interactive = true
+    this._autoModeIcon.y = -80
+    this._icons.addChild(this._autoModeIcon)
+
+    this._coolModeIcon = new Icon(0xeb3b)
+    this._coolModeIcon.interactive = true
+    this._coolModeIcon.y = -33
+    this._coolModeIcon.x = -25
+    this._icons.addChild(this._coolModeIcon)
+
+    this._heatModeIcon = new Icon(0xe518)
+    this._heatModeIcon.interactive = true
+    this._heatModeIcon.y = 23
+    this._heatModeIcon.x = -25
+    this._icons.addChild(this._heatModeIcon)
+
+    this._offModeIcon = new Icon(0xe8ac)
+    this._offModeIcon.interactive = true
+    this._offModeIcon.y = 70
+    this._icons.addChild(this._offModeIcon)
+
+    this._offModeIcon.on('pointertap', () => this.emit('acMode', 'off'))
+    this._coolModeIcon.on('pointertap', () => this.emit('acMode', 'cool'))
+    this._heatModeIcon.on('pointertap', () => this.emit('acMode', 'heat'))
+    this._autoModeIcon.on('pointertap', () => this.emit('acMode', 'auto'))
+
     this._circle =  new PIXI.Container()
-    this._circle.x = -190
+    this._circle.x = -120
     this.addChild(this._circle)
 
     this._acFrame = new TitleCircle("Air Conditioning")
@@ -50,15 +83,6 @@ export default class ClimateScreen extends PIXI.Container {
     this._downButton.on('pointertap', () => {
       this.emit('coolDown')
     })
-
-    this._offButton = new PIXI.Graphics()
-    this._offButton.beginFill(0x000000, 0.00001)
-    this._offButton.drawRect(-45, -22, 90, 44)
-    this._offButton.interactive = true
-    this._circle.addChild(this._offButton)
-    this._offButton.on('pointertap', () => {
-      this.emit('acOff')
-    })
   }
 
   render(renderer) {
@@ -71,6 +95,12 @@ export default class ClimateScreen extends PIXI.Container {
 
     this._upButton.progress = this.progress
     this._downButton.progress = this.progress
+
+    this._autoModeIcon.alpha = this.acMode === 'auto' ? 1 : 0.5
+    this._coolModeIcon.alpha = this.acMode === 'cool' ? 1 : 0.5
+    this._heatModeIcon.alpha = this.acMode === 'heat' ? 1 : 0.5
+    this._offModeIcon.alpha = this.acMode === 'off' ? 1 : 0.5
+    this._icons.alpha = this.progress
     
     super.render(renderer)
   }
