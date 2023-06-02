@@ -3,6 +3,7 @@ import TitleCircle from "../../circles/TitleCircle"
 import Icon from "../../components/Icon"
 import TextField from "../../components/TextField"
 import ArrowButton from "./ArrowButton"
+import Fan from "./Fan"
 
 export default class ClimateScreen extends PIXI.Container {
   constructor() {
@@ -11,6 +12,7 @@ export default class ClimateScreen extends PIXI.Container {
     this.acMode = 'off'
     this.targetTemperature = null
     this.currentTemperature = null
+    this.acFanSpeed = null
 
     this._icons = new PIXI.Container()
     this._icons.x = -230
@@ -83,6 +85,11 @@ export default class ClimateScreen extends PIXI.Container {
     this._downButton.on('pointertap', () => {
       this.emit('coolDown')
     })
+
+    this._fan = new Fan()
+    this._fan.y = -60
+    this._fan.x = -20
+    this.addChild(this._fan)
   }
 
   render(renderer) {
@@ -101,6 +108,14 @@ export default class ClimateScreen extends PIXI.Container {
     this._heatModeIcon.alpha = this.acMode === 'heat' ? 1 : 0.5
     this._offModeIcon.alpha = this.acMode === 'off' ? 1 : 0.5
     this._icons.alpha = this.progress
+    this._fan.progress = this.progress
+
+    if(this.acFanSpeed === 'auto') {
+      this._fan.isAuto = true
+    } else {
+      this._fan.isAuto = false
+      this._fan.speed = this.acFanSpeed || 0
+    }
     
     super.render(renderer)
   }

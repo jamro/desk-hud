@@ -18,7 +18,8 @@ export default class RoomWidget extends Widget {
       acState: null,
       acMode: null,
       covers: null,
-      doors: null
+      doors: null,
+      acFanSpeed: null
     }
 
     this._currentTempLabel = new TextField('', {
@@ -155,6 +156,14 @@ export default class RoomWidget extends Widget {
       entities.door2.state !== 'off',
       entities.door3.state !== 'off',
     ]
+    const acFanModes = ['', 'low', 'medium low', 'medium', 'medium high', 'high']
+    if(entities.ac.state === 'off') {
+      this.data.acFanSpeed = 0
+    } else if(entities.ac.attributes.fan_mode === 'auto') {
+      this.data.acFanSpeed = 'auto'
+    } else {
+      this.data.acFanSpeed = acFanModes.indexOf(entities.ac.attributes.fan_mode)/(acFanModes.length-1)
+    }
 
     console.log( this.data )
   }
@@ -217,6 +226,7 @@ export default class RoomWidget extends Widget {
     if(this._climateScreen && this.main) {      
       this._climateScreen.progress = this.main.progress
     }
-
+    
+    this._climateScreen.acFanSpeed = this.data.acFanSpeed
   }
 }
