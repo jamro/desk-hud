@@ -19,7 +19,8 @@ export default class RoomWidget extends Widget {
       acMode: null,
       covers: null,
       doors: null,
-      acFanSpeed: null
+      acFanSpeed: null,
+      tempHistory: null
     }
 
     this._currentTempLabel = new TextField('', {
@@ -164,6 +165,11 @@ export default class RoomWidget extends Widget {
     } else {
       this.data.acFanSpeed = acFanModes.indexOf(entities.ac.attributes.fan_mode)/(acFanModes.length-1)
     }
+    this.data.tempHistory = entities.temp.history.map(Number) || []
+    this.data.tempHistory.push(Number(entities.temp.state))
+    while(this.data.tempHistory.length > 48) {
+      this.data.tempHistory.shift()
+    }
 
     console.log( this.data )
   }
@@ -228,5 +234,6 @@ export default class RoomWidget extends Widget {
     }
     
     this._climateScreen.acFanSpeed = this.data.acFanSpeed
+    this._climateScreen.tempHistory = this.data.tempHistory
   }
 }

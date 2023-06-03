@@ -11,8 +11,11 @@ const TodoService = require('./services/TodoService.js');
 const RoomService = require('./services/RoomService.js');
 const DistanceService = require('./services/DistanceService.js');
 const Config = require('./Config.js');
+const storage = require('node-persist');
 
 (async () => {
+  await storage.init()
+  
   const config = new Config()
   await config.load()
 

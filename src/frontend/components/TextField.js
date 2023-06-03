@@ -3,7 +3,7 @@ export default class TextField extends PIXI.Text {
   constructor (txt, style) {
     super('', style)
     this._progress = 0
-    this._origText = txt
+    this._origText = String(txt)
     this.anchor.set(0.5)
   }
 

@@ -1,5 +1,6 @@
 import ScaleCircle from "../../circles/ScaleCircle"
 import TitleCircle from "../../circles/TitleCircle"
+import BarChart from "../../components/BarChart"
 import Icon from "../../components/Icon"
 import TextField from "../../components/TextField"
 import ArrowButton from "./ArrowButton"
@@ -13,6 +14,7 @@ export default class ClimateScreen extends PIXI.Container {
     this.targetTemperature = null
     this.currentTemperature = null
     this.acFanSpeed = null
+    this.tempHistory = null
 
     this._icons = new PIXI.Container()
     this._icons.x = -230
@@ -90,6 +92,25 @@ export default class ClimateScreen extends PIXI.Container {
     this._fan.y = -60
     this._fan.x = -20
     this.addChild(this._fan)
+
+    this._tempChart = new BarChart({width: 240, height: 100, scaleMin: 15, scaleMax: 30, tickStep: 5})
+    this._tempChart.x = 53
+    this._tempChart.y = -60
+    this.addChild(this._tempChart)
+
+    this._chartLabel = new TextField("Room Temperature (°c)", {
+      fontFamily: 'MajorMonoDisplay-Regular',
+      fontSize: 13,
+      fill: '#ff0000',
+      stroke: "#ff0000",
+      strokeThickness: 0.5,
+      align: 'center',
+    })
+    this._chartLabel.anchor.set(0, 1)
+    this._chartLabel.x = 30
+    this._chartLabel.y = -80
+    
+    this.addChild(this._chartLabel)
   }
 
   render(renderer) {
@@ -116,6 +137,10 @@ export default class ClimateScreen extends PIXI.Container {
       this._fan.isAuto = false
       this._fan.speed = this.acFanSpeed || 0
     }
+
+    this._tempChart.progress = this.progress
+    this._tempChart.data = this.tempHistory || []
+    this._chartLabel.progress = this.progress
     
     super.render(renderer)
   }

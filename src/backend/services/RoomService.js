@@ -1,6 +1,7 @@
 const Service = require('./Service.js')
 const fetch = require('node-fetch');
-const hass = require("home-assistant-js-websocket")
+const hass = require("home-assistant-js-websocket");
+const storage = require('node-persist');
 globalThis.WebSocket = require("ws");
 
 class RoomService extends Service {
@@ -45,6 +46,9 @@ class RoomService extends Service {
           return result
         }, {})
 
+      if(newEntities.temp) {
+        newEntities.temp.history = []
+      }
 
       const getTimeHash = (entitiesObj) => {
         return Object.values(myEntitiesMap)
@@ -56,11 +60,35 @@ class RoomService extends Service {
       const newHash = getTimeHash(newEntities)
 
       if(newHash !== oldHash) {
+        const tempHistory = this._entities.temp ? this._entities.temp.history : []
         this._entities = newEntities
+        if(!this._entities.temp) {
+          this._entities.temp = {}
+        }
+        this._entities.temp.history = tempHistory
         this.emit(this._entities)
       }
 
     });
+
+    setInterval(() => this._updateHistory(), 30*60*1000)
+    if(!this._entities.temp) {
+      this._entities.temp = {  }
+    }
+    this._entities.temp.history = await storage.getItem('room.tempHistory') || []
+  }
+
+  async _updateHistory() {
+    if(!this._entities.temp) return
+    if(!this._entities.temp.history) {
+      this._entities.temp.history = []
+    }
+    this._entities.temp.history.push(this._entities.temp.state)
+    while(this._entities.temp.history.length > 48) {
+      this._entities.temp.history.shift()
+    }
+    storage.setItem('room.tempHistory', this._entities.temp.history)
+    this.emit(this._entities)
   }
 
   async setCoverPos(target, value) {
