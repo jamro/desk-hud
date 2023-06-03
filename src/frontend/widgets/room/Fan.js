@@ -12,6 +12,11 @@ export default class Fan extends PIXI.Container {
 
     this.progress = 0
 
+    this._bg = new PIXI.Graphics()
+    this._bg.beginFill(0x000000, 0.001)
+    this._bg.drawCircle(0, 0, 30)
+    this.addChild(this._bg)
+
     this._pointer = new LineArt()
     this._pointer.addSequence([
       -60, -17,
@@ -83,6 +88,7 @@ export default class Fan extends PIXI.Container {
     this._label.progress = this.progress
     this._label.text = this.isAuto ? 'Auto' : Math.round(100*this.speed) + '%'
     this._pointer.progress = this.progress
+    this._bg.visible = this.progress > 0
   }
 
 }

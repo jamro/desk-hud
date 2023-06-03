@@ -91,16 +91,20 @@ export default class ClimateScreen extends PIXI.Container {
     this._fan = new Fan()
     this._fan.y = -60
     this._fan.x = -20
+    this._fan.interactive = true
+    this._fan.on('pointertap', () => {
+      this.emit('fanToggle')
+    })
     this.addChild(this._fan)
 
-    this._tempChart = new BarChart({width: 240, height: 100, scaleMin: 15, scaleMax: 30, tickStep: 5})
-    this._tempChart.x = 53
-    this._tempChart.y = -60
+    this._tempChart = new BarChart({width: 240, height: 100, scaleMin: 18, scaleMax: 26, tickStep: 1})
+    this._tempChart.x = 43
+    this._tempChart.y = -65
     this.addChild(this._tempChart)
 
-    this._chartLabel = new TextField("Room Temperature (°c)", {
+    this._chartLabel = new TextField("Room Temperature:", {
       fontFamily: 'MajorMonoDisplay-Regular',
-      fontSize: 13,
+      fontSize: 11,
       fill: '#ff0000',
       stroke: "#ff0000",
       strokeThickness: 0.5,
@@ -109,8 +113,21 @@ export default class ClimateScreen extends PIXI.Container {
     this._chartLabel.anchor.set(0, 1)
     this._chartLabel.x = 30
     this._chartLabel.y = -80
-    
     this.addChild(this._chartLabel)
+
+    this._roomTempLabel = new TextField("", {
+      fontFamily: 'MajorMonoDisplay-Regular',
+      fontSize: 11,
+      fill: '#ffffff',
+      stroke: "#ffffff",
+      strokeThickness: 0.5,
+      align: 'center',
+    })
+    this._roomTempLabel.anchor.set(0, 1)
+    this._roomTempLabel.x = 175
+    this._roomTempLabel.y = -80
+    this.addChild(this._roomTempLabel)
+    
   }
 
   render(renderer) {
@@ -141,6 +158,8 @@ export default class ClimateScreen extends PIXI.Container {
     this._tempChart.progress = this.progress
     this._tempChart.data = this.tempHistory || []
     this._chartLabel.progress = this.progress
+    this._roomTempLabel.progress = this.progress
+    this._roomTempLabel.text = this.currentTemperature ? this.currentTemperature + '°c' : ''
     
     super.render(renderer)
   }

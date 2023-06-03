@@ -11,6 +11,7 @@ export default class RoomWidget extends Widget {
   constructor() {
     super('room', "rooM")
     this._dataLoadProgress = 0
+    this._acFanModes = ['auto', 'low', 'medium low', 'medium', 'medium high', 'high']
     this.data = {
       lastUpdate: null,
       currentTemperature: null,
@@ -20,6 +21,7 @@ export default class RoomWidget extends Widget {
       covers: null,
       doors: null,
       acFanSpeed: null,
+      acFanMode: null,
       tempHistory: null
     }
 
@@ -114,7 +116,7 @@ export default class RoomWidget extends Widget {
 
     this._climateScreen.on('heatUp', () => {
       if(this.data.targetTemperature === null) {
-        this.sendMessage({action: 'acState', value: true})
+        this.sendMessage({action: 'acMode', value: 'on'})
       } else {
         this.data.targetTemperature++
         this.sendMessage({action: 'temperature', value: this.data.targetTemperature})
@@ -122,7 +124,7 @@ export default class RoomWidget extends Widget {
     })
     this._climateScreen.on('coolDown', () => {
       if(this.data.targetTemperature === null) {
-        this.sendMessage({action: 'acState', value: true})
+        this.sendMessage({action: 'acMode', value: 'on'})
       } else {
         this.data.targetTemperature--
         this.sendMessage({action: 'temperature', value: this.data.targetTemperature})
@@ -133,6 +135,13 @@ export default class RoomWidget extends Widget {
         this.data.targetTemperature = null
       }
       this.sendMessage({action: 'acMode', value: mode})
+    })
+    this._climateScreen.on('fanToggle', () => {
+      const modeIndex = this._acFanModes.indexOf(this.data.acFanMode)
+      if(modeIndex === -1) return
+      const nextMode = this._acFanModes[((modeIndex + 1) % this._acFanModes.length)]
+
+      this.sendMessage({action: 'fanMode', value: nextMode})
     })
 
     return screen
@@ -157,13 +166,16 @@ export default class RoomWidget extends Widget {
       entities.door2.state !== 'off',
       entities.door3.state !== 'off',
     ]
-    const acFanModes = ['', 'low', 'medium low', 'medium', 'medium high', 'high']
+    
     if(entities.ac.state === 'off') {
       this.data.acFanSpeed = 0
+      this.data.acFanMode = 'off'
     } else if(entities.ac.attributes.fan_mode === 'auto') {
       this.data.acFanSpeed = 'auto'
+      this.data.acFanMode = 'auto'
     } else {
-      this.data.acFanSpeed = acFanModes.indexOf(entities.ac.attributes.fan_mode)/(acFanModes.length-1)
+      this.data.acFanSpeed = (this._acFanModes.indexOf(entities.ac.attributes.fan_mode))/(this._acFanModes.length-1)
+      this.data.acFanMode = entities.ac.attributes.fan_mode
     }
     this.data.tempHistory = entities.temp.history.map(Number) || []
     this.data.tempHistory.push(Number(entities.temp.state))
