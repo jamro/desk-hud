@@ -25,7 +25,15 @@
       "cover2": "cover...",
       "cover3": "cover...",
       "cover4": "cover...",
-      "cover5": "cover..."
+      "cover5": "cover...",
+      "door1Battery": "sensor...",
+      "door2Battery": "sensor...",
+      "door3Battery": "sensor...",
+      "cover1Battery": "sensor...",
+      "cover2Battery": "sensor...",
+      "cover3Battery": "sensor...",
+      "cover4Battery": "sensor...",
+      "cover5Battery": "sensor..."
     }
   },
   "google": {

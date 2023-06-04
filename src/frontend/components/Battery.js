@@ -5,6 +5,7 @@ export default class Battery extends PIXI.Container {
   constructor() {
     super()
     this.value = 0
+    this.progress = 0
 
     this._shape = new LineArt()
     this._shape.addSequence([
@@ -27,7 +28,6 @@ export default class Battery extends PIXI.Container {
       const w = 18 // width
       const h = 4 // height
       const s = w/(this._bars.length-1) // step
-      console.log(s)
       this._bars[i] = new PIXI.Graphics()
       this._bars[i].beginFill(0xffffff)
       this._bars[i].moveTo(-w/2 + Math.max(0, (s)*i-s+m), h)

@@ -32,6 +32,14 @@ class RoomService extends Service {
     myEntitiesMap[ this.config.getProp('hass.entities.door1')] = 'door1'
     myEntitiesMap[ this.config.getProp('hass.entities.door2')] = 'door2'
     myEntitiesMap[ this.config.getProp('hass.entities.door3')] = 'door3'
+    myEntitiesMap[ this.config.getProp('hass.entities.cover1Battery')] = 'cover1Battery'
+    myEntitiesMap[ this.config.getProp('hass.entities.cover2Battery')] = 'cover2Battery'
+    myEntitiesMap[ this.config.getProp('hass.entities.cover3Battery')] = 'cover3Battery'
+    myEntitiesMap[ this.config.getProp('hass.entities.cover4Battery')] = 'cover4Battery'
+    myEntitiesMap[ this.config.getProp('hass.entities.cover5Battery')] = 'cover5Battery'
+    myEntitiesMap[ this.config.getProp('hass.entities.door1Battery')] = 'door1Battery'
+    myEntitiesMap[ this.config.getProp('hass.entities.door2Battery')] = 'door2Battery'
+    myEntitiesMap[ this.config.getProp('hass.entities.door3Battery')] = 'door3Battery'
 
     this._connection = await hass.createConnection({ auth });
     hass.subscribeEntities(this._connection, (entities) => {

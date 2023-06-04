@@ -151,7 +151,7 @@ export default class MainScreen extends PIXI.Container {
       this.removeChild(this._page)
     }
     this._page = this._pages[index]
-    this.addChild(this._page)
+    this.addChildAt(this._page, 0)
   }
 
   getPage(i) {

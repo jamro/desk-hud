@@ -6,6 +6,7 @@ import LineArt from '../../components/LineArt.js'
 import RoomPreview from '../../components/RoomPreview.js'
 import TextField from '../../components/TextField.js'
 import ClimateScreen from './ClimateScreen.js'
+import CoversScreen from './CoversScreen.js'
 
 export default class RoomWidget extends Widget {
   constructor() {
@@ -20,6 +21,8 @@ export default class RoomWidget extends Widget {
       acMode: null,
       covers: null,
       doors: null,
+      coversBattery: null,
+      doorsBattery: null,
       acFanSpeed: null,
       acFanMode: null,
       tempHistory: null,
@@ -103,14 +106,22 @@ export default class RoomWidget extends Widget {
   createMainScreen() {
     const screen = new MainScreen()
     screen.title = "room"
-    const acTab = screen.getTabButton(0)
-    const acPage = screen.getPage(0)
+    const acTab = screen.getTabButton(1)
+    const acPage = screen.getPage(1)
     acTab.visible = true
     acTab.text = "Climate"
-    const coversTab = screen.getTabButton(1)
-    const coversPage = screen.getPage(1)
+    const coversTab = screen.getTabButton(0)
+    const coversPage = screen.getPage(0)
     coversTab.visible = true
     coversTab.text = "Covers"
+
+    this._coversScreen = new CoversScreen()
+    coversPage.addChild(this._coversScreen)
+    this._coversScreen.on('coverChange', (id, pos, index) => {
+      const newValue = Math.round((1-pos)*100)
+      this.sendMessage({action: 'cover', target: id, value: newValue})
+      this.data.covers[index] = pos
+    })
 
     this._climateScreen = new ClimateScreen()
     acPage.addChild(this._climateScreen)
@@ -168,6 +179,18 @@ export default class RoomWidget extends Widget {
       entities.door2.state !== 'off',
       entities.door3.state !== 'off',
     ]
+    this.data.coversBattery = [
+      Number(entities.cover1Battery.state)/100,
+      Number(entities.cover2Battery.state)/100,
+      Number(entities.cover3Battery.state)/100,
+      Number(entities.cover4Battery.state)/100,
+      Number(entities.cover5Battery.state)/100,
+    ]
+    this.data.doorsBattery = [
+      Number(entities.door1Battery.state)/100,
+      Number(entities.door2Battery.state)/100,
+      Number(entities.door3Battery.state)/100,
+    ]
     
     if(entities.ac.state === 'off') {
       this.data.acFanSpeed = 0
@@ -217,9 +240,17 @@ export default class RoomWidget extends Widget {
     this._roomView.progress = this.progress*this._dataLoadProgress
     if(this.data.covers) {
       this._roomView.covers = this.data.covers
+      this._coversScreen.covers = this.data.covers
     }
     if(this.data.doors) {
       this._roomView.doors = this.data.doors
+      this._coversScreen.doors = this.data.doors
+    }
+    if(this.data.coversBattery) {
+      this._coversScreen.coversBattery = this.data.coversBattery
+    }
+    if(this.data.doorsBattery) {
+      this._coversScreen.doorsBattery = this.data.doorsBattery
     }
 
     this._dayButton.x = -100*this.size * Math.cos(Math.PI*0.25)
@@ -245,6 +276,9 @@ export default class RoomWidget extends Widget {
 
     if(this._climateScreen && this.main) {      
       this._climateScreen.progress = this.main.progress
+    }
+    if(this._coversScreen && this.main) {      
+      this._coversScreen.progress = this.main.progress
     }
     
     this._climateScreen.acFanSpeed = this.data.acFanSpeed
