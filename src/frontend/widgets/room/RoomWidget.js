@@ -22,7 +22,8 @@ export default class RoomWidget extends Widget {
       doors: null,
       acFanSpeed: null,
       acFanMode: null,
-      tempHistory: null
+      tempHistory: null,
+      tempBattery: null,
     }
 
     this._currentTempLabel = new TextField('', {
@@ -151,6 +152,7 @@ export default class RoomWidget extends Widget {
     console.log(entities)
     this.data.lastUpdate = new Date().getTime()
     this.data.currentTemperature = Number(entities.temp.state)
+    this.data.tempBattery = Number(entities.tempBattery.state/100)
     this.data.acState = entities.ac.state === 'off' ? 'off' : entities.ac.attributes.temperature + '°c'
     this.data.acMode = entities.ac.state
     this.data.targetTemperature = entities.ac.state === 'off' ? null : entities.ac.attributes.temperature
@@ -247,5 +249,6 @@ export default class RoomWidget extends Widget {
     
     this._climateScreen.acFanSpeed = this.data.acFanSpeed
     this._climateScreen.tempHistory = this.data.tempHistory
+    this._climateScreen.batteryValue = this.data.tempBattery
   }
 }

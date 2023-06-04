@@ -1,6 +1,7 @@
 import ScaleCircle from "../../circles/ScaleCircle"
 import TitleCircle from "../../circles/TitleCircle"
 import BarChart from "../../components/BarChart"
+import Battery from "../../components/Battery"
 import Icon from "../../components/Icon"
 import TextField from "../../components/TextField"
 import ArrowButton from "./ArrowButton"
@@ -15,6 +16,7 @@ export default class ClimateScreen extends PIXI.Container {
     this.currentTemperature = null
     this.acFanSpeed = null
     this.tempHistory = null
+    this.batteryValue = null
 
     this._icons = new PIXI.Container()
     this._icons.x = -230
@@ -128,6 +130,23 @@ export default class ClimateScreen extends PIXI.Container {
     this._roomTempLabel.y = -80
     this.addChild(this._roomTempLabel)
     
+    this._battery = new Battery()
+    this._battery.x = 235
+    this._battery.y = 55
+    this.addChild(this._battery)
+
+    this._batteryLabel = new TextField("Thermometer:", {
+      fontFamily: 'MajorMonoDisplay-Regular',
+      fontSize: 8,
+      fill: '#ffffff',
+      stroke: "#ffffff",
+      strokeThickness: 0.5,
+      align: 'center',
+    })
+    this._batteryLabel.anchor.set(1, 0.6)
+    this._batteryLabel.x = 220
+    this._batteryLabel.y = 55
+    this.addChild(this._batteryLabel)
   }
 
   render(renderer) {
@@ -160,6 +179,10 @@ export default class ClimateScreen extends PIXI.Container {
     this._chartLabel.progress = this.progress
     this._roomTempLabel.progress = this.progress
     this._roomTempLabel.text = this.currentTemperature ? this.currentTemperature + '°c' : ''
+
+    this._battery.progress = this.progress
+    this._batteryLabel.progress = this.progress
+    this._battery.value = this.batteryValue || 0
     
     super.render(renderer)
   }

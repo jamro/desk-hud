@@ -16,6 +16,7 @@
     "token": "...",
     "entities": {
       "temp":"sensor...",
+      "tempBattery": "sensor...",
       "ac": "climate...",
       "door1": "binary_sensor...",
       "door2": "binary_sensor...",

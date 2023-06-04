@@ -70,8 +70,9 @@ export default class BarChart extends PIXI.Container {
     const step = this._data.length ? this._chartWidth / this._data.length : 0
     this._canvas.beginFill(0xffffff, 0.5*this.progress)
     for(let i=0; i < this._data.length; i++) {
+      const progress = Math.min(1, Math.max(0, this.progress - 0.5*i/this._data.length)*2)
       let value = (this._data[i] - this._scaleMin) / (this._scaleMax - this._scaleMin)
-      value = this.progress * Math.max(0, Math.min(1, value))
+      value = progress * Math.max(0, Math.min(1, value))
       this._canvas.drawRect(
         i*step,
         1-this._chartHeight * value + this._chartHeight, 
@@ -83,7 +84,8 @@ export default class BarChart extends PIXI.Container {
     this._canvas.beginFill(0xffffff)
     for(let i=0; i < this._data.length; i++) {
       let value = (this._data[i] - this._scaleMin) / (this._scaleMax - this._scaleMin)
-      value = this.progress * Math.max(0, Math.min(1, value))
+      const progress = Math.min(1, Math.max(0, this.progress - 0.5*i/this._data.length)*2)
+      value = progress * Math.max(0, Math.min(1, value))
       this._canvas.drawRect(
         i*step,
         1-this._chartHeight * value + this._chartHeight, 
