@@ -86,12 +86,10 @@ export default class TimezonePreview extends PIXI.Container {
     this._pointer = new LineArt()
     this.addChild(this._pointer)
     this._pointer.addSequence([
-      120 + 5*SEGMENT_WIDTH, -SEGMENT_HEIGHT/2-2,
-      120 + 5*SEGMENT_WIDTH, SEGMENT_HEIGHT*this._timezones.length-SEGMENT_HEIGHT/2+2,
-      120 + 6*SEGMENT_WIDTH, SEGMENT_HEIGHT*this._timezones.length-SEGMENT_HEIGHT/2+2,
-      120 + 6*SEGMENT_WIDTH, -SEGMENT_HEIGHT/2-2,
-      120 + 5*SEGMENT_WIDTH, -SEGMENT_HEIGHT/2-2,
+      120 + 5.5*SEGMENT_WIDTH, -SEGMENT_HEIGHT/2-5,
+      120 + 5.5*SEGMENT_WIDTH, SEGMENT_HEIGHT*this._timezones.length-SEGMENT_HEIGHT/2+5,
     ], 4, 0xff0000)
+    this._pointer.alpha = 0.8
     
     this._dragBox = new PIXI.Graphics()
     this._dragBox.beginFill(0x000000, 0.0001)

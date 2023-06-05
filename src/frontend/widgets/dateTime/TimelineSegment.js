@@ -8,16 +8,18 @@ export default class TimelineSegment extends PIXI.Container {
     this.progress = 0
 
     const h = 34
-    this._background = new LineArt()
-    this.addChild(this._background)
-    for(let i=0; i <=24; i++) {
-      this._background.addLine(i * 30, -h/2, i * 30, h/2)
-    }
-    this._background.addLine(0, -h/2, 24 * 30, -h/2)
-    this._background.addLine(0, h/2, 24 * 30, h/2)
 
-    const hours = Array(24).fill(1).map((_, i) => String((i % 12) + 1).padStart(2, '0')).join(' ')
-    this._hourLabels = new TextField(hours, {
+    this._bg = new PIXI.Graphics()
+    this._bg.beginFill(0x666666)
+    this._bg.drawRect(30*5, -h/2, 14*30, h)
+    this._bg.beginFill(0xcccccc)
+    this._bg.drawRect(30*8, -h/2, 8*30, h)
+    this.addChild(this._bg)
+
+    const lightNumbers =  Array(24).fill(1).map((_, i) => (i < 8 || i > 15) ? String(i+1).padStart(2, '0') : '  ')
+    const darkNumbers =  Array(24).fill(1).map((_, i) => (i < 8 || i > 15) ? '  ' : String(i+1).padStart(2, '0'))
+
+    this._hourLabels = new TextField(lightNumbers.join(' '), {
       fontFamily: 'MajorMonoDisplay-Regular',
       fontSize: 13.5,
       fill: '#ffffff',
@@ -26,30 +28,30 @@ export default class TimelineSegment extends PIXI.Container {
       align: 'left',
     })
     this._hourLabels.x = 4
-    this._hourLabels.y = -h*0.2
+    this._hourLabels.y = 0
     this._hourLabels.anchor.set(0, 0.5)
     this.addChild(this._hourLabels)
 
-    const postfix = Array(24).fill(1).map((_, i) => i < 12 ? 'Am' : 'Pm').join('  ') 
-
-    this._postfixLabels = new TextField(postfix, {
+    this._darkHourLabels = new TextField(darkNumbers.join(' '), {
       fontFamily: 'MajorMonoDisplay-Regular',
-      fontSize: 10.16,
-      fill: '#ff0000',
-      stroke: "#ff0000",
-      strokeThickness: 1.5,
+      fontSize: 13.5,
+      fill: '#000000',
+      stroke: "#000000",
+      strokeThickness: 0.5,
       align: 'left',
     })
-    this._postfixLabels.x = 4
-    this._postfixLabels.y = h*0.2
-    this._postfixLabels.anchor.set(0, 0.5)
-    this.addChild(this._postfixLabels)
+    this._darkHourLabels.x = 4
+    this._darkHourLabels.y = 0
+    this._darkHourLabels.anchor.set(0, 0.5)
+    this.addChild(this._darkHourLabels)
+
   }
 
   render(renderer) {
-    this._background.progress = this.progress
     this._hourLabels.progress = this.progress
-    this._postfixLabels.progress = this.progress
+    this._darkHourLabels.progress = this.progress
+    this._bg.alpha = this.progress
+    
     super.render(renderer)
   }
 }
