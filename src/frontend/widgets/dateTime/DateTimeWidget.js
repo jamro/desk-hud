@@ -1,7 +1,9 @@
+import MainScreen from '../../MainScreen.js';
 import Widget from '../../Widget.js'
 import ProgressCircle from '../../circles/ProgressCircle.js';
 import ArchText from '../../components/ArchText.js';
 import TextField from '../../components/TextField.js';
+import DateScreen from './DateScreen.js';
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
@@ -54,6 +56,31 @@ export default class DateTimeWidget extends Widget {
     }
   }
 
+  createMainScreen() {
+    const screen = new MainScreen()
+    screen.title = "Date & Time"
+    const dateTab = screen.getTabButton(0)
+    const datePage = screen.getPage(0)
+    dateTab.visible = true
+    dateTab.text = "Date"
+    const timeTab = screen.getTabButton(1)
+    const timePage = screen.getPage(1)
+    timeTab.visible = true
+    timeTab.text = "Time"
+
+    this._dateScreen = new DateScreen()
+    datePage.addChild(this._dateScreen)
+
+
+    return screen
+  }
+
+  onConfig(config) {
+    console.log(config)
+    this._dateScreen.coundownDate = new Date(config.countdown.date)
+    this._dateScreen.countdownName = config.countdown.name
+  }
+
   render(renderer) {
     super.render(renderer)
 
@@ -101,6 +128,10 @@ export default class DateTimeWidget extends Widget {
       day.fontSize = 4 + this.size * 5
       day.alpha = i == now.getDay() ? 1 : 0.4
       day.visible = (this.size === 1 && this.progress > ((i+6) % 7)/7)
+    }
+
+    if(this._dateScreen && this.main) {      
+      this._dateScreen.progress = this.main.progress
     }
   }
 }

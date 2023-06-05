@@ -68,6 +68,10 @@ export default class GravityField extends PIXI.Container {
     this._widgets[widgetId].onMessage(msg)
   }
 
+  routeConfig(widgetId, msg) {
+    this._widgets[widgetId].onConfig(msg)
+  }
+
   addWidget(widget) {
     const index = this._widgetList.length
     this._widgetList.push(widget)

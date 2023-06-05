@@ -6,6 +6,12 @@
       "goSleep": 250
     }
   },
+  "dateTime": {
+    "countdown": {
+      "name": "...",
+      "date": "1970-01-01T00:00:00.000Z"
+    }
+  },
   "weather": {
     "apiKey": "...",
     "lat": 51.489389447148035, 

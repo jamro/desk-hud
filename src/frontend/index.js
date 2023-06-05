@@ -32,12 +32,12 @@ import RoomWidget from "./widgets/room/RoomWidget.js";
   app.stage.addChild(gravityField)
   
   const widgets = [
+    new DateTimeWidget(),
     new RoomWidget(),
     new PomodoroWidget(),
     new TodoWidget(),
     new CalendarWidget(),
     new WeatherWidget(),
-    new DateTimeWidget()
   ]
   
   widgets.forEach((w) => {
@@ -61,7 +61,7 @@ import RoomWidget from "./widgets/room/RoomWidget.js";
     } = data
   
     gravityField.routeMessage(widgetId, payload)
-  });
+  })
   socket.on('distance', async (payload) => {
     console.log(payload)
     if(payload.action === 'goSleep') {
@@ -70,4 +70,10 @@ import RoomWidget from "./widgets/room/RoomWidget.js";
       gravityField.wakeUp()
     } 
   })
+  socket.on('config', function({widgets}) {
+    const keys = Object.keys(widgets)
+    for(let key of keys) {
+      gravityField.routeConfig(key, widgets[key])
+    }
+  });
 })()

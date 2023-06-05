@@ -49,6 +49,11 @@ const storage = require('node-persist');
   }
   io.on('connection', async (socket) => {
     console.log("Client connected")
+    await socket.emit('config', {
+      widgets: {
+        dateTime: config.getProp('dateTime')
+      }
+    })
     await Promise.all(services.map(s => s.welcomeClient(socket)))
     socket.on('service', async ({serviceId, payload}) => {
       const service = services.find(s => s.id === serviceId)
