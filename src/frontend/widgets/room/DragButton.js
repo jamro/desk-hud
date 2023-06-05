@@ -74,7 +74,6 @@ export default class DragButton extends PIXI.Container {
     this.dragging = false
     console.log("done")
     this.emit('posChange', (this.y - this._yMin)/(this._yMax - this._yMin))
-
   }
 
   render(renderer) {

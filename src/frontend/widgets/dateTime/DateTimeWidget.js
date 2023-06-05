@@ -4,6 +4,7 @@ import ProgressCircle from '../../circles/ProgressCircle.js';
 import ArchText from '../../components/ArchText.js';
 import TextField from '../../components/TextField.js';
 import DateScreen from './DateScreen.js';
+import TimeScreen from './TimeScreen.js';
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
@@ -59,18 +60,20 @@ export default class DateTimeWidget extends Widget {
   createMainScreen() {
     const screen = new MainScreen()
     screen.title = "Date & Time"
-    const dateTab = screen.getTabButton(0)
-    const datePage = screen.getPage(0)
+    const dateTab = screen.getTabButton(1)
+    const datePage = screen.getPage(1)
     dateTab.visible = true
     dateTab.text = "Date"
-    const timeTab = screen.getTabButton(1)
-    const timePage = screen.getPage(1)
+    const timeTab = screen.getTabButton(0)
+    const timePage = screen.getPage(0)
     timeTab.visible = true
     timeTab.text = "Time"
 
     this._dateScreen = new DateScreen()
     datePage.addChild(this._dateScreen)
 
+    this._timeScreen = new TimeScreen()
+    timePage.addChild(this._timeScreen)
 
     return screen
   }
@@ -79,6 +82,7 @@ export default class DateTimeWidget extends Widget {
     console.log(config)
     this._dateScreen.coundownDate = new Date(config.countdown.date)
     this._dateScreen.countdownName = config.countdown.name
+    this._timeScreen.addTimezonePreview(config.timezones)
   }
 
   render(renderer) {
@@ -132,6 +136,10 @@ export default class DateTimeWidget extends Widget {
 
     if(this._dateScreen && this.main) {      
       this._dateScreen.progress = this.main.progress
+    }
+
+    if(this._timeScreen && this.main) {      
+      this._timeScreen.progress = this.main.progress
     }
   }
 }
