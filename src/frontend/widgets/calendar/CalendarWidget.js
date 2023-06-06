@@ -1,9 +1,11 @@
+import MainScreen from '../../MainScreen.js';
 import Widget from '../../Widget.js'
 import ProgressCircle from '../../circles/ProgressCircle.js';
 import TickCircle from '../../circles/TickCircle.js';
 import ArchText from '../../components/ArchText.js';
 import GaugePointer from '../../components/GaugePointer.js';
 import TextField from '../../components/TextField.js';
+import CalendarScreen from './CalendarScreen.js';
 
 export default class CalendarWidget extends Widget {
   constructor() {
@@ -92,6 +94,17 @@ export default class CalendarWidget extends Widget {
     this._clockTitle = new ArchText()
     this._meetingClock.addChild(this._clockTitle)
 
+  }
+
+  createMainScreen() {
+    const screen = new MainScreen()
+    screen.title = "Calendar"
+    const calendarPage = screen.getPage(0)
+   
+    this._calendarScreen = new CalendarScreen()
+    calendarPage.addChild(this._calendarScreen)
+
+    return screen
   }
 
   onMessage(events) {
@@ -189,5 +202,7 @@ export default class CalendarWidget extends Widget {
       this._meetingClock.visible = false
       this._clockAlert.visible = false
     }
+    this._calendarScreen.progress = this.progress * this._dataLoadProgress
+    this._calendarScreen.events = this.data.todayEvents
   }
 }

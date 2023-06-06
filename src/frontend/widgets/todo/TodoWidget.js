@@ -52,10 +52,7 @@ export default class TaskWidget extends Widget {
 
     console.log( this.data )
     const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
-    this._timeline.setPoints(this.data.actionList.map(i => i.completed ? i.completed - today : null))
-
-    setTimeout(() => this.updateData(), 1000*60*5)
-  
+    this._timeline.setPoints(this.data.actionList.map(i => i.completed ? i.completed - today : null))  
   }
 
   render(renderer) {
