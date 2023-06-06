@@ -202,7 +202,9 @@ export default class CalendarWidget extends Widget {
       this._meetingClock.visible = false
       this._clockAlert.visible = false
     }
-    this._calendarScreen.progress = this.progress * this._dataLoadProgress
+    if(this._calendarScreen && this.main) {      
+      this._calendarScreen.progress = this.main.progress * this._dataLoadProgress
+    }
     this._calendarScreen.events = this.data.todayEvents
   }
 }
