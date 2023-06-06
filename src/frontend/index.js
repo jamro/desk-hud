@@ -32,10 +32,10 @@ import RoomWidget from "./widgets/room/RoomWidget.js";
   app.stage.addChild(gravityField)
   
   const widgets = [
+    new PomodoroWidget(),
     new CalendarWidget(),
     new DateTimeWidget(),
     new RoomWidget(),
-    new PomodoroWidget(),
     new TodoWidget(),
     new WeatherWidget(),
   ]

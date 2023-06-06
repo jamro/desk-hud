@@ -1,3 +1,4 @@
+import MainScreen from '../../MainScreen.js'
 import Widget from '../../Widget.js'
 import DotCircle from '../../circles/DotCircle.js'
 import TickCircle from '../../circles/TickCircle.js'
@@ -5,6 +6,7 @@ import ArchText from '../../components/ArchText.js'
 import GaugePointer from '../../components/GaugePointer.js'
 import PlayButton from '../../components/PlayButton.js'
 import TextField from '../../components/TextField.js'
+import PomodoroStatsScreen from './PomodoroStatsScreen.js'
 
 const WORK_DURATION= 1000 * 25 * 60
 const BREAK_DURATION = 1000 * 5 * 60
@@ -25,6 +27,9 @@ export default class PomodoroWidget extends Widget {
     this.addChildAt(this._redLight, 0)
     
     this._history = this._loadHistory()
+    this._stats = Array(7).fill(0)
+    this._updateStats()
+    console.log({pomodoroHistory: this._history, pomodoroStats: this._stats})
     this._timerStart = Number(localStorage.getItem('Pomodoro_timerStart')) || null
     this._timerStop = Number(localStorage.getItem('Pomodoro_timerStop')) || null
     this._mode = localStorage.getItem('Pomodoro_mode') || 'work'
@@ -124,6 +129,29 @@ export default class PomodoroWidget extends Widget {
 
   }
 
+  _updateStats() {
+    const today = Math.floor((new Date().getTime())/(1000*60*60*24))
+    this._stats = this._history
+      .map(t => Math.floor(t/(1000*60*60*24) - today + 6))
+      .filter(t => t >= 0)
+      .reduce((s, v) => {
+        s[v]++
+        return s
+      }, Array(7).fill(0))
+  }
+
+
+  createMainScreen() {
+    const screen = new MainScreen()
+    screen.title = "Pomodoro stats"
+    const page = screen.getPage(0)
+   
+    this._statsScreen = new PomodoroStatsScreen()
+    page.addChild(this._statsScreen)
+
+    return screen
+  }
+
   _loadHistory() {
     try {
       const raw = localStorage.getItem('Pomodoro_history')
@@ -168,6 +196,7 @@ export default class PomodoroWidget extends Widget {
         // pomodoro completed
         this._history.push(new Date().getTime())
         this._saveHistory(this._history)
+        this._updateStats()
       }
     }
     return dt / timeLimit
@@ -263,5 +292,9 @@ export default class PomodoroWidget extends Widget {
     this._dots.countMax = Math.min(10, this._history.filter(p => p > dayStart ).length)
     this._dotLabel.alpha = this._dots.countMax > 0 ? 1 : 0
     
+    if(this._statsScreen && this.main) {      
+      this._statsScreen.progress = this.main.progress
+    }
+    this._statsScreen.stats = this._stats
   }
 }

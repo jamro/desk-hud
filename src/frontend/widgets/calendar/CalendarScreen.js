@@ -92,7 +92,7 @@ export default class CalendarScreen extends PIXI.Container {
       this._agenda.text = this.events
         .slice(0, 11)
         .filter(e => e.end >= now.getTime())
-        .map(e => `${formatTime(e.start)} - ${formatTime(e.end)}   ${e.summary.substring(0, 41)}`).join('\n')
+        .map(e => `${formatTime(e.start)} - ${formatTime(e.end)}   ${e.summary.substring(0, 41)}`).join('\n') || '                no more meetings today'
 
 
       this._busyCanvas.clear()
