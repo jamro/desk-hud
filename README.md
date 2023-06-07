@@ -25,6 +25,7 @@
 - [RPI] Expand filesystem `sudo raspi-config` > `Advanced Options` > `Expand Filesystem`
 - [RPI] Enable ssh `sudo raspi-config`
 - [RPI] Disable screen saver ` xset s off`
+- [RPI] Edit `/boot/config.txt` and replace `dtoverlay=vc4-kms-v3d` by `dtoverlay=vc4-fkms-v3d` to enable hdmi monitor control
 - [local] generate public and private keys `ssh-keygen`
 - [local] copy public key to remote host `ssh-copy-id -i ~/.ssh/id_rsa.pub pi@raspberrypi.local`
 - [local] add key to ssh: `ssh-add`
