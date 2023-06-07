@@ -135,9 +135,9 @@ class DistanceService extends Service {
     if(distance < goSleepThreshold) {
       this._inactivityTimer = 0
     } else {
-      this._inactivityTimer+=50
+      this._inactivityTimer+=500
     }
-    if(this._isPowerOn  &&this._inactivityTimer > 1000*60) {
+    if(this._isPowerOn  && this._inactivityTimer > this.config.getProp('core.powerOffTime')) {
       // power off
       this._isPowerOn = false
       console.log("Power HDMI off")

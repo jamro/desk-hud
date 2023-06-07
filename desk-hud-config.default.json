@@ -4,7 +4,8 @@
     "distance": {
       "wakeUp": 150,
       "goSleep": 250
-    }
+    },
+    "powerOffTime": 10000
   },
   "dateTime": {
     "countdown": {
