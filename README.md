@@ -37,6 +37,7 @@ curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 sudo apt-get install -y nodejs
 ```
 - [RPI] Install PM2 `sudo npm install pm2@latest -g`
+- [RPI] make sure PM2 starts automatically after boot `pm2 startup`
 - [RPI] Create app folder
 ```bash
 sudo mkdir /var/www

@@ -1,6 +1,7 @@
 const Service = require('./Service.js')
 const fetch = require('node-fetch');
 const spawn = require('child_process').spawn
+const exec = require('child_process').exec
 const path = require('path')
 
 class DistanceService extends Service {
@@ -13,6 +14,8 @@ class DistanceService extends Service {
     this._distance = 0
     this._lastSensorDataTime = 10000
     this._isAwake = false
+    this._isPowerOn = true
+    this._inactivityTimer = 0
   }
 
   async start() {
@@ -127,12 +130,30 @@ class DistanceService extends Service {
     if(count <= 0) return null
 
     const distance = Math.round(sum/count)
-    if(distance < this.config.getProp('core.distance.wakeUp') && !this._isAwake) {
+    const wakeUpThreshold = this.config.getProp('core.distance.wakeUp')
+    const goSleepThreshold = this.config.getProp('core.distance.goSleep')
+    if(distance < goSleepThreshold) {
+      this._inactivityTimer = 0
+    } else {
+      this._inactivityTimer+=50
+    }
+    if(this._isPowerOn  &&this._inactivityTimer > 1000*60) {
+      // power off
+      this._isPowerOn = false
+      console.log("Power HDMI off")
+      exec('vcgencmd display_power 0', console.log)
+    } else if(!this._isPowerOn && this._inactivityTimer === 0) {
+      // power on
+      this._isPowerOn = true
+      console.log("Power HDMI on")
+      exec('vcgencmd display_power 1', console.log)
+    }
+    if(distance < wakeUpThreshold && !this._isAwake) {
       // wake up
       this._isAwake = true
       return {distance, action: 'wakeUp'}
-    } else if(distance > this.config.getProp('core.distance.goSleep') && this._isAwake) {
-      // wake up
+    } else if(distance > goSleepThreshold && this._isAwake) {
+      // go sleep
       this._isAwake = false
       this._distance = distance
       return {distance, action: 'goSleep'}
