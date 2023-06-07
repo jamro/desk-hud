@@ -14,7 +14,7 @@ class DistanceService extends Service {
     this._distance = 0
     this._lastSensorDataTime = 10000
     this._isAwake = false
-    this._isPowerOn = true
+    this._isPowerOn = false
     this._inactivityTimer = 0
   }
 
