@@ -29,10 +29,11 @@ class TodoService extends GoogleService {
   async fetchAll() {
     const inbox = await this._queryTodo(this.config.getProp('google.tasks.inboxId'))
     const action = await this._queryTodo(this.config.getProp('google.tasks.actionsId'))
-    const today = Math.ceil((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
+    const endOfToday = Math.ceil((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
+    const startOfToday = endOfToday - 1000*60*60*24
     return {
       inbox: inbox.filter(t => !t.completed && !t.due),
-      action: action.filter(t => ((!t.due || t.due < today) && (!t.completed || t.completed > today))),
+      action: action.filter(t => ((!t.due || t.due < endOfToday) && (!t.completed || t.completed > startOfToday))),
     }
   }
 
@@ -52,7 +53,12 @@ class TodoService extends GoogleService {
         completed: new Date(t.completed).getTime() || null,
         due: new Date(t.due).getTime() || null,
       }))
-      .sort((a, b) => String(a.position).localeCompare(String(b.position)))
+      .sort((a, b) => {
+        if(a.completed && b.completed) return a.completed - b.completed
+        if(a.completed && !b.completed) return 1
+        if(!a.completed && b.completed) return -1
+        return String(a.position).localeCompare(String(b.position))
+      })
   }
 
 }

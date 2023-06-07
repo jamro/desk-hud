@@ -121,7 +121,12 @@ export default class CoversScreen extends PIXI.Container {
         }
         this._dragButtons[i].visible = !this.doors[i]
       }
+    } else {
+      for(let i=0; i < this._dragButtons.length; i++) {
+        this._dragButtons[i].visible = false
+      }
     }
+
 
     for(let i=0; i < this._coverBatteryIcons.length; i++) {
       this._coverBatteryIcons[i].progress = this.progress
