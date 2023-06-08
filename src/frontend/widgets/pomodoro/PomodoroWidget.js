@@ -8,8 +8,8 @@ import PlayButton from '../../components/PlayButton.js'
 import TextField from '../../components/TextField.js'
 import PomodoroStatsScreen from './PomodoroStatsScreen.js'
 
-const WORK_DURATION= 1000// * 25 * 60
-const BREAK_DURATION = 1000// * 5 * 60
+const WORK_DURATION= 1000 * 25 * 60
+const BREAK_DURATION = 1000 * 5 * 60
 
 export default class PomodoroWidget extends Widget {
   constructor() {
