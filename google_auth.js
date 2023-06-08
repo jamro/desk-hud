@@ -8,7 +8,7 @@ const Config = require('./src/backend/Config.js')
 // https://developers.google.com/tasks/quickstart/nodejs
 
 const SCOPES = [
-  'https://www.googleapis.com/auth/tasks.readonly',
+  'https://www.googleapis.com/auth/tasks',
   'https://www.googleapis.com/auth/calendar.events.readonly'
 ];
 

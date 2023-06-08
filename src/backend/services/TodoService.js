@@ -37,6 +37,27 @@ class TodoService extends GoogleService {
     }
   }
 
+  async completeNextAction(taskId) {
+    const actionListId = this.config.getProp('google.tasks.actionsId')
+    console.log(`Complete task ${taskId} from list ${actionListId}`)
+    await this.tasks.tasks.patch({requestBody: {status: 'completed'}, tasklist: actionListId, task: taskId})
+    this.emit(await this.fetchAll())
+  }
+
+  async uncompleteNextAction(taskId) {
+    const actionListId = this.config.getProp('google.tasks.actionsId')
+    console.log(`Un-complete task ${taskId} from list ${actionListId}`)
+    await this.tasks.tasks.patch({requestBody: {status: 'needsAction', completed: undefined}, tasklist: actionListId, task: taskId})
+    this.emit(await this.fetchAll())
+  }
+
+  async onMessage({action, id}) {
+    switch(action) {
+      case 'completeNextAction': return await this.completeNextAction(id)
+      case 'uncompleteNextAction': return await this.uncompleteNextAction(id)
+    }
+  }
+
   async _queryTodo(id) {
     const response = await this.tasks.tasks.list({
       tasklist: id,
@@ -54,9 +75,6 @@ class TodoService extends GoogleService {
         due: new Date(t.due).getTime() || null,
       }))
       .sort((a, b) => {
-        if(a.completed && b.completed) return a.completed - b.completed
-        if(a.completed && !b.completed) return 1
-        if(!a.completed && b.completed) return -1
         return String(a.position).localeCompare(String(b.position))
       })
   }

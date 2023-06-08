@@ -53,6 +53,13 @@ export default class TaskWidget extends Widget {
     this._todoListScreen = new TodoListScreen()
     page.addChild(this._todoListScreen)
 
+    this._todoListScreen.on('complete', (id) => {
+      this.sendMessage({action: 'completeNextAction', id})
+    })
+    this._todoListScreen.on('uncomplete', (id) => {
+      this.sendMessage({action: 'uncompleteNextAction', id})
+    })
+
     return screen
   }
 
