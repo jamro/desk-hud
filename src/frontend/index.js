@@ -6,6 +6,10 @@ import WeatherWidget from "./widgets/weather/WeatherWidget.js";
 import CalendarWidget from "./widgets/calendar/CalendarWidget.js";
 import TodoWidget from "./widgets/todo/TodoWidget.js";
 import RoomWidget from "./widgets/room/RoomWidget.js";
+import DemoSocket from "./DemoSocket.js";
+
+const DEMO_MODE = (window.location.hash === '#demo');
+console.log({DEMO_MODE});
 
 (async () => {
   async function loadFont(name) {
@@ -18,7 +22,7 @@ import RoomWidget from "./widgets/room/RoomWidget.js";
   await loadFont('MajorMonoDisplay-Regular')
   await loadFont('Material Symbols Outlined')
   
-  const socket = io();
+  const socket = DEMO_MODE ? new DemoSocket() : io()
   
   const app = new PIXI.Application({
       width: 1480,
@@ -55,6 +59,7 @@ import RoomWidget from "./widgets/room/RoomWidget.js";
   })
   
   socket.on('widget', function(data) {
+    console.log(data)
     const {
       widgetId,
       payload
