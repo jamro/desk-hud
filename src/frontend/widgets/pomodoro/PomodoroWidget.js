@@ -8,8 +8,8 @@ import PlayButton from '../../components/PlayButton.js'
 import TextField from '../../components/TextField.js'
 import PomodoroStatsScreen from './PomodoroStatsScreen.js'
 
-const WORK_DURATION= 1000 * 25 * 60
-const BREAK_DURATION = 1000 * 5 * 60
+const WORK_DURATION= 1000// * 25 * 60
+const BREAK_DURATION = 1000// * 5 * 60
 
 export default class PomodoroWidget extends Widget {
   constructor() {
@@ -26,7 +26,7 @@ export default class PomodoroWidget extends Widget {
     this._redLight.alpha = 0
     this.addChildAt(this._redLight, 0)
     
-    this._history = this._loadHistory()
+    this._history = []
     this._stats = Array(7).fill(0)
     this._updateStats()
     console.log({pomodoroHistory: this._history, pomodoroStats: this._stats})
@@ -129,6 +129,11 @@ export default class PomodoroWidget extends Widget {
 
   }
 
+  onMessage({history}) {
+    this._history = history
+    this._updateStats()
+  }
+
   _updateStats() {
     const today = Math.floor((new Date().getTime())/(1000*60*60*24))
     this._stats = this._history
@@ -140,7 +145,6 @@ export default class PomodoroWidget extends Widget {
       }, Array(7).fill(0))
   }
 
-
   createMainScreen() {
     const screen = new MainScreen()
     screen.title = "Pomodoro stats"
@@ -150,28 +154,6 @@ export default class PomodoroWidget extends Widget {
     page.addChild(this._statsScreen)
 
     return screen
-  }
-
-  _loadHistory() {
-    try {
-      const raw = localStorage.getItem('Pomodoro_history')
-      return JSON.parse(raw) || []
-    } catch(err) {
-      console.warn(err)
-    }
-    return []
-  }
-
-  _saveHistory(data) {
-    while(data.length > 1000) {
-      data.unshift()
-    }
-    try {
-      const raw = localStorage.setItem('Pomodoro_history', JSON.stringify(data))
-    } catch(err) {
-      console.warn(err)
-    }
-    return []
   }
 
   _updatePlayButtonStatus() {
@@ -194,8 +176,7 @@ export default class PomodoroWidget extends Widget {
       this._pulse = true
       if(this._mode === 'work') {
         // pomodoro completed
-        this._history.push(new Date().getTime())
-        this._saveHistory(this._history)
+        this.sendMessage({action: 'pomodoroDone'})
         this._updateStats()
       }
     }

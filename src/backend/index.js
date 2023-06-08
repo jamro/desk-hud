@@ -12,6 +12,7 @@ const RoomService = require('./services/RoomService.js');
 const DistanceService = require('./services/DistanceService.js');
 const Config = require('./Config.js');
 const storage = require('node-persist');
+const PomodoroService = require('./services/PomodoroService.js');
 
 (async () => {
   await storage.init()
@@ -40,6 +41,7 @@ const storage = require('node-persist');
     new TodoService(config, io),
     new RoomService(config, io),
     new DistanceService(config, io),
+    new PomodoroService(config, io),
   ]
   try{
     await Promise.all(services.map(s => s.start()))
