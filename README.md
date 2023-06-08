@@ -1,6 +1,16 @@
-# desk-hud
+# Desk-HUD
 
-# Configuration of Google API
+Desk-HUD is a compact side monitor designed to enhance productivity and convenience in your workspace. It features an 11.9-inch touch screen connected to a Raspberry Pi hardware platform, providing quick access to essential features like a todo list, calendar, weather updates, clock, and smart device control for items such as window covers and air conditioning. With Desk-HUD, managing tasks, staying organized, and controlling your environment becomes effortless, all while keeping everything you need within reach on your desk.
+
+![Room Control Preview](doc/room_preview.png)
+
+![Todo List Preview](doc/todo_preview.png)
+
+![Weather Widget Preview](doc/weather_preview.png)
+
+# Installation
+
+## Configuration of Google API
 
 - In the Google Cloud console, go to Menu `APIs & Services` > `Credentials`.
 - Click `Create Credentials` > `OAuth client ID`.
@@ -11,7 +21,7 @@
 - Save the downloaded JSON file as `credentials.json`
 - Open `OAuth consent screen` and yourself to `Test users`
 
-# Setup project on local machine
+## Setup project on local machine
 
 - Clone reporistory `git clone https://github.com/jamro/desk-hud.git`
 - Enter project folter `cd desk-hud`
@@ -20,7 +30,7 @@
 - Move `credentials.json` file downloaded in previous steps to `./desk-hud` folder
 - Authorize in Google `node google_auth.js`. The script will create/populate `./.env` file
 
-# Configuration of Raspberry PI
+## Configuration of Raspberry PI
 
 - [RPI] Expand filesystem `sudo raspi-config` > `Advanced Options` > `Expand Filesystem`
 - [RPI] Enable ssh `sudo raspi-config`
