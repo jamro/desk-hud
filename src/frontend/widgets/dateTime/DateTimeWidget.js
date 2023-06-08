@@ -60,12 +60,12 @@ export default class DateTimeWidget extends Widget {
   createMainScreen() {
     const screen = new MainScreen()
     screen.title = "Date & Time"
-    const dateTab = screen.getTabButton(1)
-    const datePage = screen.getPage(1)
+    const dateTab = screen.getTabButton(0)
+    const datePage = screen.getPage(0)
     dateTab.visible = true
     dateTab.text = "Date"
-    const timeTab = screen.getTabButton(0)
-    const timePage = screen.getPage(0)
+    const timeTab = screen.getTabButton(1)
+    const timePage = screen.getPage(1)
     timeTab.visible = true
     timeTab.text = "Time"
 
