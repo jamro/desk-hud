@@ -1,7 +1,9 @@
+import MainScreen from '../../MainScreen.js'
 import Widget from '../../Widget.js'
 import ScaleCircle from '../../circles/ScaleCircle.js'
 import ArchText from '../../components/ArchText.js'
 import TextField from '../../components/TextField.js'
+import ForecastScreen from './ForecastScreen.js'
 
 const icons = {
   '01d': '',    '01n': '',
@@ -25,7 +27,8 @@ export default class WeatherWidget extends Widget {
       currentTemperatureMax: null,
       currentIcon: null,
       currentDescription: null,
-      rainTime: null
+      rainTime: null,
+      forecast: null
     }
     this._dataLoadProgress = 0
 
@@ -70,6 +73,17 @@ export default class WeatherWidget extends Widget {
     this._rainLabel.positionOffset = -Math.PI*0.45
     this.addChild(this._rainLabel)
   }
+
+  createMainScreen() {
+    const screen = new MainScreen()
+    screen.title = "3 Days Forecast"
+    const page = screen.getPage(0)
+   
+    this._forecastScreen = new ForecastScreen()
+    page.addChild(this._forecastScreen)
+
+    return screen
+  }
   
   onMessage(msg) {
     const currentJsonData = msg.current
@@ -99,6 +113,16 @@ export default class WeatherWidget extends Widget {
 
     let rain = forecastJsonData.list.filter(d => d.rain)
     this.data.rainTime = (rain && rain.length > 0) ? rain[0].dt*1000 : null
+
+    console.log(forecastJsonData)
+
+    this.data.forecast = {
+      startTime: forecastJsonData.list[0].dt*1000,
+      icons: forecastJsonData.list.map(r => r.weather ? r.weather[0].icon : undefined),
+      pop: forecastJsonData.list.map(r => r.rain ? r.pop : 0),
+      rain: forecastJsonData.list.map(r => r.rain ? r.rain['3h'] : 0),
+      temp: forecastJsonData.list.map(r => r.main.temp),
+    }
 
     console.log(this.data)
   }
@@ -156,5 +180,17 @@ export default class WeatherWidget extends Widget {
     this._rainLabel.size = this.size
     this._rainLabel.radius = 110*this.size
     this._rainLabel.fontSize = 11*this.size
+
+    if(this._forecastScreen && this.main) {      
+      this._forecastScreen.progress = this.main.progress * this._dataLoadProgress
+    }
+    if(this.data.forecast) {
+      this._forecastScreen.startTime = this.data.forecast.startTime
+      this._forecastScreen.icons = this.data.forecast.icons
+      this._forecastScreen.pop = this.data.forecast.pop
+      this._forecastScreen.rain = this.data.forecast.rain
+      this._forecastScreen.temp = this.data.forecast.temp
+    }
+
   }
 }

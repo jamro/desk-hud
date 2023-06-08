@@ -13,6 +13,14 @@ export default class LineArt extends PIXI.Container {
     this._lines = {}
   }
 
+  clear() {
+    this._lineGroups = []
+    this._lines = {}
+    this._lastHash = ''
+    this._canvas.clear()
+    this._linesChanged = true
+  }
+
   addLine(x1, y1, x2, y2, width=1, color=0xffffff, alpha=1, startTime=0, endTime=1) {
     this._linesChanged = true
     const groupId = `${width.toFixed(1)}|${color.toString(16)}|${alpha.toFixed(2)}`
