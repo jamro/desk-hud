@@ -15,12 +15,12 @@ Necessary hardware:
 
 Mount [Raspberry PI](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/) to the [touch screen](https://www.waveshare.com/11.9inch-hdmi-lcd.htm) with included screws and distances. Connect HDMI and touch screen USB with included adapters. Install SD Card with Raspberry PI OS.
 
-![Touch screen back](doc/img/lcd.jpg)
+![Touch screen back](img/lcd.jpg)
 
-![Raspberry PI + Touch screen](doc/img/rpi.jpg)
+![Raspberry PI + Touch screen](img/rpi.jpg)
 
 Wire [distance sensor](https://www.sparkfun.com/products/17777) to GPIO pins of [Raspberry PI](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/)  
 
-![Wireing](doc/img/wiring.png)
+![Wireing](img/wiring.png)
 
 Power up [Raspberry PI](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/) by connecting to USB charger. Make sure that touch screen is working correctly. It may have wrong orientation. Fix it using "Rotate Touch" button on the back of the screen 
