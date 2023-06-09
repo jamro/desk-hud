@@ -14,6 +14,10 @@ Desk-HUD is specifically tailored to meet my unique requirements and is not inte
 
 ![Weather Widget Preview](doc/img/weather_preview.png)
 
+# Demo
+
+You can experience a demo of Desk-HUD by visiting the following URL: [https://desk-hud.jmrlab.com](https://desk-hud.jmrlab.com). Please note that the demo uses simulated data to showcase the features, giving you a feel for Desk-HUD's functionality and is not connected to real systems.
+
 # Installation Guide
 
 - [Hardware setup](doc/install_hardware.md)
