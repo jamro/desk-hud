@@ -33,6 +33,9 @@ console.log({DEMO_MODE});
   document.body.appendChild(app.view)
   
   const gravityField = new GravityField()
+  if(DEMO_MODE) {
+    gravityField.infoMessage.emptyText = '[Demo Mode]'
+  }
   app.stage.addChild(gravityField)
   
   const widgets = [

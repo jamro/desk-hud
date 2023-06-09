@@ -16,6 +16,7 @@ export default class InfoMessage extends PIXI.Container {
     this.addChild(this._label)
     this._text = ''
     this._clearTime = 0
+    this.emptyText = ''
   }
 
   set text(txt) {
@@ -32,7 +33,7 @@ export default class InfoMessage extends PIXI.Container {
         this._clearTime--
         return
       } else {
-        this._text = ''
+        this._text = this.emptyText
       }
     }
 

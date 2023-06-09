@@ -42,6 +42,10 @@ export default class GravityField extends PIXI.Container {
     this.addChild(this._infoMessage)
   }
 
+  get infoMessage() {
+    return this._infoMessage
+  }
+
   goSleep() {
     this._sleep = true
     this._infoMessage.text = BYE[Math.floor(Math.random()*BYE.length)]
