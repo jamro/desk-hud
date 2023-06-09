@@ -16,9 +16,12 @@ Desk-HUD is specifically tailored to meet my unique requirements and is not inte
 
 # Demo
 
-You can experience a demo of Desk-HUD by visiting the following URL: [https://desk-hud.jmrlab.com](https://desk-hud.jmrlab.com). Please note that the demo uses simulated data to showcase the features, giving you a feel for Desk-HUD's functionality and is not connected to real systems.
+You can experience a demo of Desk-HUD by visiting the following URL: [https://desk-hud.jmrlab.com](https://desk-hud.jmrlab.com). Please note that the demo uses simulated data to showcase the features, giving you a feel for Desk-HUD's functionality and is not connected to real systems. 
+
+Additionally, there is a [video](https://www.youtube.com/watch?v=2UuWsG3Lnaw) showcasing the assembled project, complete with the wooden case and touch screen monitor.
 
 # Installation Guide
 
 - [Hardware setup](doc/install_hardware.md)
 - [Software installation](doc/install_software.md)
+- [Wooden case assembly instructions](doc/install_case.md)
