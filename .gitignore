@@ -1,4 +1,5 @@
 .node-persist
+.DS_Store
 
 # Logs
 logs
