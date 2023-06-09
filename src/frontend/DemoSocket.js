@@ -113,6 +113,14 @@ export default class DemoSocket {
       this._publish('widget', this._getRoomData())
       this._publish('widget', this._getPomodoroData())
     }, 500)
+
+    setTimeout(() => {
+      this._publish('distance', {
+        "distance": 15,
+        "sensorDataAge": 33,
+        "action": "wakeUp"
+      })
+    }, 1000)
   }  
 
   _publish(eventName, ...args) {
