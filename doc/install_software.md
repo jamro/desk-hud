@@ -37,7 +37,6 @@ curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 sudo apt-get install -y nodejs
 ```
 - [RPI] Install PM2 `sudo npm install pm2@latest -g`
-- [RPI] make sure PM2 starts automatically after boot `pm2 startup`
 - [RPI] Create app folder
 ```bash
 sudo mkdir /var/www
@@ -51,3 +50,15 @@ DHUD_CONFIG=/home/pi/desk-hud-config.json
 - [local] provision remote host `npm run provision-remote`
 - [local] deploy `npm run deploy`
 - [RPI] open web browser, go to http://localhost:300 and go full screen
+
+
+## enable auto start after boot
+- [RPI] make sure PM2 starts automatically after boot `pm2 startup`
+- [RPI] edit autostart: `sudo nano /etc/xdg/lxsession/LXDE-pi/autostart` and add following lines
+```
+@chromium-browser --kiosk http://localhost:3000/
+@unclutter -idle 0.1 -root
+```
+- Reload of the page may be necessary sine Desk-HUD server may not be immediately available 
+
+In order to exit Chromium kiosk mode, press Ctrl+F4
