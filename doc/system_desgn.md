@@ -12,6 +12,20 @@ Communication between the client and server is established through web sockets, 
 
 The server component of Desk-HUD encompasses multiple services, each responsible for the logic of a specific widget. These services handle data retrieval, processing, and communication with external APIs such as Google API, Open Weather Maps, or Home Assistant. The server also controls peripherals connected to the Raspberry Pi, including a distance sensor and the power of the HDMI monitor.
 
+### Incoming messages
+
+There are several web socket events emitted by the server:
+
+- `config` - configuration details sent after client connected
+- `widget` - update of widget data. The message is specific to each eidget
+- `distance` - updates from distance sensor
+
+### Outgoing messages
+
+There is one web socket event emitted by the client:
+
+- `service` - command for the service (e.g. turn the air conditioning off)
+
 ## Persistance
 
 To store essential data, the server employs simple JSON files on the local disk, utilizing the `node-persist` library. This approach ensures persistence and accessibility of necessary information for the widgets and services.

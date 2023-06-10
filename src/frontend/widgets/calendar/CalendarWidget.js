@@ -114,8 +114,6 @@ export default class CalendarWidget extends Widget {
     this.data.todayEvents = this.data.allEvents.filter(e => e.start < today + 24*60*60*1000 && !e.allDay)
     this.data.todayEventsLeft = this.data.todayEvents.filter(e => e.end >= new Date().getTime())
     this.data.lastUpdate = new Date().getTime()
-
-    console.log( this.data )
   }
 
   render(renderer) {

@@ -29,7 +29,7 @@ export default class PomodoroWidget extends Widget {
     this._history = []
     this._stats = Array(7).fill(0)
     this._updateStats()
-    console.log({pomodoroHistory: this._history, pomodoroStats: this._stats})
+    this.log({pomodoroHistory: this._history, pomodoroStats: this._stats})
     this._timerStart = Number(localStorage.getItem('Pomodoro_timerStart')) || null
     this._timerStop = Number(localStorage.getItem('Pomodoro_timerStop')) || null
     this._mode = localStorage.getItem('Pomodoro_mode') || 'work'

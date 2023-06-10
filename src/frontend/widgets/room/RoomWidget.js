@@ -160,7 +160,6 @@ export default class RoomWidget extends Widget {
   }
 
   onMessage(entities) {
-    console.log(entities)
     this.data.lastUpdate = new Date().getTime()
     this.data.currentTemperature = Number(entities.temp.state)
     this.data.tempBattery = Number(entities.tempBattery.state/100)
@@ -207,8 +206,6 @@ export default class RoomWidget extends Widget {
     while(this.data.tempHistory.length > 48) {
       this.data.tempHistory.shift()
     }
-
-    console.log( this.data )
   }
 
   render(renderer) {

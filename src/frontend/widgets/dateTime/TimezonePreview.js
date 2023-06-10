@@ -28,7 +28,6 @@ export default class TimezonePreview extends PIXI.Container {
         offset
       }
     }) 
-    console.log(this._timezones)
 
     this._container = new PIXI.Container()
     this._container.x = 120

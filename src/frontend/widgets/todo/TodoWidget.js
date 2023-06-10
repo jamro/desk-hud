@@ -70,7 +70,6 @@ export default class TaskWidget extends Widget {
     this.data.actionList = tasks.action
     this.data.todayLeft = this.data.actionList.filter(t => t.status === 'needsAction')
 
-    console.log( this.data )
     const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
     this._timeline.setPoints(this.data.actionList.map(i => i.completed ? i.completed - today : null))  
   }

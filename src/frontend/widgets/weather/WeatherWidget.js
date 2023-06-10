@@ -114,8 +114,6 @@ export default class WeatherWidget extends Widget {
     let rain = forecastJsonData.list.filter(d => d.rain)
     this.data.rainTime = (rain && rain.length > 0) ? rain[0].dt*1000 : null
 
-    console.log(forecastJsonData)
-
     this.data.forecast = {
       startTime: forecastJsonData.list[0].dt*1000,
       icons: forecastJsonData.list.map(r => r.weather ? r.weather[0].icon : undefined),
@@ -123,8 +121,6 @@ export default class WeatherWidget extends Widget {
       rain: forecastJsonData.list.map(r => r.rain ? r.rain['3h'] : 0),
       temp: forecastJsonData.list.map(r => r.main.temp),
     }
-
-    console.log(this.data)
   }
 
   render(renderer) {

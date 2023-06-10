@@ -132,15 +132,21 @@ export default class Widget extends PIXI.Container {
   }
 
   onMessage(msg) {
-    console.log(`Widget "${this._id}" received a message:`, msg)
+    this.log(`Widget received a message:`, msg)
   }
 
   onConfig(config) {
-    console.log(`Widget "${this._id}" received config:`, config)
+    this.log(`Widget received config:`, config)
   }
 
   sendMessage(payload) {
-    this.emit('service', {serviceId: this._id, payload})
+    const msg = {serviceId: this._id, payload}
+    this.log('Sending message:', msg)
+    this.emit('service', msg)
+  }
+
+  log(...args) {
+    console.log(`[${this._id}]`, ...args)
   }
 
   toString() {
