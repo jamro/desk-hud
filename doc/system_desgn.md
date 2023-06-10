@@ -4,7 +4,7 @@ Desk-HUD utilizes a client-server architecture where both the client and server 
 
 On the client side, multiple widgets runs, each corresponding to a specific backend service. These widgets communicate with their respective backend services to retrieve and display relevant data. This modular design allows for flexibility and scalability in adding or modifying widgets based on individual preferences and requirements.
 
-![img/systemDesign.png](System Design Diagram)
+![System Design Diagram](img/systemDesign.png)
 
 ## Communication
 
