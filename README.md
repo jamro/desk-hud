@@ -22,6 +22,7 @@ Additionally, there is a [video](https://www.youtube.com/watch?v=2UuWsG3Lnaw) sh
 
 - [Hardware setup](doc/install_hardware.md)
 - [Software installation](doc/install_software.md)
+- [Configuration](doc/configuration.md)
 - [Wooden case assembly instructions](doc/install_case.md)
 
 # Customization
