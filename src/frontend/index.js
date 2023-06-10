@@ -1,12 +1,7 @@
 import GravityField from "./GravityField.js";
 import FontFaceObserver from 'fontfaceobserver'
-import DateTimeWidget from "./widgets/dateTime/DateTimeWidget.js";
-import PomodoroWidget from "./widgets/pomodoro/PomodoroWidget.js";
-import WeatherWidget from "./widgets/weather/WeatherWidget.js";
-import CalendarWidget from "./widgets/calendar/CalendarWidget.js";
-import TodoWidget from "./widgets/todo/TodoWidget.js";
-import RoomWidget from "./widgets/room/RoomWidget.js";
 import DemoSocket from "./DemoSocket.js";
+import widgets from "../widgets/widgets.js";
 
 const DEMO_MODE = (window.location.hash === '#demo');
 const LOG_STYLE = 'font-weight:bold;background-color:green;color:white'
@@ -45,16 +40,9 @@ if(DEMO_MODE) {
   }
   app.stage.addChild(gravityField)
   
-  const widgets = [
-    new DateTimeWidget(),
-    new WeatherWidget(),
-    new RoomWidget(),
-    new CalendarWidget(),
-    new TodoWidget(),
-    new PomodoroWidget(),
-  ]
+  const widgetsInstances = widgets.map((Def) => new Def())
   
-  widgets.forEach((w) => {
+  widgetsInstances.forEach((w) => {
     gravityField.addWidget(w)
     w.on('service', (msg) => {
       socket.emit('service', msg)

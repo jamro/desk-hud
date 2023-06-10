@@ -36,6 +36,7 @@
     "@babel/preset-env": "^7.21.5",
     "@google-cloud/local-auth": "^2.1.1",
     "babel-loader": "^9.1.2",
+    "cloc": "^1.96.0-cloc",
     "connect-livereload": "^0.6.1",
     "copy-webpack-plugin": "^11.0.0",
     "cz-conventional-changelog": "^3.3.0",

@@ -5,14 +5,10 @@ const livereload = require("livereload");
 const connectLiveReload = require("connect-livereload");
 const http = require('http');
 const { Server } = require("socket.io");
-const WeatherService = require('./services/WeatherService.js')
-const CalendarService = require('./services/CalendarService.js');
-const TodoService = require('./services/TodoService.js');
-const RoomService = require('./services/RoomService.js');
-const DistanceService = require('./services/DistanceService.js');
 const Config = require('./Config.js');
 const storage = require('node-persist');
-const PomodoroService = require('./services/PomodoroService.js');
+const DistanceService = require('./services/DistanceService.js');
+const services = require('../widgets/services.js');
 
 (async () => {
   await storage.init()
@@ -35,16 +31,11 @@ const PomodoroService = require('./services/PomodoroService.js');
   app.use(connectLiveReload());
   app.use(express.static(path.join(__dirname, 'www')))
   
-  const services = [
-    new WeatherService(config, io),
-    new CalendarService(config, io),
-    new TodoService(config, io),
-    new RoomService(config, io),
-    new DistanceService(config, io),
-    new PomodoroService(config, io),
-  ]
+  const serviceInstances = services.map((Def) => new Def(config, io))
+  serviceInstances.push(new DistanceService(config, io))
+ 
   try{
-    await Promise.all(services.map(s => s.start()))
+    await Promise.all(serviceInstances.map(s => s.start()))
   } catch(err) {
     console.error('Unable to start services')
     console.error(err)
@@ -56,9 +47,9 @@ const PomodoroService = require('./services/PomodoroService.js');
         dateTime: config.getProp('dateTime')
       }
     })
-    await Promise.all(services.map(s => s.welcomeClient(socket)))
+    await Promise.all(serviceInstances.map(s => s.welcomeClient(socket)))
     socket.on('service', async ({serviceId, payload}) => {
-      const service = services.find(s => s.id === serviceId)
+      const service = serviceInstances.find(s => s.id === serviceId)
       if(service) {
         await service.onMessage(payload)
       }

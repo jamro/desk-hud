@@ -7,7 +7,7 @@ const path = require('path')
 class DistanceService extends Service {
 
   constructor(config, io) {
-    super(config, io, 'weather')
+    super(config, io, 'distance')
     this._loop = null
     this._proc = null
     this._queue = []
