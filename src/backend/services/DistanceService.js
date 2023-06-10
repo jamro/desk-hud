@@ -93,9 +93,7 @@ class DistanceService extends Service {
       console.log("Sensor data is outdated. skipping")
       this._queue = []
       this._lastSensorDataTime = performance.now()
-      if(this._proc) {
-        this._respawn()
-      }
+      this._respawn()
       return null;
     }
     let sum = 0
@@ -141,12 +139,12 @@ class DistanceService extends Service {
     if(distance < wakeUpThreshold && !this._isAwake) {
       // wake up
       this._isAwake = true
-      return {distance, action: 'wakeUp'}
+      return {distance, action: 'wakeUp', dataAge}
     } else if(distance > goSleepThreshold && this._isAwake) {
       // go sleep
       this._isAwake = false
       this._distance = distance
-      return {distance, action: 'goSleep'}
+      return {distance, action: 'goSleep', dataAge}
     }
     
   }

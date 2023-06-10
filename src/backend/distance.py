@@ -23,7 +23,7 @@ def checkDistance():
 	current = round(pulse_duration * 17241, 2)
 	current = min(300, max(30, current))
 
-	time.sleep(max(0.01, 0.03 - pulse_duration))
+	time.sleep(max(0.03, 0.06 - pulse_duration))
 
 	return current
 
