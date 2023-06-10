@@ -82,16 +82,14 @@ To obtain the weather.apiKey for Desk-HUD, you will need to sign up on the OpenW
 
 To set up Google access keys for integration with Desk-HUD, follow these steps:
 
-1. Enable Google Cloud API: 
-   - Before using Google APIs, you need to enable them in a Google Cloud project. In the Google Cloud console, enable the Google Tasks API.
-
-2. Configure the OAuth consent screen:
-   - If you're using a new Google Cloud project, configure the OAuth consent screen and add yourself as a test user. In the Google Cloud console, go to `Menu` > `APIs & Services` > `OAuth consent` screen. Select the user type, complete the app registration form, and add test users if applicable.
-
-3. Authorize credentials for a desktop application:
-   - To authenticate as an end user and access user data in your app, create OAuth 2.0 Client IDs. In the Google Cloud console, go to `Menu` > `APIs & Services` > `Credentials`. Click Create Credentials > OAuth client ID. Choose "Desktop app" as the application type, provide a name for the credential, and click Create. Save the downloaded JSON file as `credentials.json` in your project root directory.
-
-4. Run the `google_auth.js` script:
-   - Once you have `credentials.json`, run the `node ./google_auth.js` script. Follow the instructions provided to complete the authentication process.
+- In the Google Cloud console, go to Menu `APIs & Services` > `Credentials`.
+- Click `Create Credentials` > `OAuth client ID`.
+- Click `Application type` > `Desktop app`.
+- In the `Name` field, type a name for the credential. This name is only shown in the Google Cloud console.
+- Click `Create`. The OAuth client created screen appears, showing your new Client ID and Client secret.
+- Click `OK`. The newly created credential appears under OAuth 2.0 Client IDs.
+- Save the downloaded JSON file as `credentials.json`
+- Open `OAuth consent screen` and yourself to `Test users`
+- Once you have `credentials.json`, run the `node ./google_auth.js` script. Follow the instructions provided to complete the authentication process.
 
 Detailed process of obtaining `credentials.json` is described here [here](https://developers.google.com/tasks/quickstart/nodejs)
