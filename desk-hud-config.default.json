@@ -2,8 +2,8 @@
   "core": {
     "port": 3000,
     "distance": {
-      "wakeUp": 150,
-      "goSleep": 250
+      "wakeUp": 80,
+      "goSleep": 100
     },
     "powerOffTime": 10000
   },

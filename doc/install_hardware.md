@@ -19,7 +19,7 @@ Mount [Raspberry PI](https://www.raspberrypi.com/products/raspberry-pi-4-model-b
 
 ![Raspberry PI + Touch screen](img/rpi.jpg)
 
-Wire [distance sensor](https://www.sparkfun.com/products/17777) to GPIO pins of [Raspberry PI](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/)  
+Wire [distance sensor](https://www.sparkfun.com/products/17777) to GPIO pins of [Raspberry PI](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/). Connect the GND at first, otherwise, it will affect the normal work of the module.   
 
 ![Wireing](img/wiring.png)
 
