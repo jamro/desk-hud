@@ -20,8 +20,7 @@ const icons = {
 export default class WeatherWidget extends Widget {
   constructor() {
     super('weather', "Weather")
-    this.data = {
-      lastUpdate: null,
+    this.initState({
       currentTemperature: null,
       currentTemperatureMin: null,
       currentTemperatureMax: null,
@@ -29,8 +28,7 @@ export default class WeatherWidget extends Widget {
       currentDescription: null,
       rainTime: null,
       forecast: null
-    }
-    this._dataLoadProgress = 0
+    })
 
     this._currentTempScale = new ScaleCircle(-10, 30, '°c', 5, Math.PI*0.8)
     this._currentTempScale.rotation = Math.PI*0.3 + Math.PI/2
@@ -80,16 +78,14 @@ export default class WeatherWidget extends Widget {
     this._forecastScreen = new ForecastScreen()
     page.addChild(this._forecastScreen)
   }
-
-
   
-  onMessage(msg) {
+  msg2state(msg) {
     const currentJsonData = msg.current
     const forecastJsonData = msg.forecast
-    this.data.lastUpdate = new Date().getTime()
-    this.data.currentTemperature = currentJsonData.main.temp
-    this.data.currentIcon = currentJsonData.weather[0].icon
-    this.data.currentDescription = currentJsonData.weather[0].description
+    const newState = {}
+    newState.currentTemperature = currentJsonData.main.temp
+    newState.currentIcon = currentJsonData.weather[0].icon
+    newState.currentDescription = currentJsonData.weather[0].description
 
     const now = (new Date().getTime())/1000
     const temperature24 = forecastJsonData.list
@@ -106,60 +102,57 @@ export default class WeatherWidget extends Widget {
         min: currentJsonData.main.temp,
         max: currentJsonData.main.temp
       })
-    this.data.currentTemperatureMin = temperature24.min
-    this.data.currentTemperatureMax = temperature24.max
+      newState.currentTemperatureMin = temperature24.min
+    newState.currentTemperatureMax = temperature24.max
 
     let rain = forecastJsonData.list.filter(d => d.rain)
-    this.data.rainTime = (rain && rain.length > 0) ? rain[0].dt*1000 : null
+    newState.rainTime = (rain && rain.length > 0) ? rain[0].dt*1000 : null
 
-    this.data.forecast = {
+    newState.forecast = {
       startTime: forecastJsonData.list[0].dt*1000,
       icons: forecastJsonData.list.map(r => r.weather ? r.weather[0].icon : undefined),
       pop: forecastJsonData.list.map(r => r.rain ? r.pop : 0),
       rain: forecastJsonData.list.map(r => r.rain ? r.rain['3h'] : 0),
       temp: forecastJsonData.list.map(r => r.main.temp),
     }
+    return newState
   }
 
   render(renderer) {
     super.render(renderer)
 
-    if(this.data.lastUpdate && this._dataLoadProgress < 1) {
-      this._dataLoadProgress = Math.min(1, this._dataLoadProgress + 0.02)
-    }
-
-    this._currentTempLabel.progress = this.progress*this._dataLoadProgress
-    this._currentTempLabel.text = this.data.currentTemperature === null ? '' : Math.round(this.data.currentTemperature) + '°c'
+    this._currentTempLabel.progress = this.progress*this.dataLoadProgress
+    this._currentTempLabel.text = this.state.currentTemperature === null ? '' : Math.round(this.state.currentTemperature) + '°c'
     this._currentTempLabel.y = 40*this.size
     this._currentTempLabel.style.fontSize = this.size * 8 + 7
 
-    this._currentIcon.alpha = this.progress*this._dataLoadProgress
-    this._currentIcon.text = this.data.currentIcon === null ? '' : icons[this.data.currentIcon]
+    this._currentIcon.alpha = this.progress*this.dataLoadProgress
+    this._currentIcon.text = this.state.currentIcon === null ? '' : icons[this.state.currentIcon]
     this._currentIcon.y = -29*this.size
     this._currentIcon.style.fontSize = this.size * 60
 
-    this._currentDescriotionLabel.progress = this.progress*this._dataLoadProgress
-    this._currentDescriotionLabel.text = this.data.currentDescription === null ? '' : this.data.currentDescription.substring(0, 17)
+    this._currentDescriotionLabel.progress = this.progress*this.dataLoadProgress
+    this._currentDescriotionLabel.text = this.state.currentDescription === null ? '' : this.state.currentDescription.substring(0, 17)
     this._currentDescriotionLabel.y = 15*this.size
     this._currentDescriotionLabel.visible = (this.size === 1)
     this._currentDescriotionLabel.style.fontSize = this.size * 12
 
     this._currentTempScale.size = this.size
-    this._currentTempScale.progress = this.progress*this._dataLoadProgress
+    this._currentTempScale.progress = this.progress*this.dataLoadProgress
     this._currentTempScale.visible = (this.size === 1)
-    if(this.data.currentTemperature !== null) {
-      this._currentTempScale.value = Math.max(-30, Math.min(30, this.data.currentTemperature))
+    if(this.state.currentTemperature !== null) {
+      this._currentTempScale.value = Math.max(-30, Math.min(30, this.state.currentTemperature))
     }
-    if(this.data.currentTemperatureMin !== null) {
-      this._currentTempScale.valueMin = Math.max(-10, Math.min(30, this.data.currentTemperatureMin))
+    if(this.state.currentTemperatureMin !== null) {
+      this._currentTempScale.valueMin = Math.max(-10, Math.min(30, this.state.currentTemperatureMin))
     }
-    if(this.data.currentTemperatureMax !== null) {
-      this._currentTempScale.valueMax = Math.max(-10, Math.min(30, this.data.currentTemperatureMax))
+    if(this.state.currentTemperatureMax !== null) {
+      this._currentTempScale.valueMax = Math.max(-10, Math.min(30, this.state.currentTemperatureMax))
     }
 
-    if(this.data.rainTime) {
+    if(this.state.rainTime) {
       const now = (new Date().getTime())
-      const rainTimeLeft = Math.round(Math.max(0, this.data.rainTime - now)/1000)
+      const rainTimeLeft = Math.round(Math.max(0, this.state.rainTime - now)/1000)
       let rainClock = ''
       rainClock += Math.floor(rainTimeLeft/(60*60)).toString().padStart(2, '0') + ':'
       rainClock += (Math.floor(rainTimeLeft/60) % 60).toString().padStart(2, '0') + ':'
@@ -170,18 +163,18 @@ export default class WeatherWidget extends Widget {
     }
 
     this._rainLabel.visible = (this.size === 1)
-    this._rainLabel.progress = this.progress*this._dataLoadProgress
+    this._rainLabel.progress = this.progress*this.dataLoadProgress
     this._rainLabel.size = this.size
     this._rainLabel.radius = 110*this.size
     this._rainLabel.fontSize = 11*this.size
     
-    this._forecastScreen.progress = this.main.progress * this._dataLoadProgress
-    if(this.data.forecast) {
-      this._forecastScreen.startTime = this.data.forecast.startTime
-      this._forecastScreen.icons = this.data.forecast.icons
-      this._forecastScreen.pop = this.data.forecast.pop
-      this._forecastScreen.rain = this.data.forecast.rain
-      this._forecastScreen.temp = this.data.forecast.temp
+    this._forecastScreen.progress = this.main.progress * this.dataLoadProgress
+    if(this.state.forecast) {
+      this._forecastScreen.startTime = this.state.forecast.startTime
+      this._forecastScreen.icons = this.state.forecast.icons
+      this._forecastScreen.pop = this.state.forecast.pop
+      this._forecastScreen.rain = this.state.forecast.rain
+      this._forecastScreen.temp = this.state.forecast.temp
     }
 
   }

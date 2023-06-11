@@ -14,6 +14,11 @@ const BREAK_DURATION = 1000 * 5 * 60
 export default class PomodoroWidget extends Widget {
   constructor() {
     super('pomodoro', "Pomodoro")
+    
+    this.initState({
+      history: null,
+      stats: null
+    })
 
     this._ticks = new TickCircle()
     this._ticks.count = 25
@@ -26,10 +31,6 @@ export default class PomodoroWidget extends Widget {
     this._redLight.alpha = 0
     this.addChildAt(this._redLight, 0)
     
-    this._history = []
-    this._stats = Array(7).fill(0)
-    this._updateStats()
-    this.log({pomodoroHistory: this._history, pomodoroStats: this._stats})
     this._timerStart = Number(localStorage.getItem('Pomodoro_timerStart')) || null
     this._timerStop = Number(localStorage.getItem('Pomodoro_timerStop')) || null
     this._mode = localStorage.getItem('Pomodoro_mode') || 'work'
@@ -134,20 +135,18 @@ export default class PomodoroWidget extends Widget {
     page.addChild(this._statsScreen)
   }
 
-  onMessage({history}) {
-    this._history = history
-    this._updateStats()
-  }
-
-  _updateStats() {
+  msg2state(data) {
     const today = Math.floor((new Date().getTime())/(1000*60*60*24))
-    this._stats = this._history
-      .map(t => Math.floor(t/(1000*60*60*24) - today + 6))
-      .filter(t => t >= 0)
-      .reduce((s, v) => {
-        s[v]++
-        return s
-      }, Array(7).fill(0))
+    return {
+      history: data.history,
+      stats:  data.history      
+        .map(t => Math.floor(t/(1000*60*60*24) - today + 6))
+        .filter(t => t >= 0)
+        .reduce((s, v) => {
+          s[v]++
+          return s
+        }, Array(7).fill(0))
+    }
   }
 
   _updatePlayButtonStatus() {
@@ -171,7 +170,6 @@ export default class PomodoroWidget extends Widget {
       if(this._mode === 'work') {
         // pomodoro completed
         this.sendMessage({action: 'pomodoroDone'})
-        this._updateStats()
       }
     }
     return dt / timeLimit
@@ -264,10 +262,12 @@ export default class PomodoroWidget extends Widget {
     this._dotLabel.fontSize = 12 * this.size
     this._dotLabel.visible = (this.size === 1)
     const dayStart = Math.floor(now / (1000*60*60*24))*(1000*60*60*24)
-    this._dots.countMax = Math.min(10, this._history.filter(p => p > dayStart ).length)
+    if(this.state.history) {
+      this._dots.countMax = Math.min(10, this.state.history.filter(p => p > dayStart ).length)
+    }
     this._dotLabel.alpha = this._dots.countMax > 0 ? 1 : 0
         
     this._statsScreen.progress = this.main.progress
-    this._statsScreen.stats = this._stats
+    this._statsScreen.stats = this.state.stats
   }
 }

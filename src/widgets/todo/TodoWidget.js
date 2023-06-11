@@ -10,12 +10,11 @@ import MainScreen from '../../frontend/MainScreen.js'
 export default class TodoWidget extends Widget {
   constructor() {
     super('todo', "Tasks")
-    this._dataLoadProgress = 0
-    this.data = {
-      lastUpdate: null,
+    this.dataLoadProgress = 0
+    this.initState({
       inboxList: null,
       actionList: null,
-    }
+    })
 
     this._scaleLarge = new TickCircle()
     this._scaleLarge.count = 8
@@ -59,15 +58,16 @@ export default class TodoWidget extends Widget {
 
   }
 
-  onMessage(tasks) {
-
-    this.data.lastUpdate = new Date().getTime()
-    this.data.inboxList = tasks.inbox
-    this.data.actionList = tasks.action
-    this.data.todayLeft = this.data.actionList.filter(t => t.status === 'needsAction')
+  msg2state(tasks) {
+    const newState = {}
+    newState.lastUpdate = new Date().getTime()
+    newState.inboxList = tasks.inbox
+    newState.actionList = tasks.action
+    newState.todayLeft = newState.actionList.filter(t => t.status === 'needsAction')
 
     const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
-    this._timeline.setPoints(this.data.actionList.map(i => i.completed ? i.completed - today : null))  
+    this._timeline.setPoints(newState.actionList.map(i => i.completed ? i.completed - today : null))  
+    return newState
   }
 
   render(renderer) {
@@ -75,14 +75,10 @@ export default class TodoWidget extends Widget {
 
     const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
 
-    if(this.data.lastUpdate && this._dataLoadProgress < 1) {
-      this._dataLoadProgress = Math.min(1, this._dataLoadProgress + 0.02)
-    }
+    this._dotCluster.count = this.state.inboxList ? this.state.inboxList.length : 0
+    this._dotCluster.progress = this.progress * this.dataLoadProgress
 
-    this._dotCluster.count = this.data.inboxList ? this.data.inboxList.length : 0
-    this._dotCluster.progress = this.progress * this._dataLoadProgress
-
-    this._timeline.progress = this.progress * this._dataLoadProgress
+    this._timeline.progress = this.progress * this.dataLoadProgress
     this._timeline.size = this.size
     this._timeline.now = new Date().getTime() - today
 
@@ -99,7 +95,7 @@ export default class TodoWidget extends Widget {
     this._inboxFrame.progress = this.progress
     this._inboxFrame.visible = this.size === 1
     
-    this._todoListScreen.progress = this.main.progress * this._dataLoadProgress
-    this._todoListScreen.actionList = this.data.actionList
+    this._todoListScreen.progress = this.main.progress * this.dataLoadProgress
+    this._todoListScreen.actionList = this.state.actionList
   }
 }

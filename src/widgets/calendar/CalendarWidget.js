@@ -1,4 +1,3 @@
-import MainScreen from '../../frontend/MainScreen.js';
 import Widget from '../../frontend/Widget.js'
 import ProgressCircle from '../../frontend/circles/ProgressCircle.js';
 import TickCircle from '../../frontend/circles/TickCircle.js';
@@ -10,13 +9,11 @@ import CalendarScreen from './CalendarScreen.js';
 export default class CalendarWidget extends Widget {
   constructor() {
     super('calendar', "Calendar")
-    this._dataLoadProgress = 0
-    this.data = {
-      lastUpdate: null,
+    this.initState({
       allEvents: null,
       todayEvents: null,
       todayEventsLeft: null,
-    }
+    })
 
     this._statsTitle = new TextField('completed\ntoday', {
       fontFamily: 'MajorMonoDisplay-Regular',
@@ -102,39 +99,36 @@ export default class CalendarWidget extends Widget {
     calendarPage.addChild(this._calendarScreen)
   }
 
-  onMessage(events) {
+  msg2state(events) {
     const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
 
-    this.data.allEvents = events.filter(e => e.start < today + 7*24*60*60*1000)
-    this.data.todayEvents = this.data.allEvents.filter(e => e.start < today + 24*60*60*1000 && !e.allDay)
-    this.data.todayEventsLeft = this.data.todayEvents.filter(e => e.end >= new Date().getTime())
-    this.data.lastUpdate = new Date().getTime()
+    const newState = {}
+    newState.allEvents = events.filter(e => e.start < today + 7*24*60*60*1000)
+    newState.todayEvents = newState.allEvents.filter(e => e.start < today + 24*60*60*1000 && !e.allDay)
+    newState.todayEventsLeft = newState.todayEvents.filter(e => e.end >= new Date().getTime())
+    return newState
   }
 
   render(renderer) {
     super.render(renderer)
 
-    if(this.data.lastUpdate && this._dataLoadProgress < 1) {
-      this._dataLoadProgress = Math.min(1, this._dataLoadProgress + 0.02)
-    }
-
     const now = new Date().getTime()
 
-    this._statsLabel.progress = this.progress * this._dataLoadProgress
-    this._statsTitle.progress = this.progress * this._dataLoadProgress
+    this._statsLabel.progress = this.progress * this.dataLoadProgress
+    this._statsTitle.progress = this.progress * this.dataLoadProgress
     this._statsLabel.y = 25 * this.size - 120*Math.max(0, this.size - 0.5)
     this._statsTitle.y = -20 * this.size - 80*Math.max(0, this.size - 0.5)
-    this._statusProgress.progress = this.progress * this._dataLoadProgress
+    this._statusProgress.progress = this.progress * this.dataLoadProgress
     this._statusProgress.size = this.size
-    if(this.data.todayEvents && this.data.todayEventsLeft) {
-      const completedEvents = this.data.todayEvents.length - this.data.todayEventsLeft.length
-      const allEvents = this.data.todayEvents.length
+    if(this.state.todayEvents && this.state.todayEventsLeft) {
+      const completedEvents = this.state.todayEvents.length - this.state.todayEventsLeft.length
+      const allEvents = this.state.todayEvents.length
       this._statsLabel.text = completedEvents + '/' + allEvents
       this._statusProgress.value = allEvents ? 0.5*((completedEvents)/allEvents) : 0
     }
 
-    if(this.data.todayEventsLeft && this.data.todayEventsLeft.length > 0) {
-      const upcomingMeetings = this.data.todayEvents.filter(e => e.start > now)
+    if(this.state.todayEventsLeft && this.state.todayEventsLeft.length > 0) {
+      const upcomingMeetings = this.state.todayEvents.filter(e => e.start > now)
       if(upcomingMeetings.length > 0) {
         const eventTime = new Date(upcomingMeetings[0].start)
         const hh = (eventTime.getHours()).toString().padStart(2, '0')
@@ -142,12 +136,12 @@ export default class CalendarWidget extends Widget {
         this._nextMeetingLabel.visible = true
         this._nextMeetingLabel.radius = this.size * 105 + 5
         this._nextMeetingLabel.text = `${hh}:${mm} ${this.size === 1 ? upcomingMeetings[0].summary.substring(0, 40) : ''}`
-        this._nextMeetingLabel.progress = this.progress * this._dataLoadProgress
+        this._nextMeetingLabel.progress = this.progress * this.dataLoadProgress
         this._nextMeetingLabel.positionOffset = -Math.PI * 0.52 - 0.5*(1 - this.size)
         this._nextLabel.visible = true
         this._nextLabel.radius = this.size * 105 + 5
         this._nextLabel.text = 'next:'
-        this._nextLabel.progress = this.progress * this._dataLoadProgress
+        this._nextLabel.progress = this.progress * this.dataLoadProgress
         this._nextLabel.fontSize = 7 + this.size*4
         this._nextMeetingLabel.fontSize = 7 + this.size*4
       } else {
@@ -159,8 +153,8 @@ export default class CalendarWidget extends Widget {
       this._nextLabel.visible = false
     }
 
-    if(this.size === 1 && this.data.todayEvents) {
-      const currentMeeting = this.data.todayEvents.find(e => e.start < now && e.end > now)
+    if(this.size === 1 && this.state.todayEvents) {
+      const currentMeeting = this.state.todayEvents.find(e => e.start < now && e.end > now)
       let meetingProgress = 0
       let meetingTimeLeft = 0
       if(currentMeeting) {
@@ -171,18 +165,18 @@ export default class CalendarWidget extends Widget {
       this._meetingClock.visible = true
       this._meetingClock.y = 40 * this.size
       this._clockScale.size = 0.4*this.size
-      this._clockScale.progress = this.progress * this._dataLoadProgress
+      this._clockScale.progress = this.progress * this.dataLoadProgress
       this._clockSplit.size = 0.4 * this.size
-      this._clockSplit.progress = this.progress * this._dataLoadProgress
+      this._clockSplit.progress = this.progress * this.dataLoadProgress
       this._clockFrame.size = 0.45 * this.size
-      this._clockFrame.progress = this.progress * this._dataLoadProgress
+      this._clockFrame.progress = this.progress * this.dataLoadProgress
 
       this._clockPointer.size = 0.35
-      this._clockPointer.progress = this.progress * this._dataLoadProgress
-      this._clockCenter.alpha = this.progress * this._dataLoadProgress
+      this._clockPointer.progress = this.progress * this.dataLoadProgress
+      this._clockCenter.alpha = this.progress * this.dataLoadProgress
 
       this._clockTitle.radius = 53
-      this._clockTitle.progress = this.progress * this._dataLoadProgress
+      this._clockTitle.progress = this.progress * this.dataLoadProgress
       this._clockTitle.text = currentMeeting ? "meeting clock" : "no meetings now"
       this._clockTitle.alpha = currentMeeting ? 1 : 0.4
       this._clockPointer.pointerRotation = 2 * Math.PI * meetingProgress
@@ -190,12 +184,12 @@ export default class CalendarWidget extends Widget {
 
       this._clockAlert.visible = true
       this._clockAlert.alpha = meetingTimeLeft > 0 && meetingTimeLeft < 5*60*1000 ? Math.sin(performance.now()*0.01)*0.4 + 0.4 : 0
-      this._clockAlert.alpha *= this.progress * this._dataLoadProgress
+      this._clockAlert.alpha *= this.progress * this.dataLoadProgress
     } else {
       this._meetingClock.visible = false
       this._clockAlert.visible = false
     }   
-    this._calendarScreen.progress = this.main.progress * this._dataLoadProgress
-    this._calendarScreen.events = this.data.todayEvents
+    this._calendarScreen.progress = this.main.progress * this.dataLoadProgress
+    this._calendarScreen.events = this.state.todayEvents
   }
 }

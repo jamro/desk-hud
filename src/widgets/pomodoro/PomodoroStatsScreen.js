@@ -37,10 +37,12 @@ export default class PomodoroStatsScreen extends PIXI.Container {
     const now = new Date()
     const dayOfWeek = now.getDay()
     this._scale.progress = this.progress
-    for(let i=0; i < this._plants.length; i++) {
-      this._plants[i].progress = this.progress
-      this._plants[i].label = DAYS[(i + dayOfWeek+1) % 7]
-      this._plants[i].value = this.stats[i]
+    if(this.stats) {
+      for(let i=0; i < this._plants.length; i++) {
+        this._plants[i].progress = this.progress
+        this._plants[i].label = DAYS[(i + dayOfWeek+1) % 7]
+        this._plants[i].value = this.stats[i]
+      }
     }
     super.render(renderer)
   }

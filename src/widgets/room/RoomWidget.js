@@ -10,9 +10,8 @@ import CoversScreen from './CoversScreen.js'
 export default class RoomWidget extends Widget {
   constructor() {
     super('room', "rooM")
-    this._dataLoadProgress = 0
     this._acFanModes = ['auto', 'low', 'medium low', 'medium', 'medium high', 'high']
-    this.data = {
+    this.initState({
       lastUpdate: null,
       currentTemperature: null,
       targetTemperature: null,
@@ -26,7 +25,7 @@ export default class RoomWidget extends Widget {
       acFanMode: null,
       tempHistory: null,
       tempBattery: null,
-    }
+    })
 
     this._currentTempLabel = new TextField('', {
       fontFamily: 'MajorMonoDisplay-Regular',
@@ -117,36 +116,36 @@ export default class RoomWidget extends Widget {
     this._coversScreen.on('coverChange', (id, pos, index) => {
       const newValue = Math.round((1-pos)*100)
       this.sendMessage({action: 'cover', target: id, value: newValue})
-      this.data.covers[index] = pos
+      this.state.covers[index] = pos
     })
 
     this._climateScreen = new ClimateScreen()
     acPage.addChild(this._climateScreen)
 
     this._climateScreen.on('heatUp', () => {
-      if(this.data.targetTemperature === null) {
+      if(this.state.targetTemperature === null) {
         this.sendMessage({action: 'acMode', value: 'on'})
       } else {
-        this.data.targetTemperature++
-        this.sendMessage({action: 'temperature', value: this.data.targetTemperature})
+        this.state.targetTemperature++
+        this.sendMessage({action: 'temperature', value: this.state.targetTemperature})
       }
     })
     this._climateScreen.on('coolDown', () => {
-      if(this.data.targetTemperature === null) {
+      if(this.state.targetTemperature === null) {
         this.sendMessage({action: 'acMode', value: 'on'})
       } else {
-        this.data.targetTemperature--
-        this.sendMessage({action: 'temperature', value: this.data.targetTemperature})
+        this.state.targetTemperature--
+        this.sendMessage({action: 'temperature', value: this.state.targetTemperature})
       }
     })
     this._climateScreen.on('acMode', (mode) => {
       if(mode === 'off') {
-        this.data.targetTemperature = null
+        this.state.targetTemperature = null
       }
       this.sendMessage({action: 'acMode', value: mode})
     })
     this._climateScreen.on('fanToggle', () => {
-      const modeIndex = this._acFanModes.indexOf(this.data.acFanMode)
+      const modeIndex = this._acFanModes.indexOf(this.state.acFanMode)
       if(modeIndex === -1) return
       const nextMode = this._acFanModes[((modeIndex + 1) % this._acFanModes.length)]
 
@@ -154,72 +153,70 @@ export default class RoomWidget extends Widget {
     })
   }
 
-  onMessage(entities) {
-    this.data.lastUpdate = new Date().getTime()
-    this.data.currentTemperature = Number(entities.temp.state)
-    this.data.tempBattery = Number(entities.tempBattery.state/100)
-    this.data.acState = entities.ac.state === 'off' ? 'off' : entities.ac.attributes.temperature + '°c'
-    this.data.acMode = entities.ac.state
-    this.data.targetTemperature = entities.ac.state === 'off' ? null : entities.ac.attributes.temperature
-    this.data.covers = [
+  msg2state(entities) {
+    const newState = {}
+    newState.lastUpdate = new Date().getTime()
+    newState.currentTemperature = Number(entities.temp.state)
+    newState.tempBattery = Number(entities.tempBattery.state/100)
+    newState.acState = entities.ac.state === 'off' ? 'off' : entities.ac.attributes.temperature + '°c'
+    newState.acMode = entities.ac.state
+    newState.targetTemperature = entities.ac.state === 'off' ? null : entities.ac.attributes.temperature
+    newState.covers = [
       1-entities.cover1.attributes.current_position/100,
       1-entities.cover2.attributes.current_position/100,
       1-entities.cover3.attributes.current_position/100,
       1-entities.cover4.attributes.current_position/100,
       1-entities.cover5.attributes.current_position/100,
     ]
-    this.data.doors = [
+    newState.doors = [
       entities.door1.state !== 'off',
       entities.door2.state !== 'off',
       entities.door3.state !== 'off',
     ]
-    this.data.coversBattery = [
+    newState.coversBattery = [
       Number(entities.cover1Battery.state)/100,
       Number(entities.cover2Battery.state)/100,
       Number(entities.cover3Battery.state)/100,
       Number(entities.cover4Battery.state)/100,
       Number(entities.cover5Battery.state)/100,
     ]
-    this.data.doorsBattery = [
+    newState.doorsBattery = [
       Number(entities.door1Battery.state)/100,
       Number(entities.door2Battery.state)/100,
       Number(entities.door3Battery.state)/100,
     ]
     
     if(entities.ac.state === 'off') {
-      this.data.acFanSpeed = 0
-      this.data.acFanMode = 'off'
+      newState.acFanSpeed = 0
+      newState.acFanMode = 'off'
     } else if(entities.ac.attributes.fan_mode === 'auto') {
-      this.data.acFanSpeed = 'auto'
-      this.data.acFanMode = 'auto'
+      newState.acFanSpeed = 'auto'
+      newState.acFanMode = 'auto'
     } else {
-      this.data.acFanSpeed = (this._acFanModes.indexOf(entities.ac.attributes.fan_mode))/(this._acFanModes.length-1)
-      this.data.acFanMode = entities.ac.attributes.fan_mode
+      newState.acFanSpeed = (this._acFanModes.indexOf(entities.ac.attributes.fan_mode))/(this._acFanModes.length-1)
+      newState.acFanMode = entities.ac.attributes.fan_mode
     }
-    this.data.tempHistory = entities.temp.history.map(Number) || []
-    this.data.tempHistory.push(Number(entities.temp.state))
-    while(this.data.tempHistory.length > 48) {
-      this.data.tempHistory.shift()
+    newState.tempHistory = entities.temp.history.map(Number) || []
+    newState.tempHistory.push(Number(entities.temp.state))
+    while(newState.tempHistory.length > 48) {
+      newState.tempHistory.shift()
     }
+    return newState
   }
 
   render(renderer) {
     super.render(renderer)
 
-    if(this.data.lastUpdate && this._dataLoadProgress < 1) {
-      this._dataLoadProgress = Math.min(1, this._dataLoadProgress + 0.02)
-    }
-
-    this._currentTempLabel.progress = this.progress * this._dataLoadProgress
-    this._currentTempLabel.text = this.data.currentTemperature === null ? '' : Math.round(this.data.currentTemperature) + '°c'
-    this._climateScreen.targetTemperature = this.data.targetTemperature
-    this._climateScreen.currentTemperature = this.data.currentTemperature
-    this._climateScreen.acMode = this.data.acMode
+    this._currentTempLabel.progress = this.progress * this.dataLoadProgress
+    this._currentTempLabel.text = this.state.currentTemperature === null ? '' : Math.round(this.state.currentTemperature) + '°c'
+    this._climateScreen.targetTemperature = this.state.targetTemperature
+    this._climateScreen.currentTemperature = this.state.currentTemperature
+    this._climateScreen.acMode = this.state.acMode
     this._currentTempLabel.y = -60*this.size
     this._currentTempLabel.style.fontSize = this.size * 8 + 7
 
-    this._acStateLabel.progress = this.progress * this._dataLoadProgress
-    this._acStateLabel.text = (this.data.acState || '')
+    this._acStateLabel.progress = this.progress * this.dataLoadProgress
+    this._acStateLabel.text = (this.state.acState || '')
     if(this.size === 1) {
       this._acStateLabel.y = -40*this.size
       this._acStateLabel.style.fontSize = this.size * 8 + 3
@@ -229,20 +226,20 @@ export default class RoomWidget extends Widget {
     }
 
     this._roomView.size = this.size
-    this._roomView.progress = this.progress*this._dataLoadProgress
-    if(this.data.covers) {
-      this._roomView.covers = this.data.covers
-      this._coversScreen.covers = this.data.covers
+    this._roomView.progress = this.progress*this.dataLoadProgress
+    if(this.state.covers) {
+      this._roomView.covers = this.state.covers
+      this._coversScreen.covers = this.state.covers
     }
-    if(this.data.doors) {
-      this._roomView.doors = this.data.doors
-      this._coversScreen.doors = this.data.doors
+    if(this.state.doors) {
+      this._roomView.doors = this.state.doors
+      this._coversScreen.doors = this.state.doors
     }
-    if(this.data.coversBattery) {
-      this._coversScreen.coversBattery = this.data.coversBattery
+    if(this.state.coversBattery) {
+      this._coversScreen.coversBattery = this.state.coversBattery
     }
-    if(this.data.doorsBattery) {
-      this._coversScreen.doorsBattery = this.data.doorsBattery
+    if(this.state.doorsBattery) {
+      this._coversScreen.doorsBattery = this.state.doorsBattery
     }
 
     this._dayButton.x = -100*this.size * Math.cos(Math.PI*0.25)
@@ -254,9 +251,9 @@ export default class RoomWidget extends Widget {
     this._dayButton.visible = this.size === 1
     this._callButton.visible = this.size === 1
     this._nightButton.visible = this.size === 1
-    this._dayButton.scale.set(this.progress*this._dataLoadProgress)
-    this._callButton.scale.set(this.progress*this._dataLoadProgress)
-    this._nightButton.scale.set(this.progress*this._dataLoadProgress)
+    this._dayButton.scale.set(this.progress*this.dataLoadProgress)
+    this._callButton.scale.set(this.progress*this.dataLoadProgress)
+    this._nightButton.scale.set(this.progress*this.dataLoadProgress)
 
     this._buttonFrame.size = this.size
     this._buttonFrame.progress = this.progress
@@ -269,8 +266,8 @@ export default class RoomWidget extends Widget {
     this._climateScreen.progress = this.main.progress
     this._coversScreen.progress = this.main.progress
     
-    this._climateScreen.acFanSpeed = this.data.acFanSpeed
-    this._climateScreen.tempHistory = this.data.tempHistory
-    this._climateScreen.batteryValue = this.data.tempBattery
+    this._climateScreen.acFanSpeed = this.state.acFanSpeed
+    this._climateScreen.tempHistory = this.state.tempHistory
+    this._climateScreen.batteryValue = this.state.tempBattery
   }
 }

@@ -20,6 +20,9 @@ export default class Widget extends PIXI.Container {
     this.addChild(this._bg)
     this.interactive = true
     this.main = new MainScreen()
+    this.dataLoadProgress = 1
+
+    this._state = null
 
     this.on('pointertap', () => {
       this.emit('activate')
@@ -35,6 +38,28 @@ export default class Widget extends PIXI.Container {
       y2: 0,
       size2: 1,
       flickTime: 0
+    }
+  }
+
+  get state() {
+    return this._state
+  }
+
+  initState(obj) {
+    this.log('State initialized', obj)
+    this.dataLoadProgress = 0
+    this._state = {
+      ...obj,
+      lastUpdate: null
+    }
+  }
+
+  updateState(obj) {
+    this.log('State updated', obj)
+    this._state = {
+      ...this._state,
+      ...obj,
+      lastUpdate: new Date().getTime()
     }
   }
 
@@ -74,12 +99,15 @@ export default class Widget extends PIXI.Container {
   }
 
   render(renderer) {
+    if(this._state && this._state.lastUpdate && this.dataLoadProgress < 1) {
+      this.dataLoadProgress = Math.min(1, this.dataLoadProgress + 0.02)
+    }
+
     this._bg.scale.set(this.size)
     this._frame.size = this.size
     this._frame.progress = this._progress
 
     const rescaleTime = (t, min, max) => Math.min(1, Math.max(0, t - min)/(max-min))
-
 
     if(this.movement.timeLeft > 0) {
       const {x1, y1, size1, x2, y2, size2} = this.movement
@@ -124,12 +152,19 @@ export default class Widget extends PIXI.Container {
     super.render(renderer)
   }
 
+  msg2state(msg) {
+    return null
+  }
+
   onMessage(msg) {
-    this.log(`Widget received a message:`, msg)
+    const newState = this.msg2state(msg)
+    if(newState) {
+      this.updateState(newState)
+    }
   }
 
   onConfig(config) {
-    this.log(`Widget received config:`, config)
+
   }
 
   sendMessage(payload) {
