@@ -94,17 +94,12 @@ export default class CalendarWidget extends Widget {
     this._clockTitle = new ArchText()
     this._meetingClock.addChild(this._clockTitle)
 
-  }
-
-  createMainScreen() {
-    const screen = new MainScreen()
-    screen.title = "Calendar"
-    const calendarPage = screen.getPage(0)
+    // main screen
+    this.main.title = "Calendar"
+    const calendarPage = this.main.getPage(0)
    
     this._calendarScreen = new CalendarScreen()
     calendarPage.addChild(this._calendarScreen)
-
-    return screen
   }
 
   onMessage(events) {
@@ -199,10 +194,8 @@ export default class CalendarWidget extends Widget {
     } else {
       this._meetingClock.visible = false
       this._clockAlert.visible = false
-    }
-    if(this._calendarScreen && this.main) {      
-      this._calendarScreen.progress = this.main.progress * this._dataLoadProgress
-    }
+    }   
+    this._calendarScreen.progress = this.main.progress * this._dataLoadProgress
     this._calendarScreen.events = this.data.todayEvents
   }
 }

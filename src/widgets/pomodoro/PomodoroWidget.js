@@ -113,7 +113,6 @@ export default class PomodoroWidget extends Widget {
     this.addChild(this._timeLabel)
     this.addChild(this._playButton)
 
-
     this._dotLabel = new ArchText()
     this._dotLabel.text = 'completed:'
     this._dotLabel.color = 0xff0000
@@ -127,6 +126,12 @@ export default class PomodoroWidget extends Widget {
     this._dots.countMax = 0
     this.addChild(this._dots)
 
+    // main screen
+    this.main.title = "Pomodoro stats"
+    const page = this.main.getPage(0)
+   
+    this._statsScreen = new PomodoroStatsScreen()
+    page.addChild(this._statsScreen)
   }
 
   onMessage({history}) {
@@ -143,17 +148,6 @@ export default class PomodoroWidget extends Widget {
         s[v]++
         return s
       }, Array(7).fill(0))
-  }
-
-  createMainScreen() {
-    const screen = new MainScreen()
-    screen.title = "Pomodoro stats"
-    const page = screen.getPage(0)
-   
-    this._statsScreen = new PomodoroStatsScreen()
-    page.addChild(this._statsScreen)
-
-    return screen
   }
 
   _updatePlayButtonStatus() {
@@ -272,10 +266,8 @@ export default class PomodoroWidget extends Widget {
     const dayStart = Math.floor(now / (1000*60*60*24))*(1000*60*60*24)
     this._dots.countMax = Math.min(10, this._history.filter(p => p > dayStart ).length)
     this._dotLabel.alpha = this._dots.countMax > 0 ? 1 : 0
-    
-    if(this._statsScreen && this.main) {      
-      this._statsScreen.progress = this.main.progress
-    }
+        
+    this._statsScreen.progress = this.main.progress
     this._statsScreen.stats = this._stats
   }
 }

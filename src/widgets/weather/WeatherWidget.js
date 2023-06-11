@@ -72,18 +72,16 @@ export default class WeatherWidget extends Widget {
     this._rainLabel.color = 0xff0000
     this._rainLabel.positionOffset = -Math.PI*0.45
     this.addChild(this._rainLabel)
-  }
 
-  createMainScreen() {
-    const screen = new MainScreen()
-    screen.title = "3 Days Forecast"
-    const page = screen.getPage(0)
+    // main screen
+    this.main.title = "3 Days Forecast"
+    const page = this.main.getPage(0)
    
     this._forecastScreen = new ForecastScreen()
     page.addChild(this._forecastScreen)
-
-    return screen
   }
+
+
   
   onMessage(msg) {
     const currentJsonData = msg.current
@@ -176,10 +174,8 @@ export default class WeatherWidget extends Widget {
     this._rainLabel.size = this.size
     this._rainLabel.radius = 110*this.size
     this._rainLabel.fontSize = 11*this.size
-
-    if(this._forecastScreen && this.main) {      
-      this._forecastScreen.progress = this.main.progress * this._dataLoadProgress
-    }
+    
+    this._forecastScreen.progress = this.main.progress * this._dataLoadProgress
     if(this.data.forecast) {
       this._forecastScreen.startTime = this.data.forecast.startTime
       this._forecastScreen.icons = this.data.forecast.icons

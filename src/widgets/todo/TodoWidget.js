@@ -43,12 +43,9 @@ export default class TodoWidget extends Widget {
 
     this.addChild(this._timeline)
 
-  }
-
-  createMainScreen() {
-    const screen = new MainScreen()
-    screen.title = "Getting Things Done"
-    const page = screen.getPage(0)
+    // main screen
+    this.main.title = "Getting Things Done"
+    const page = this.main.getPage(0)
    
     this._todoListScreen = new TodoListScreen()
     page.addChild(this._todoListScreen)
@@ -60,7 +57,6 @@ export default class TodoWidget extends Widget {
       this.sendMessage({action: 'uncompleteNextAction', id})
     })
 
-    return screen
   }
 
   onMessage(tasks) {
@@ -102,10 +98,8 @@ export default class TodoWidget extends Widget {
     
     this._inboxFrame.progress = this.progress
     this._inboxFrame.visible = this.size === 1
-
-    if(this._todoListScreen && this.main) {      
-      this._todoListScreen.progress = this.main.progress * this._dataLoadProgress
-    }
+    
+    this._todoListScreen.progress = this.main.progress * this._dataLoadProgress
     this._todoListScreen.actionList = this.data.actionList
   }
 }

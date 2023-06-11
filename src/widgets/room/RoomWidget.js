@@ -100,17 +100,15 @@ export default class RoomWidget extends Widget {
       align: 'center',
     });
     this.addChild(this._scenesLabel)
-  }
 
-  createMainScreen() {
-    const screen = new MainScreen()
-    screen.title = "room"
-    const acTab = screen.getTabButton(1)
-    const acPage = screen.getPage(1)
+    // main screen
+    this.main.title = "room"
+    const acTab = this.main.getTabButton(1)
+    const acPage = this.main.getPage(1)
     acTab.visible = true
     acTab.text = "Climate"
-    const coversTab = screen.getTabButton(0)
-    const coversPage = screen.getPage(0)
+    const coversTab = this.main.getTabButton(0)
+    const coversPage = this.main.getPage(0)
     coversTab.visible = true
     coversTab.text = "Covers"
 
@@ -154,8 +152,6 @@ export default class RoomWidget extends Widget {
 
       this.sendMessage({action: 'fanMode', value: nextMode})
     })
-
-    return screen
   }
 
   onMessage(entities) {
@@ -269,13 +265,9 @@ export default class RoomWidget extends Widget {
     this._scenesLabel.progress = this.progress
     this._scenesLabel.y = 35
     this._scenesLabel.visible = this.size === 1
-
-    if(this._climateScreen && this.main) {      
-      this._climateScreen.progress = this.main.progress
-    }
-    if(this._coversScreen && this.main) {      
-      this._coversScreen.progress = this.main.progress
-    }
+     
+    this._climateScreen.progress = this.main.progress
+    this._coversScreen.progress = this.main.progress
     
     this._climateScreen.acFanSpeed = this.data.acFanSpeed
     this._climateScreen.tempHistory = this.data.tempHistory

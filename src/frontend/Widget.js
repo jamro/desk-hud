@@ -19,8 +19,7 @@ export default class Widget extends PIXI.Container {
     this._bg.drawCircle(0, 0, 100)
     this.addChild(this._bg)
     this.interactive = true
-
-    this.main = this.createMainScreen()
+    this.main = new MainScreen()
 
     this.on('pointertap', () => {
       this.emit('activate')
@@ -37,12 +36,6 @@ export default class Widget extends PIXI.Container {
       size2: 1,
       flickTime: 0
     }
-  }
-
-  createMainScreen() {
-    const main = new MainScreen()
-    main.visible = false
-    return main
   }
 
   get id() {

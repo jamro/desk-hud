@@ -55,17 +55,15 @@ export default class DateTimeWidget extends Widget {
       label.progress = 1
       this.addChild(label)
     }
-  }
 
-  createMainScreen() {
-    const screen = new MainScreen()
-    screen.title = "Date & Time"
-    const dateTab = screen.getTabButton(0)
-    const datePage = screen.getPage(0)
+    // main screen
+    this.main.title = "Date & Time"
+    const dateTab = this.main.getTabButton(0)
+    const datePage = this.main.getPage(0)
     dateTab.visible = true
     dateTab.text = "Date"
-    const timeTab = screen.getTabButton(1)
-    const timePage = screen.getPage(1)
+    const timeTab = this.main.getTabButton(1)
+    const timePage = this.main.getPage(1)
     timeTab.visible = true
     timeTab.text = "Time"
 
@@ -74,8 +72,6 @@ export default class DateTimeWidget extends Widget {
 
     this._timeScreen = new TimeScreen()
     timePage.addChild(this._timeScreen)
-
-    return screen
   }
 
   onConfig(config) {
@@ -132,13 +128,8 @@ export default class DateTimeWidget extends Widget {
       day.alpha = i == now.getDay() ? 1 : 0.4
       day.visible = (this.size === 1 && this.progress > ((i+6) % 7)/7)
     }
-
-    if(this._dateScreen && this.main) {      
-      this._dateScreen.progress = this.main.progress
-    }
-
-    if(this._timeScreen && this.main) {      
-      this._timeScreen.progress = this.main.progress
-    }
+ 
+    this._dateScreen.progress = this.main.progress  
+    this._timeScreen.progress = this.main.progress
   }
 }
