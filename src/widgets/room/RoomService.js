@@ -185,7 +185,9 @@ class RoomService extends Service {
   }
 
   async welcomeClient(socket) {
-    this.emit(this._entities, socket)
+    if(Object.keys(this._entities).length) {
+      this.emit(this._entities, socket)
+    }
   }
 
 }
