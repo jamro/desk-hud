@@ -1,5 +1,6 @@
 import BarChart from "../../frontend/components/BarChart"
 import LineArt from "../../frontend/components/LineArt"
+import ScrollContainer from "../../frontend/components/ScrollContainer"
 import TextField from "../../frontend/components/TextField"
 
 const ICONS = {
@@ -20,37 +21,23 @@ export default class ForecastScreen extends PIXI.Container {
   constructor() {
     super()
     this.progress = 0
-    this.dragging = false
-    this.offsetX = 0
     this._startTime = 0
     this._icons = []
     this._pop = []
     this._rain = []
     this._temp = []
 
-    this._container = new PIXI.Container()
-    this._container.x = -280
+    this._container = new ScrollContainer(580, 180)
+    this._container.contentRect.x = 0
+    this._container.contentRect.y = 0
+    this._container.contentRect.height = 180
+    this._container.contentRect.width = 1730
+    this._container.x = -290
+    this._container.y = -90
     this.addChild(this._container)
 
-    this._containerMask = new PIXI.Graphics()
-    this._containerMask.beginFill(0x0000ff)
-    this._containerMask.drawRect(-290, -90, 580, 180)
-    this.addChild(this._containerMask)
-    this._container.mask = this._containerMask
-
-    this._scroller = new PIXI.Graphics()
-    this._scroller.beginFill(0x000000, 0.0001)
-    this._scroller.drawRect(-290, -90, 580, 180)
-    this._scroller.interactive = true
-    this._scroller.on('mousedown', (e) => this._startDrag(e.data.global.x))
-    this._scroller.on('mouseup', (e) => this._stopDrag(e.data.global.x))
-    this._scroller.on('pointerdown', (e) => this._startDrag(e.data.global.x))
-    this._scroller.on('pointermove', (e) => this._updateDrag(e.data.global.x))
-    this._scroller.on('pointerup', (e) => this._stopDrag(e.data.global.x))
-    this.addChild(this._scroller)
-
-
     this._daySeparators = new LineArt()
+    this._daySeparators.y = +90
     this._container.addChild(this._daySeparators)
     
     this._timelineHours = new TextField('', {
@@ -61,7 +48,7 @@ export default class ForecastScreen extends PIXI.Container {
       strokeThickness: 0.5,
       align: 'center',
     })
-    this._timelineHours.y = 20
+    this._timelineHours.y = 20+90
     this._timelineHours.anchor.set(0, 0.5)
     this._container.addChild(this._timelineHours)
 
@@ -75,7 +62,7 @@ export default class ForecastScreen extends PIXI.Container {
         align: 'center',
       })
       ico.x = i * COL_WIDTH + 22
-      ico.y = 50
+      ico.y = 50+90
 
       this._container.addChild(ico)
       return ico
@@ -89,7 +76,7 @@ export default class ForecastScreen extends PIXI.Container {
       strokeThickness: 0.5,
       align: 'center',
     })
-    this._timelinePop.y = 80
+    this._timelinePop.y = 80+90
     this._timelinePop.anchor.set(0, 0.5)
     this._container.addChild(this._timelinePop)
 
@@ -101,12 +88,12 @@ export default class ForecastScreen extends PIXI.Container {
       showScale: false,
       colFill: 0.15
     })
-    this._rainChart.y = -40
+    this._rainChart.y = -40+90
     this._rainChart.x = -COL_WIDTH*0.2
     this._container.addChild(this._rainChart)
 
     this._tempLine = new LineArt()
-    this._tempLine.y = 0
+    this._tempLine.y = 0+90
     this._tempLine.x = COL_WIDTH*0.25
     this._container.addChild(this._tempLine)
 
@@ -118,7 +105,7 @@ export default class ForecastScreen extends PIXI.Container {
       strokeThickness: 1.5,
       align: 'center',
     })
-    this._tempLabels.y = -80
+    this._tempLabels.y = -80+90
     this._tempLabels.anchor.set(0, 0.5)
     this._container.addChild(this._tempLabels)
 
@@ -251,32 +238,7 @@ export default class ForecastScreen extends PIXI.Container {
       }
     }
     
-    
     this._timelineHours.text = hoursLabels
-  }
-
-  _boundX(x) {
-    return Math.max(-1450, Math.min(-280, x))
-  }
-
-  _startDrag(x) {
-    this.offsetX = x - this._container.x
-    this._scroller.scale.set(100)
-    this.dragging = true
-  }
-
-  _updateDrag(x) {
-    if (this.dragging) {
-      this._container.x = this._boundX(x- this.offsetX)
-    }
-  }
-
-  _stopDrag(x) {
-    if(!this.dragging) return
-    this._container.x = this._boundX(x - this.offsetX)
-    this._scroller.scale.set(1)
-    this._scroller.x = 0
-    this.dragging = false
   }
 
   render(renderer) {
@@ -286,7 +248,7 @@ export default class ForecastScreen extends PIXI.Container {
     this._timelinePop.progress = this.progress
     this._timelineIcons.forEach(i => i.progress = this.progress)
     if(this.progress === 0) {
-      this._container.x = -280
+      this._container.scrollTo(0, 0)
     }
     this._rainChart.progress = this.progress
     this._tempLine.progress = this.progress < 1 ? this.progress*0.4 : 1
