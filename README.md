@@ -29,5 +29,8 @@ Additionally, there is a [video](https://www.youtube.com/watch?v=2UuWsG3Lnaw) sh
 
 Desk-HUD is specifically tailored to meet my unique requirements and is not intended as a one-size-fits-all solution. However, the project's source code is open for anyone to fork and customize according to their individual needs and preferences.
 
-To get started, get familiar with Desk-HUD's architecture described in [System Design](doc/system_desgn.md) section.
+Some resources to get started:
 
+- [System Design](doc/system_desgn.md)
+- [Setup of Development Environment](doc/dev_setup.md)
+- [Development Guide: Create a widget](doc/dev_create_widget.md)
