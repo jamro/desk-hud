@@ -1,6 +1,7 @@
+import TextField from "../../frontend/components/TextField"
 import TaskItem from "./TaskItem"
 
-const TASK_MAX = 8
+const TASK_MAX = 20
 const ITEM_HEIGHT = 50
 
 export default class TodoListScreen extends PIXI.Container {
@@ -45,6 +46,30 @@ export default class TodoListScreen extends PIXI.Container {
     this._scroller.on('pointerdown', (e) => this._startDrag(e.data.global.y))
     this._scroller.on('pointermove', (e) => this._updateDrag(e.data.global.y))
     this._scroller.on('pointerup', (e) => this._stopDrag(e.data.global.y))
+
+    this._statsLabel = new TextField(' todo | show | all ', {
+      fontFamily: 'MajorMonoDisplay-Regular',
+      fontSize: 8,
+      fill: '#ff0000',
+      stroke: "#ff0000",
+      strokeThickness: 1.5,
+      align: 'left',
+    })
+    this._statsLabel.x = 202
+    this._statsLabel.y = 101
+    this.addChild(this._statsLabel)
+
+    this._statsValues = new TextField('', {
+      fontFamily: 'MajorMonoDisplay-Regular',
+      fontSize: 10.5,
+      fill: '#ffffff',
+      stroke: "#ffffff",
+      strokeThickness: 0.5,
+      align: 'left',
+    })
+    this._statsValues.x = 203
+    this._statsValues.y = 118
+    this.addChild(this._statsValues)
   }
 
 
@@ -93,7 +118,15 @@ export default class TodoListScreen extends PIXI.Container {
         this._tasks[i].id = this.actionList[i].id
         this._tasks[i].completed = !!this.actionList[i].completed
       }
+
+      this._statsValues.text = [
+        this.actionList.filter(a => !a.completed).length, 
+        Math.min(this.actionList.length, TASK_MAX), 
+        this.actionList.length
+      ].map(v => String(v).padStart(3, ' ')).join('  ')
     }
+    this._statsLabel.progress = this.progress
+    this._statsValues.progress = this.progress
 
     super.render(renderer)
   }
