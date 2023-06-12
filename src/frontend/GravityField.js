@@ -12,10 +12,10 @@ export default class GravityField extends PIXI.Container {
     this._slots = [
       { index: 0, x: 810,    y: 165,   size: 1},
       { index: 1, x: 1080,   y: 155,   size: 1},
-      { index: 2, x: 1275,   y: 80,    size: 0.5},
-      { index: 3, x: 1265,   y: 240,   size: 0.5},
-      { index: 4, x: 1410,   y: 80,    size: 0.5},
-      { index: 5, x: 1400,   y: 240,   size: 0.5},
+      { index: 2, x: 1265,   y: 100,    size: 0.5},
+      { index: 3, x: 1265,   y: 220,   size: 0.5},
+      { index: 4, x: 1400,   y: 100,    size: 0.5},
+      { index: 5, x: 1400,   y: 220,   size: 0.5},
     ]
 
     this._widgets = {}
@@ -97,16 +97,20 @@ export default class GravityField extends PIXI.Container {
   }
 
   _activate(widget) {
-    const index = this._widgetList.indexOf(widget)
-    if(index === 0) return
-    this._widgetList.splice(index, 1)
-    this._widgetList.unshift(widget)
-
-    this.addChild(widget.main)
-
-    for(let i=0; i < this._widgetList.length; i++) {
-      this._widgetList[i].moveTo(this._slots[i])
+    let sourceWidget = widget
+    let index = this._widgetList.indexOf(widget)
+    if(index === 0) {
+      index = 1
+      sourceWidget = this._widgetList[index]
     }
+
+    this._widgetList[index] = this._widgetList[0]
+    this._widgetList[0] = sourceWidget
+
+    this.addChild(sourceWidget.main)
+
+    this._widgetList[0].moveTo(this._slots[0])
+    this._widgetList[index].moveTo(this._slots[index])
   }
 
   render(renderer) {
