@@ -52,7 +52,10 @@ The configuration for Desk-HUD is stored in a JSON file.
     - `actionsId` (string): The ID of the Google Tasks actions list (see Getting Things Done technique).
   - `calendars` (array): An array of Google Calendars IDs.
 
-These parameters in the JSON file allow you to customize Desk-HUD based on your preferred configurations, including server settings, date and time preferences, weather data, Home Assistant integration, and Google API integration.
+- **alphavantage** - allows you to configure the AlphaVantage service integration for Desk-HUD. AlphaVantage provides financial market data and analytics.
+  - `apiKey` (string): The API key for accessing the AlphaVantage service. By default, the value is set to "demo" for testing purposes.
+  - `symbol` (string): The stock symbol or ticker for which you want to fetch data. 
+
 
 
 ## Integrations
@@ -93,3 +96,11 @@ To set up Google access keys for integration with Desk-HUD, follow these steps:
 - Once you have `credentials.json`, run the `node ./google_auth.js` script. Follow the instructions provided to complete the authentication process.
 
 Detailed process of obtaining `credentials.json` is described here [here](https://developers.google.com/tasks/quickstart/nodejs)
+
+### AlphaVantage
+
+- Visit the AlphaVantage website: Go to the AlphaVantage website at http://www.alphavantage.co.
+- Click "Get your free API key today"
+- Access the API documentation: Once you are logged in, navigate to the "API" section or find the "API Documentation" link.
+- Fill the form and click "Generate"
+- After generating the API key, it should be displayed on the screen. Copy the API key and keep it in a secure place.

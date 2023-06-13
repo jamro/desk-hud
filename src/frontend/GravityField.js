@@ -69,10 +69,18 @@ export default class GravityField extends PIXI.Container {
   }
 
   routeMessage(widgetId, msg) {
+    if(!this._widgets[widgetId]) {
+      console.warn(`Widget "${widgetId}" not found. Ignoring incoming message`)
+      return
+    }
     this._widgets[widgetId].onMessage(msg)
   }
 
   routeConfig(widgetId, msg) {
+    if(!this._widgets[widgetId]) {
+      console.warn(`Widget "${widgetId}" not found. Ignoring incoming config`)
+      return
+    }
     this._widgets[widgetId].onConfig(msg)
   }
 

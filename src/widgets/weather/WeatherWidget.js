@@ -1,4 +1,3 @@
-import MainScreen from '../../frontend/MainScreen.js'
 import Widget from '../../frontend/Widget.js'
 import ScaleCircle from '../../frontend/circles/ScaleCircle.js'
 import ArchText from '../../frontend/components/ArchText.js'

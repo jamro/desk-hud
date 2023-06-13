@@ -13,11 +13,34 @@ export default class BarChart extends PIXI.Container {
     this._tickStep = options.tickStep !== undefined ? options.tickStep : 10
     this._showScale = options.showScale !== undefined ? options.showScale : true
     this._colFill = options.colFill !== undefined ? options.colFill : 0.66
+    this._autoscale = options.autoscale !== undefined ? options.autoscale : false
+
 
     this.progress = 0
     this._data = []
 
     this._renderHash = ''
+    this._scaleLabels = []
+    this._scaleLines = null
+    this._canvas = null
+
+    this._reload()
+
+  }
+
+  _reload() {
+    this._renderHash = ''
+    if(this._scaleLines && this._scaleLines.parent) {
+      this.removeChild(this._scaleLines)
+      this._scaleLines = null
+    }
+    if(this._canvas && this._canvas.parent) {
+      this.removeChild(this._canvas)
+      this._canvas = null
+    }
+    while(this._scaleLabels.length) {
+      this.removeChild(this._scaleLabels.pop())
+    }
 
     if(this._showScale) {
       this._scaleLines = new LineArt()
@@ -54,8 +77,55 @@ export default class BarChart extends PIXI.Container {
   }
 
   set data(d) {
+    if(this._data === d) return
+
+    if(this._data.length === 0 && d.length > 0 && this._autoscale) {
+      this._scaleMin = Math.floor(d[0]*0.999 / this._tickStep)*this._tickStep
+      this._scaleMax = Math.ceil(d[0]*1.001 / this._tickStep)*this._tickStep
+      this._reload()
+    } 
     this._data = d
+    if(this._autoscale && this._data.length > 0) {
+      this.applyAutoscale()
+    }
   }
+
+  applyAutoscale() {
+    let min = this._data[0]
+    let max = this._data[0]
+    for(let v of this._data) {
+      min = Math.min(min, v)
+      max = Math.max(max, v)
+    }
+
+    this._tickStep = 1
+    while((max - min)/this._tickStep > 8) {
+      if(this._tickStep % 2 !== 0) {
+        this._tickStep *= 5
+      } else {
+        this._tickStep *= 2
+      }
+    }
+
+    let reloadNeeded = false
+    let newScaleMin = this._scaleMin
+    let newScaleMax = this._scaleMax
+    if(min < this._scaleMin) {
+      newScaleMin = Math.floor(0.95 * min / this._tickStep)*this._tickStep
+      reloadNeeded = true
+    }
+    if(max > this._scaleMax) {
+      newScaleMax = Math.ceil(1.05 * max / this._tickStep)*this._tickStep
+      reloadNeeded = true
+    }
+    if(reloadNeeded) {
+      console.log({min, max})
+      this._scaleMin = newScaleMin
+      this._scaleMax = newScaleMax
+      this._reload()
+    }
+    
+   }
 
   render(renderer) {
     super.render(renderer)
