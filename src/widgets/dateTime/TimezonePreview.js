@@ -7,6 +7,10 @@ const SHOW_SEGMENTS = 11
 const SEGMENT_WIDTH = 30
 const SEGMENT_HEIGHT = 34
 
+function getTimezoneMs(options={}) {
+  return new Date ((new Date()).toLocaleString('en-GB', {hour12: false, ...options}).replace(/^([0-9]{2})\/([0-9]{2})\/([0-9]{4}), (.*)$/, "$3-$2-$1T$4")).getTime()
+}
+
 export default class TimezonePreview extends PIXI.Container {
   constructor(timezones) {
     super()
@@ -20,8 +24,8 @@ export default class TimezonePreview extends PIXI.Container {
     this._lastDragTime = -10000
 
     this._timezones = timezones.map(t => {
-      const localTimestamp = new Date((new Date()).toLocaleString('en-GB', {hour12: false})).getTime()
-      const remoteTimestamp = new Date((new Date()).toLocaleString('en-GB', {hour12: false, timeZone: t.id})).getTime()
+      const localTimestamp = getTimezoneMs()
+      const remoteTimestamp = getTimezoneMs({timeZone: t.id})
       let offset = (remoteTimestamp - localTimestamp)/(1000*60*60)
       return {
         ...t,
