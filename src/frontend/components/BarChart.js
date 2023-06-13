@@ -119,7 +119,6 @@ export default class BarChart extends PIXI.Container {
       reloadNeeded = true
     }
     if(reloadNeeded) {
-      console.log({min, max})
       this._scaleMin = newScaleMin
       this._scaleMax = newScaleMax
       this._reload()

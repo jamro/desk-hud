@@ -5,6 +5,7 @@ import RoomWidget from './room'
 import CalendarWidget from './calendar'
 import TodoWidget from './todo'
 import PomodoroWidget from './pomodoro'
+import StocksWidget from './stocks'
 
 const widgets = [
   DateTimeWidget,
@@ -13,5 +14,6 @@ const widgets = [
   CalendarWidget,
   TodoWidget,
   PomodoroWidget,
+  StocksWidget
 ]
 export default widgets

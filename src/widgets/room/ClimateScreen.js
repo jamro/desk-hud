@@ -164,6 +164,12 @@ export default class ClimateScreen extends PIXI.Container {
     this._coolModeIcon.alpha = this.acMode === 'cool' ? 1 : 0.5
     this._heatModeIcon.alpha = this.acMode === 'heat' ? 1 : 0.5
     this._offModeIcon.alpha = this.acMode === 'off' ? 1 : 0.5
+
+    this._autoModeIcon.scale.set(0.55)
+    this._coolModeIcon.scale.set(0.55)
+    this._heatModeIcon.scale.set(0.55)
+    this._offModeIcon.scale.set(0.55)
+
     this._icons.alpha = this.progress
     this._fan.progress = this.progress
 

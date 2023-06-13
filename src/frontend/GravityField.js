@@ -1,5 +1,7 @@
 import InfoMessage from "./InfoMessage"
 import SleepToggle from "./SleepToggle"
+import WindowBorder from "./WindowBorder"
+import IconButton from "./components/IconButton"
 
 
 const HELLO = ['hi', 'hello', 'hey there', 'what\'s up?', 'howdy', 'greetings', 'what\'s going on?', 'how\'s everything?', 'good to see you', 'nice to see you', 'what\'s new?', 'look who it is?', 'yo!', 'hello my friend', 'good day']
@@ -12,12 +14,14 @@ export default class GravityField extends PIXI.Container {
     this._slots = [
       { index: 0, x: 810,    y: 165,   size: 1},
       { index: 1, x: 1080,   y: 155,   size: 1},
-      { index: 2, x: 1265,   y: 100,    size: 0.5},
-      { index: 3, x: 1265,   y: 220,   size: 0.5},
-      { index: 4, x: 1400,   y: 100,    size: 0.5},
+      { index: 2, x: 1400,   y: 100,   size: 0.5},
+      { index: 3, x: 1265,   y: 100,   size: 0.5},
+      { index: 4, x: 1265,   y: 220,   size: 0.5},
       { index: 5, x: 1400,   y: 220,   size: 0.5},
+      { index: 6, x: 1600,   y: 160,   size: 0.5},
     ]
 
+    this.progress = 0
     this._widgets = {}
     this._widgetList = []
     this._sleep = !localStorage.getItem('isAwake')
@@ -40,6 +44,32 @@ export default class GravityField extends PIXI.Container {
     this._infoMessage.x = 55
     this._infoMessage.y = 298
     this.addChild(this._infoMessage)
+
+    this._border = new WindowBorder()
+    this.addChild(this._border)
+
+    this._border.on('rotate', (direction) => this._rotateWidgets(direction))
+  }
+
+  _rotateWidgets(direction) {
+
+    if(direction > 0 && this._widgetList.length > 2) {
+      const firstWidget =  this._widgetList[2]
+      for(let i=3; i < this._widgetList.length; i++) {
+        this._widgetList[i-1] = this._widgetList[i]
+      }
+      this._widgetList[this._widgetList.length-1] = firstWidget
+    } else {
+      const lastWidget =  this._widgetList[this._widgetList.length-1]
+      for(let i=this._widgetList.length-1; i >= 3; i--) {
+        this._widgetList[i] = this._widgetList[i-1]
+      }
+      this._widgetList[2] = lastWidget
+    }
+
+    for(let i=2; i < this._widgetList.length; i++) {
+      this._widgetList[i].moveTo(this._slots[i])
+    }
   }
 
   get infoMessage() {
@@ -89,6 +119,13 @@ export default class GravityField extends PIXI.Container {
     this._widgetList.push(widget)
     this._widgets[widget.id] = widget
 
+    while(this._slots.length < index+1) {
+      this._slots.push({
+        ...this._slots[this._slots.length-1],
+        index: this._slots.length
+      })
+    }
+
     widget.x = this._slots[index].x
     widget.y = this._slots[index].y
     widget.index = this._slots[index].index
@@ -122,17 +159,20 @@ export default class GravityField extends PIXI.Container {
   }
 
   render(renderer) {
+    if(this._sleep) {
+      this.progress = Math.max(0, this.progress - 0.08)
+    } else {
+      this.progress = Math.min(1, this.progress + 0.08)
+    }
     for(let i=0; i < this._widgetList.length; i++) {
       const widget = this._widgetList[i]
-      if(this._sleep) {
-        widget.progress = Math.max(0, widget.progress - 0.08)
-      } else {
-        widget.progress = Math.min(1, widget.progress + 0.08)
-      }
+      widget.progress = this.progress
     }
     if(this._sleepToggle.pulse) {
       this._infoMessage.text = "conNecting..."
     }
+    this._border.progress = this.progress
+    this._border.rotationActive = (this._widgetList.length > 6)
     super.render(renderer)
   }
 }
