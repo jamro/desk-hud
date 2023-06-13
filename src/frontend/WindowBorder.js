@@ -1,5 +1,6 @@
 import IconButton from "./components/IconButton"
 import LineArt from "./components/LineArt"
+import TextField from "./components/TextField"
 
 export default class WindowBorder extends PIXI.Container {
 
@@ -7,6 +8,8 @@ export default class WindowBorder extends PIXI.Container {
     super()
     this.progress = 0
     this._rotationActive = false
+    this.distance = 0
+    this._distanceAnim = 0
 
     this._lines = new LineArt()
     this.addChild(this._lines)
@@ -69,8 +72,9 @@ export default class WindowBorder extends PIXI.Container {
     ], 1, 0x555555)
 
     this._lines.addSequence([
-      70, 0,
-      70, 25,
+      0, 20,
+      130, 20,
+      135, 25,
       1480, 25,
     ], 1, 0x555555)
 
@@ -92,6 +96,19 @@ export default class WindowBorder extends PIXI.Container {
     this._rotateBackButton.on('pointertap', () => this.emit('rotate', -1))
 
 
+    this._distanceLabel = new TextField('',{
+      fontFamily: 'MajorMonoDisplay-Regular',
+      fontSize: 8,
+      fill: '#888888',
+      stroke: "#888888",
+      strokeThickness: 0.5,
+      align: 'center',
+    });
+    this._distanceLabel.x = 8
+    this._distanceLabel.y = 10
+    this._distanceLabel.progress = 1
+    this._distanceLabel.anchor.set(0, 0.5)
+    this.addChild(this._distanceLabel)
 
   }
 
@@ -111,6 +128,8 @@ export default class WindowBorder extends PIXI.Container {
     this._rotateForwardButton.alpha = this.progress
     this._rotateBackButton.alpha = this.progress
     this._lines.progress = this.progress
+    this._distanceAnim += (this.distance - this._distanceAnim)/20
+    this._distanceLabel.text = `distance: ${this._distanceAnim.toFixed(3).padStart(7, ' ')}cm`
   }
 
 }

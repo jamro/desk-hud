@@ -68,12 +68,17 @@ if(DEMO_MODE) {
     gravityField.routeMessage(widgetId, payload)
   })
   socket.on('distance', async (payload) => {
-    console.log(`%c${LOG_PREFIX} Socket message "distance":`, LOG_STYLE, payload)
+    if(payload.action) {
+      console.log(`%c${LOG_PREFIX} Socket message "distance":`, LOG_STYLE, payload)
+    }
     if(payload.action === 'goSleep') {
       gravityField.goSleep()
     } else if(payload.action === 'wakeUp') {
       gravityField.wakeUp()
     } 
+    if(payload.distance !== undefined) {
+      gravityField.distance = payload.distance
+    }
   })
   socket.on('config', function(data) {
     console.log(`%c${LOG_PREFIX} Socket message "config":`, LOG_STYLE, data)

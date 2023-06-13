@@ -22,6 +22,7 @@ export default class GravityField extends PIXI.Container {
     ]
 
     this.progress = 0
+    this.distance = 0
     this._widgets = {}
     this._widgetList = []
     this._sleep = !localStorage.getItem('isAwake')
@@ -173,6 +174,7 @@ export default class GravityField extends PIXI.Container {
     }
     this._border.progress = this.progress
     this._border.rotationActive = (this._widgetList.length > 6)
+    this._border.distance = this.distance
     super.render(renderer)
   }
 }
