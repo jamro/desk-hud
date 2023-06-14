@@ -101,7 +101,7 @@ class DistanceService extends Service {
     let max = this._queue[0]
     let min = this._queue[0]
     let val
-    while(this._queue.length > 5) {
+    while(this._queue.length > 0) {
       count++
       val = this._queue.shift()
       sum += val
