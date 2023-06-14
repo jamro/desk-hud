@@ -40,7 +40,7 @@ try:
 	while True:
 		global maxVal, minVal, sum
 		distances = []
-		for x in range(0, 5):
+		for x in range(0, 3):
 			distances.append(checkDistance())
 
 		sum = 0
@@ -55,9 +55,9 @@ try:
 		avg = (sum-maxVal-minVal)/(len(distances)-2)
 
 		if avg > lastDistance*1.5 or avg < lastDistance*0.5:
-			newDistance = avg*0.1 + lastDistance*0.9
+			newDistance = avg*0.3 + lastDistance*0.7
 		else:
-			newDistance = avg*0.5 + lastDistance*0.5
+			newDistance = avg*0.7 + lastDistance*0.3
 
 		print (round(newDistance), flush=True)
 		lastDistance = newDistance
