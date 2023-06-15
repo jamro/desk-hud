@@ -116,9 +116,16 @@ export default class DemoSocket {
 
     setTimeout(() => {
       this._publish('distance', {
-        "distance": 15,
+        "distance": 45 + 5*Math.random(),
         "sensorDataAge": 33,
         "action": "wakeUp"
+      })
+    }, 1000)
+
+    setInterval(() => {
+      this._publish('distance', {
+        "distance": 45 + 5*Math.random(),
+        "sensorDataAge": 33,
       })
     }, 1000)
   }  

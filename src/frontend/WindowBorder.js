@@ -1,5 +1,6 @@
 import IconButton from "./components/IconButton"
 import LineArt from "./components/LineArt"
+import ProgressBar from "./components/ProgressBar"
 import TextField from "./components/TextField"
 
 export default class WindowBorder extends PIXI.Container {
@@ -104,11 +105,17 @@ export default class WindowBorder extends PIXI.Container {
       strokeThickness: 0.5,
       align: 'center',
     });
-    this._distanceLabel.x = 8
+    this._distanceLabel.x = 15
     this._distanceLabel.y = 10
     this._distanceLabel.progress = 1
     this._distanceLabel.anchor.set(0, 0.5)
     this.addChild(this._distanceLabel)
+
+    this._distanceBar = new ProgressBar(30)
+    this.addChild(this._distanceBar)
+    this._distanceBar.x = 140
+    this._distanceBar.y = 6
+    this._distanceBar.alpha = 0.4
 
   }
 
@@ -130,6 +137,7 @@ export default class WindowBorder extends PIXI.Container {
     this._lines.progress = this.progress
     this._distanceAnim += (this.distance - this._distanceAnim)/20
     this._distanceLabel.text = `distance: ${this._distanceAnim.toFixed(3).padStart(7, ' ')}cm`
+    this._distanceBar.value = Math.min(1, this._distanceAnim/300)
   }
 
 }

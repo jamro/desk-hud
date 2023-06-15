@@ -1,7 +1,6 @@
 import InfoMessage from "./InfoMessage"
 import SleepToggle from "./SleepToggle"
 import WindowBorder from "./WindowBorder"
-import IconButton from "./components/IconButton"
 
 
 const HELLO = ['hi', 'hello', 'hey there', 'what\'s up?', 'howdy', 'greetings', 'what\'s going on?', 'how\'s everything?', 'good to see you', 'nice to see you', 'what\'s new?', 'look who it is?', 'yo!', 'hello my friend', 'good day']
