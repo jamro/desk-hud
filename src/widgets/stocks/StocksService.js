@@ -42,26 +42,34 @@ class StocksService extends Service {
   }
 
   async updateIntraDay() {
-    const apiKey = this.config.getProp('alphavantage.apiKey')
-    const symbol = this.config.getProp('alphavantage.symbol')
+    try {
+      const apiKey = this.config.getProp('alphavantage.apiKey')
+      const symbol = this.config.getProp('alphavantage.symbol')
 
-    this._intraDay = await this._fetchIntraDay(apiKey, symbol);
+      this._intraDay = await this._fetchIntraDay(apiKey, symbol);
 
-    const msg = this._createMessage()
-    if(msg) {
-      this.emit(msg)
+      const msg = this._createMessage()
+      if(msg) {
+        this.emit(msg)
+      }
+    } catch(err) {
+      console.error(err)
     }
   }
 
   async updateDaily() {
-    const apiKey = this.config.getProp('alphavantage.apiKey')
-    const symbol = this.config.getProp('alphavantage.symbol')
+    try {
+      const apiKey = this.config.getProp('alphavantage.apiKey')
+      const symbol = this.config.getProp('alphavantage.symbol')
 
-    this._daily = await this._fetchDaily(apiKey, symbol);
+      this._daily = await this._fetchDaily(apiKey, symbol);
 
-    const msg = this._createMessage()
-    if(msg) {
-      this.emit(msg)
+      const msg = this._createMessage()
+      if(msg) {
+        this.emit(msg)
+      }
+    } catch(err) {
+      console.error(err)
     }
   }
 

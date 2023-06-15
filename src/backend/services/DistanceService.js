@@ -1,5 +1,4 @@
 const Service = require('./Service.js')
-const fetch = require('node-fetch');
 const spawn = require('child_process').spawn
 const exec = require('child_process').exec
 const path = require('path')

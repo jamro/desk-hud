@@ -19,11 +19,19 @@ class TodoService extends GoogleService {
   }
 
   async welcomeClient(socket) {
-    this.emit(await this.fetchAll(), socket)
+    try {
+      this.emit(await this.fetchAll(), socket)
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   async update() {
-    this.emit(await this.fetchAll())
+    try {
+      this.emit(await this.fetchAll())
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   async fetchAll() {

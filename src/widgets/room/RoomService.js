@@ -1,5 +1,4 @@
 const Service = require('../../backend/services/Service.js')
-const fetch = require('node-fetch');
 const hass = require("home-assistant-js-websocket");
 const storage = require('node-persist');
 globalThis.WebSocket = require("ws");

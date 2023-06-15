@@ -49,7 +49,7 @@ try:
 
 		for val in distances:
 			maxVal=max(maxVal, val)
-			minVal=min(minVal, val)
+			minVal=min(minVal, val) 
 			sum += val
 			
 		avg = (sum-maxVal-minVal)/(len(distances)-2)
