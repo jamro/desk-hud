@@ -69,6 +69,10 @@ export default class WindowBorder extends PIXI.Container {
       820, 40,
       820, 30,
       600, 30,
+      600-10, 30-10,
+      600-10+5, 30-10,
+      600-10+5+10, 30-10-17,
+      573, 3,
       570, 0,
     ], 1, 0x555555)
 
@@ -111,7 +115,7 @@ export default class WindowBorder extends PIXI.Container {
     this._distanceLabel.anchor.set(0, 0.5)
     this.addChild(this._distanceLabel)
 
-    this._distanceBar = new ProgressBar(30)
+    this._distanceBar = new ProgressBar(45)
     this.addChild(this._distanceBar)
     this._distanceBar.x = 140
     this._distanceBar.y = 6
@@ -138,6 +142,8 @@ export default class WindowBorder extends PIXI.Container {
     this._distanceAnim += (this.distance - this._distanceAnim)/20
     this._distanceLabel.text = `distance: ${this._distanceAnim.toFixed(3).padStart(7, ' ')}cm`
     this._distanceBar.value = Math.min(1, this._distanceAnim/300)
+
+    this._distanceBar.alpha = 0.2 + 0.8 * this.progress
   }
 
 }
