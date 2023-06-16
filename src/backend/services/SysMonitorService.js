@@ -41,7 +41,7 @@ class SysMonitorService extends Service {
     try {
       cpuTemp = Number(fs.readFileSync('/sys/class/thermal/thermal_zone0/temp', 'utf8'))/1000
     } catch(err) {
-      console.warn(err)
+      console.warn('Unable to read CPU temperature', String(err))
     }
     return {
       cpuLoad: os.loadavg(1)/100,

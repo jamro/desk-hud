@@ -19,13 +19,16 @@ class StocksService extends Service {
       clearInterval(this._loop2)
     }
     this._loop1 = setInterval(() => this.updateIntraDay(), 5*60*1000)
-    this.updateIntraDay()
     this._loop2 = setInterval(() => this.updateDaily(), 60*60*1000)
-    this.updateDaily()
+    this.updateIntraDay()
+    setTimeout(() => this.updateDaily(), 1000)
   }
 
   _createMessage() {
-    if(!this._intraDay || ! this._daily) return null
+    if(!this._intraDay || ! this._daily) {
+      console.log('Unable to create full stocks message', {_intraDay: !!this._intraDay,  _daily: !!this._daily})
+      return null
+    }
     const symbol = this.config.getProp('alphavantage.symbol')
     return {
       symbol,
@@ -47,7 +50,6 @@ class StocksService extends Service {
       const symbol = this.config.getProp('alphavantage.symbol')
 
       this._intraDay = await this._fetchIntraDay(apiKey, symbol);
-
       const msg = this._createMessage()
       if(msg) {
         this.emit(msg)

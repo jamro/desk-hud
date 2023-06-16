@@ -71,7 +71,7 @@ export default class StocksWidget extends Widget {
       symbol: msg.symbol,
       current,
       past,
-      change: Number((1 - current/past).toFixed(3)),
+      change: Number((current/past-1).toFixed(3)),
       history: dailyTimeline.map(d => msg.daily['Time Series (Daily)'][d.id]).map(d => Number(d['4. close']))
     }
   }

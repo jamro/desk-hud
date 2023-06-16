@@ -128,12 +128,12 @@ class DistanceService extends Service {
       // power off
       this._isPowerOn = false
       console.log("Power HDMI off")
-      exec('vcgencmd display_power 0', console.log)
+      exec('vcgencmd display_power 0', (err) => console.warn('Unable to turn HDMI off', String(err)))
     } else if(!this._isPowerOn && this._inactivityTimer === 0) {
       // power on
       this._isPowerOn = true
       console.log("Power HDMI on")
-      exec('vcgencmd display_power 1', console.log)
+      exec('vcgencmd display_power 1', (err) => console.warn('Unable to turn HDMI off', String(err)))
     }
     if(distance < wakeUpThreshold && !this._isAwake) {
       // wake up
