@@ -2,6 +2,7 @@ import IconButton from "./components/IconButton"
 import LineArt from "./components/LineArt"
 import ProgressBar from "./components/ProgressBar"
 import TextField from "./components/TextField"
+import Thermometer from "./components/Thermometer"
 
 export default class WindowBorder extends PIXI.Container {
 
@@ -12,6 +13,7 @@ export default class WindowBorder extends PIXI.Container {
     this.distance = 0
     this.cpuLoad = 0
     this.memLoad = 0
+    this.cpuTemp = 0
     this._distanceAnim = 0
 
     this._lines = new LineArt()
@@ -152,6 +154,25 @@ export default class WindowBorder extends PIXI.Container {
     this._memLabel.y = 306
     this._memLabel.x = 820
 
+    this._tempLabel = new TextField('temp:  0.0°c',{
+      fontFamily: 'MajorMonoDisplay-Regular',
+      fontSize: 8,
+      fill: '#888888',
+      stroke: "#888888",
+      strokeThickness: 0.5,
+      align: 'center',
+    });
+    this._tempLabel.anchor.set(0, 0.5)
+    this.addChild(this._tempLabel)
+    this._tempLabel.y = 306
+    this._tempLabel.x = 690
+
+    this._tempBar = new Thermometer(125, 0.77)
+    this.addChild(this._tempBar)
+    this._tempBar.y = 303
+    this._tempBar.x = 670
+    this._tempBar.alpha = 0.65
+
     this._cpuBar = new ProgressBar(23, 2)
     this.addChild(this._cpuBar)
     this._cpuBar.x = 900
@@ -194,6 +215,12 @@ export default class WindowBorder extends PIXI.Container {
     this._memLabel.text = `mem: ${(100*this.memLoad).toFixed(1).padStart(5, ' ')}%`
     this._memBar.progress = this.progress
     this._memBar.value = this.memLoad
+
+    this._tempLabel.progress = this.progress
+    this._tempLabel.text = `temp: ${(this.cpuTemp).toFixed(1).padStart(5, ' ')}°c`
+
+    this._tempBar.progress = this.progress
+    this._tempBar.value = Math.min(1, this.cpuTemp/110)
   }
 
 }

@@ -81,9 +81,10 @@ if(DEMO_MODE) {
     }
   })
   socket.on('system', async (payload) => {
-    console.log(`%c${LOG_PREFIX} Socket message "system":`, LOG_STYLE, payload)
+    //console.log(`%c${LOG_PREFIX} Socket message "system":`, LOG_STYLE, payload)
     gravityField.cpuLoad = payload.cpuLoad
     gravityField.memLoad = payload.memLoad
+    gravityField.cpuTemp = payload.cpuTemp
   })
   socket.on('config', function(data) {
     console.log(`%c${LOG_PREFIX} Socket message "config":`, LOG_STYLE, data)

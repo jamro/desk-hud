@@ -122,6 +122,22 @@ export default class DemoSocket {
       })
     }, 1000)
 
+    setTimeout(() => {
+      this._publish('system', {
+        cpuLoad: 0.21 + 0.05 * Math.random(),
+        memLoad: 0.63 + 0.03 * Math.random(),
+        cpuTemp: 50 + 10 * Math.random(),
+      })
+    }, 500)
+
+    setInterval(() => {
+      this._publish('system', {
+        cpuLoad: 0.21 + 0.05 * Math.random(),
+        memLoad: 0.63 + 0.03 * Math.random(),
+        cpuTemp: 50 + 10 * Math.random(),
+      })
+    }, 3000)
+
     setInterval(() => {
       this._publish('distance', {
         "distance": 45 + 5*Math.random(),

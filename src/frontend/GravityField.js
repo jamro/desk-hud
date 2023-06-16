@@ -24,6 +24,7 @@ export default class GravityField extends PIXI.Container {
     this.distance = 0
     this.memLoad = 0
     this.cpuLoad = 0
+    this.cpuTemp = 0
     this._widgets = {}
     this._widgetList = []
     this._sleep = !localStorage.getItem('isAwake')
@@ -178,6 +179,7 @@ export default class GravityField extends PIXI.Container {
     this._border.distance = this.distance
     this._border.cpuLoad = this.cpuLoad
     this._border.memLoad = this.memLoad
+    this._border.cpuTemp = this.cpuTemp
     super.render(renderer)
   }
 }

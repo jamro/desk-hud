@@ -36,9 +36,16 @@ class SysMonitorService extends Service {
   }
 
   async fetchAll() {
+    let cpuTemp = 0
+    try {
+      cpuTemp = fs.readFileSync('/sys/class/thermal/thermal_zone0/temp', 'utf8')
+    } catch(err) {
+      console.warn(err)
+    }
     return {
       cpuLoad: os.loadavg(1)/100,
-      memLoad: 1-os.freememPercentage()
+      memLoad: 1-os.freememPercentage(),
+      cpuTemp
     }
   }
 
