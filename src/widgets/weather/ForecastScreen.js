@@ -1,4 +1,4 @@
-import BarChart from "../../frontend/components/BarChart"
+import Chart from "../../frontend/components/Chart"
 import LineArt from "../../frontend/components/LineArt"
 import ScrollContainer from "../../frontend/components/ScrollContainer"
 import TextField from "../../frontend/components/TextField"
@@ -80,7 +80,7 @@ export default class ForecastScreen extends PIXI.Container {
     this._timelinePop.anchor.set(0, 0.5)
     this._container.addChild(this._timelinePop)
 
-    this._rainChart = new BarChart({
+    this._rainChart = new Chart({
       height: 50,
       width: 24 * 73.2,
       scaleMax: 2.5,

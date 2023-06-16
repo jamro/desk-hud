@@ -1,5 +1,6 @@
 const Service = require("../../backend/services/Service");
 const fetch = require('node-fetch');
+const storage = require('node-persist');
 
 class StocksService extends Service {
 
@@ -12,6 +13,9 @@ class StocksService extends Service {
   }
 
   async start() {
+    this._intraDay = await storage.getItem('stocks.intraDay') || null
+    this._daily = await storage.getItem('stocks.daily') || null
+
     if(this._loop1) {
       clearInterval(this._loop1)
     }
@@ -20,8 +24,12 @@ class StocksService extends Service {
     }
     this._loop1 = setInterval(() => this.updateIntraDay(), 5*60*1000)
     this._loop2 = setInterval(() => this.updateDaily(), 60*60*1000)
-    this.updateIntraDay()
-    setTimeout(() => this.updateDaily(), 1000)
+    if(!this._intraDay ) {
+      this.updateIntraDay()
+    }
+    if(!this._daily ) {
+      setTimeout(() => this.updateDaily(), 10000)
+    }
   }
 
   _createMessage() {
@@ -50,6 +58,9 @@ class StocksService extends Service {
       const symbol = this.config.getProp('alphavantage.symbol')
 
       this._intraDay = await this._fetchIntraDay(apiKey, symbol);
+      
+      await storage.setItem('stocks.intraDay', this._intraDay)
+
       const msg = this._createMessage()
       if(msg) {
         this.emit(msg)
@@ -65,6 +76,8 @@ class StocksService extends Service {
       const symbol = this.config.getProp('alphavantage.symbol')
 
       this._daily = await this._fetchDaily(apiKey, symbol);
+
+      await storage.setItem('stocks.daily', this._daily)
 
       const msg = this._createMessage()
       if(msg) {

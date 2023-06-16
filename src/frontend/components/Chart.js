@@ -1,7 +1,7 @@
 import LineArt from "./LineArt"
-import TextField from '../components/TextField'
+import TextField from './TextField'
 
-export default class BarChart extends PIXI.Container {
+export default class Chart extends PIXI.Container {
 
   constructor(options={}) {
     super()
@@ -14,7 +14,7 @@ export default class BarChart extends PIXI.Container {
     this._showScale = options.showScale !== undefined ? options.showScale : true
     this._colFill = options.colFill !== undefined ? options.colFill : 0.66
     this._autoscale = options.autoscale !== undefined ? options.autoscale : false
-
+    this._style = options.style !== undefined ? options.style : 'bars'
 
     this.progress = 0
     this._data = []
@@ -141,6 +141,62 @@ export default class BarChart extends PIXI.Container {
     }
 
     this._canvas.clear()
+    
+    switch(this._style ) {
+      case 'dots':
+        this._renderDots()
+        break;
+      case 'line':
+        this._renderLine()
+        break;
+      case 'bars':
+      default:
+        this._renderBars()
+    }
+    
+  }
+
+  _renderDots() {
+    const step = this._data.length ? this._chartWidth / this._data.length : 0
+
+    this._canvas.beginFill(0xffffff)
+    for(let i=0; i < this._data.length; i++) {
+      let value = (this._data[i] - this._scaleMin) / (this._scaleMax - this._scaleMin)
+      const progress = Math.min(1, Math.max(0, this.progress - 0.5*i/this._data.length)*2)
+      value = progress * Math.max(0, Math.min(1, value))
+      this._canvas.drawRect(
+        i*step + (1-this._colFill)*step*0.5,
+        1-this._chartHeight * value + this._chartHeight, 
+        step*this._colFill,
+        Math.min(3, this._chartHeight * value)
+      )
+    }
+  }
+
+  _renderLine() {
+    const step = this._data.length ? this._chartWidth / this._data.length : 0
+
+    this._canvas.lineStyle({
+      width: 2,
+      color: 0xffffff,
+      alpha: this.progress
+    })
+    for(let i=0; i < this._data.length; i++) {
+      let value = (this._data[i] - this._scaleMin) / (this._scaleMax - this._scaleMin)
+      const progress = Math.min(1, Math.max(0, this.progress - 0.5*i/this._data.length)*2)
+      value = progress * Math.max(0, Math.min(1, value))
+
+      const x = (i*step + (1-this._colFill)*step*0.5) + step*this._colFill*0.5
+      const y = 1-this._chartHeight * value + this._chartHeight
+
+      const method = (i === 0) ? 'moveTo' : 'lineTo'
+
+      this._canvas[method](x, y)
+
+    }
+  }
+
+  _renderBars() {
     const step = this._data.length ? this._chartWidth / this._data.length : 0
     this._canvas.beginFill(0xffffff, 0.5*this.progress)
     for(let i=0; i < this._data.length; i++) {
@@ -167,6 +223,5 @@ export default class BarChart extends PIXI.Container {
         Math.min(3, this._chartHeight * value)
       )
     }
-    
   }
 }

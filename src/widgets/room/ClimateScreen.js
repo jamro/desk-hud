@@ -1,6 +1,6 @@
 import ScaleCircle from "../../frontend/circles/ScaleCircle"
 import TitleCircle from "../../frontend/circles/TitleCircle"
-import BarChart from "../../frontend/components/BarChart"
+import Chart from "../../frontend/components/Chart"
 import Battery from "../../frontend/components/Battery"
 import Icon from "../../frontend/components/Icon"
 import TextField from "../../frontend/components/TextField"
@@ -99,7 +99,7 @@ export default class ClimateScreen extends PIXI.Container {
     })
     this.addChild(this._fan)
 
-    this._tempChart = new BarChart({width: 240, height: 100, scaleMin: 18, scaleMax: 26, tickStep: 1})
+    this._tempChart = new Chart({width: 240, height: 100, scaleMin: 18, scaleMax: 26, tickStep: 1})
     this._tempChart.x = 43
     this._tempChart.y = -65
     this.addChild(this._tempChart)
