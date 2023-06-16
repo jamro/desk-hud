@@ -154,7 +154,7 @@ export default class WindowBorder extends PIXI.Container {
     this._memLabel.y = 306
     this._memLabel.x = 820
 
-    this._tempLabel = new TextField('temp:  0.0°c',{
+    this._tempLabel = new TextField('cpu temp:  0.0°c',{
       fontFamily: 'MajorMonoDisplay-Regular',
       fontSize: 8,
       fill: '#888888',
@@ -165,7 +165,7 @@ export default class WindowBorder extends PIXI.Container {
     this._tempLabel.anchor.set(0, 0.5)
     this.addChild(this._tempLabel)
     this._tempLabel.y = 306
-    this._tempLabel.x = 690
+    this._tempLabel.x = 685
 
     this._tempBar = new Thermometer(125, 0.77)
     this.addChild(this._tempBar)
@@ -216,7 +216,7 @@ export default class WindowBorder extends PIXI.Container {
     this._memBar.value = this.memLoad
 
     this._tempLabel.progress = this.progress
-    this._tempLabel.text = `temp: ${(this.cpuTemp).toFixed(1).padStart(5, ' ')}°c`
+    this._tempLabel.text = `cpu temp: ${(this.cpuTemp).toFixed(1).padStart(5, ' ')}°c`
 
     this._tempBar.progress = this.progress
     this._tempBar.value = Math.min(1, this.cpuTemp/110)
