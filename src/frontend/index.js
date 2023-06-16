@@ -4,7 +4,6 @@ import DemoSocket from "./DemoSocket.js";
 import widgets from "../widgets/widgets.js";
 
 const DEMO_MODE = (window.location.hash === '#demo');
-const LOG_STYLE = 'font-weight:bold;background-color:green;color:white'
 const LOG_PREFIX = '[core]';
 
 if(DEMO_MODE) {
@@ -18,7 +17,7 @@ if(DEMO_MODE) {
     console.log(LOG_PREFIX, `Font "${name}" has been loaded`)
   }
   
-  console.groupCollapsed(`%c${LOG_PREFIX} Loading fonts....`, LOG_STYLE)
+  console.groupCollapsed(`${LOG_PREFIX} Loading fonts....`)
   await loadFont('weathericons-regular-webfont')
   await loadFont('MajorMonoDisplay-Regular')
   await loadFont('Material Symbols Outlined')
@@ -50,26 +49,30 @@ if(DEMO_MODE) {
   })
   
   socket.on('connect', () => {
-    console.log(`%c${LOG_PREFIX} Socket connected`, LOG_STYLE)
+    console.log(`${LOG_PREFIX} Socket connected`)
     gravityField.online = true
   })
   socket.on('disconnect', () => {
-    console.log(`${LOG_PREFIX} Socket disconnected`, LOG_STYLE)
+    console.log(`${LOG_PREFIX} Socket disconnected`)
     gravityField.online = false
   })
   
   socket.on('widget', function(data) {
-    console.log(`%c[${data.widgetId || 'core'}] Socket message "widget":`, LOG_STYLE, data)
+    console.groupCollapsed(`[${data.widgetId || 'core'}] Socket message "widget"`)
+    console.log(`[${data.widgetId || 'core'}] Socket message "widget":`, data)
     const {
       widgetId,
       payload
     } = data
   
     gravityField.routeMessage(widgetId, payload)
+    console.groupEnd()
   })
   socket.on('distance', async (payload) => {
     if(payload.action) {
-      console.log(`%c${LOG_PREFIX} Socket message "distance":`, LOG_STYLE, payload)
+      console.log(`${LOG_PREFIX} Socket message "distance":`, payload)
+    } else {
+      console.debug(`${LOG_PREFIX} Socket message "distance":`, payload)
     }
     if(payload.action === 'goSleep') {
       gravityField.goSleep()
@@ -81,13 +84,13 @@ if(DEMO_MODE) {
     }
   })
   socket.on('system', async (payload) => {
-    //console.log(`%c${LOG_PREFIX} Socket message "system":`, LOG_STYLE, payload)
+    console.debug(`${LOG_PREFIX} Socket message "system":`, payload)
     gravityField.cpuLoad = payload.cpuLoad
     gravityField.memLoad = payload.memLoad
     gravityField.cpuTemp = payload.cpuTemp
   })
   socket.on('config', function(data) {
-    console.log(`%c${LOG_PREFIX} Socket message "config":`, LOG_STYLE, data)
+    console.log(`${LOG_PREFIX} Socket message "config":`, data)
     const {widgets} = data
     const keys = Object.keys(widgets)
     for(let key of keys) {
