@@ -10,6 +10,8 @@ export default class WindowBorder extends PIXI.Container {
     this.progress = 0
     this._rotationActive = false
     this.distance = 0
+    this.cpuLoad = 0
+    this.memLoad = 0
     this._distanceAnim = 0
 
     this._lines = new LineArt()
@@ -116,11 +118,51 @@ export default class WindowBorder extends PIXI.Container {
     this.addChild(this._distanceLabel)
 
     this._distanceBar = new ProgressBar(45)
+    this._distanceBar.progress = 1
     this.addChild(this._distanceBar)
     this._distanceBar.x = 140
     this._distanceBar.y = 6
     this._distanceBar.alpha = 0.4
 
+    this._cpuLabel = new TextField('cpu:  0.0%',{
+      fontFamily: 'MajorMonoDisplay-Regular',
+      fontSize: 8,
+      fill: '#888888',
+      stroke: "#888888",
+      strokeThickness: 0.5,
+      align: 'center',
+    });
+    this._cpuLabel.anchor.set(0, 0.5)
+
+    this.addChild(this._cpuLabel)
+    this._cpuLabel.y = 293
+    this._cpuLabel.x = 820
+
+    this._memLabel = new TextField('mem:  0.0%',{
+      fontFamily: 'MajorMonoDisplay-Regular',
+      fontSize: 8,
+      fill: '#888888',
+      stroke: "#888888",
+      strokeThickness: 0.5,
+      align: 'center',
+    });
+    this._memLabel.anchor.set(0, 0.5)
+
+    this.addChild(this._memLabel)
+    this._memLabel.y = 306
+    this._memLabel.x = 820
+
+    this._cpuBar = new ProgressBar(23, 2)
+    this.addChild(this._cpuBar)
+    this._cpuBar.x = 900
+    this._cpuBar.y = 293
+    this._cpuBar.alpha = 0.75
+
+    this._memBar = new ProgressBar(23, 2)
+    this.addChild(this._memBar)
+    this._memBar.x = 900
+    this._memBar.y = 306
+    this._memBar.alpha = 0.75
   }
 
   get rotationActive() {
@@ -142,8 +184,16 @@ export default class WindowBorder extends PIXI.Container {
     this._distanceAnim += (this.distance - this._distanceAnim)/20
     this._distanceLabel.text = `distance: ${this._distanceAnim.toFixed(3).padStart(7, ' ')}cm`
     this._distanceBar.value = Math.min(1, this._distanceAnim/300)
-
     this._distanceBar.alpha = 0.2 + 0.8 * this.progress
+
+    this._cpuLabel.progress = this.progress
+    this._cpuLabel.text = `cpu: ${(100*this.cpuLoad).toFixed(1).padStart(5, ' ')}%`
+    this._cpuBar.progress = this.progress
+    this._cpuBar.value = this.cpuLoad
+    this._memLabel.progress = this.progress
+    this._memLabel.text = `mem: ${(100*this.memLoad).toFixed(1).padStart(5, ' ')}%`
+    this._memBar.progress = this.progress
+    this._memBar.value = this.memLoad
   }
 
 }

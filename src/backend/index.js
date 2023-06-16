@@ -8,6 +8,7 @@ const { Server } = require("socket.io");
 const Config = require('./Config.js');
 const storage = require('node-persist');
 const DistanceService = require('./services/DistanceService.js');
+const SysMonitorService = require('./services/SysMonitorService.js');
 const services = require('../widgets/services.js');
 
 (async () => {
@@ -33,6 +34,7 @@ const services = require('../widgets/services.js');
   
   const serviceInstances = services.map((Def) => new Def(config, io))
   serviceInstances.push(new DistanceService(config, io))
+  serviceInstances.push(new SysMonitorService(config, io))
  
   try{
     await Promise.all(serviceInstances.map(s => s.start()))

@@ -1,40 +1,39 @@
 export default class ProgressBar extends PIXI.Container {
-  constructor(segmentCount=10) {
+  constructor(segmentCount=10, height=10) {
     super()
 
-    this._value = 0
+    this.value = 0
+    this.progress = 0
 
     this._segments = Array(segmentCount).fill(1).map((_, i) => {
       const segment = new PIXI.Graphics()
       segment.beginFill(0xffffff)
-      segment.moveTo(5,0)
-      segment.lineTo(13,0)
-      segment.lineTo(8,10)
-      segment.lineTo(0,10)
-      segment.lineTo(5,0)
+      segment.moveTo(height/2,0)
+      segment.lineTo(height/2 + 8,0)
+      segment.lineTo(8,height)
+      segment.lineTo(0,height)
+      segment.lineTo(height/2,0)
       segment.alpha = 0
       this.addChild(segment)
       segment.x = 10 * i
       return segment
     })
 
-    const limit = new PIXI.Graphics()
-    limit.beginFill(0xffffff)
-    limit.moveTo(5,0)
-    limit.lineTo(7,0)
-    limit.lineTo(2,10)
-    limit.lineTo(0,10)
-    limit.lineTo(5,0)
-    this.addChild(limit)
-    limit.x = 10 * this._segments.length
+    this._limit = new PIXI.Graphics()
+    this._limit.beginFill(0xffffff)
+    this._limit.moveTo(height/2,0)
+    this._limit.lineTo(height/2 + 2,0)
+    this._limit.lineTo(2,height)
+    this._limit.lineTo(0,height)
+    this._limit.lineTo(height/2,0)
+    this.addChild(this._limit)
+    this._limit.x = 10 * this._segments.length
   }
 
-  set value(v) {
-    if(this._value === v) return
-    this._value = v
-
+  render(renderer) {
+    const v = this.value*this.progress
     const segmentWidth = 1 / this._segments.length
-    const fullSegments = Math.floor(this.value/segmentWidth)
+    const fullSegments = Math.floor(v/segmentWidth)
 
     for(let i=0; i < this._segments.length; i++) {
       const segment = this._segments[i]
@@ -42,15 +41,14 @@ export default class ProgressBar extends PIXI.Container {
       if(i < fullSegments) {
         segment.alpha = 1
       } else if(i === fullSegments) {
-        segment.alpha = (this.value - i * segmentWidth)/segmentWidth
+        segment.alpha = (v - i * segmentWidth)/segmentWidth
       } else {
-        segment.alpha = 0.1
+        segment.alpha = 0.1*this.progress
       }
-      
     }
-  }
 
-  get value() {
-    return this._value
+    this._limit.visible = (this.progress === 1)
+
+    super.render(renderer)
   }
 }
