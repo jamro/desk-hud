@@ -84,9 +84,6 @@ class DistanceService extends Service {
   }
 
   async fetchAll() {
-    if(this._queue.length === 0) {
-      return null
-    }
     const dataAge = Math.max(0, performance.now() - this._lastSensorDataTime)
     if(dataAge > 3000) {
       this.logger.log("Sensor data is outdated. skipping")
@@ -94,6 +91,9 @@ class DistanceService extends Service {
       this._lastSensorDataTime = performance.now()
       this._respawn()
       return null;
+    }
+    if(this._queue.length === 0) {
+      return null
     }
     let sum = 0
     let count = 0
