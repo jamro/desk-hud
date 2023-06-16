@@ -5,7 +5,7 @@ export default class Thermometer extends PIXI.Container {
     this.progress = 0
     this._barHeight = height
     this._bg = new PIXI.Graphics()
-    this._bg.beginFill(0xffffff)
+    this._bg.beginFill(0x888888)
     this._bg.drawCircle(0, 0, 6)
     this._bg.drawRect(-4, -this._barHeight+4, 8, this._barHeight-4)
     this._bg.drawCircle(0, -this._barHeight+4, 4)
@@ -18,11 +18,11 @@ export default class Thermometer extends PIXI.Container {
     this._bg.beginFill(0xffffff)
     this._bg.drawCircle(0, 0, 3)
     if(warnThreshold) {
-      this._bg.beginFill(0xff0000)
+      this._bg.beginFill(0xcc0000)
       this._bg.drawRect(8, -this._barHeight, 3, 4+(this._barHeight-4)*(1-warnThreshold))
       this._bg.endFill()
       this._bg.lineStyle({
-        color: 0xffffff,
+        color: 0x888888,
         width: 1
       })
       this._bg.moveTo(

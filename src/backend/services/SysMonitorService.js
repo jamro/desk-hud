@@ -2,6 +2,7 @@ const Service = require('./Service.js')
 const spawn = require('child_process').spawn
 const exec = require('child_process').exec
 const os 	= require('os-utils');
+const fs 	= require('fs');
 const path = require('path')
 
 class SysMonitorService extends Service {
@@ -38,7 +39,7 @@ class SysMonitorService extends Service {
   async fetchAll() {
     let cpuTemp = 0
     try {
-      cpuTemp = fs.readFileSync('/sys/class/thermal/thermal_zone0/temp', 'utf8')
+      cpuTemp = Number(fs.readFileSync('/sys/class/thermal/thermal_zone0/temp', 'utf8'))/1000
     } catch(err) {
       console.warn(err)
     }

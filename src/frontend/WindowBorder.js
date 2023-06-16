@@ -171,7 +171,6 @@ export default class WindowBorder extends PIXI.Container {
     this.addChild(this._tempBar)
     this._tempBar.y = 303
     this._tempBar.x = 670
-    this._tempBar.alpha = 0.65
 
     this._cpuBar = new ProgressBar(23, 2)
     this.addChild(this._cpuBar)
