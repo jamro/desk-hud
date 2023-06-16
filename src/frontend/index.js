@@ -47,6 +47,8 @@ if(DEMO_MODE) {
       socket.emit('service', msg)
     })
   })
+
+  document.getElementById('loading').style.display = 'none'
   
   socket.on('connect', () => {
     console.log(`${LOG_PREFIX} Socket connected`)
