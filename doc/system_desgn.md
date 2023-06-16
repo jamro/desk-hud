@@ -20,6 +20,7 @@ There are several web socket events emitted by the server:
 - `widget` - update of widget data. The message is specific to each eidget
 - `distance` - updates from distance sensor
 - `system` - updates from system monitor
+- `log` - stream of server side logs to show them in browser's dev tool console
 
 ### Outgoing messages
 

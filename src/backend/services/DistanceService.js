@@ -29,9 +29,9 @@ class DistanceService extends Service {
 
   _respawn() {
     try {
-      console.log(`spawning distance monitor (${this.config.isDevMode ? 'dev' : 'prod'})...`)
+      this.logger.log(`spawning distance monitor (${this.config.isDevMode ? 'dev' : 'prod'})...`)
       if(this._proc) {
-        console.log("process alrady exists. killing")
+        this.logger.log("process alrady exists. killing")
         this._proc.noRespawn = true
         this._proc.kill()
       }
@@ -41,7 +41,7 @@ class DistanceService extends Service {
         this._proc = spawn('python', [path.resolve(__dirname, '..', 'distance.py')]);
       }
     } catch(err) {
-      console.log('Unable to spawn distance script', err)
+      this.logger.log('Unable to spawn distance script', err)
       return 
     }
     this._proc.stdout.on('data', (data) => {
@@ -50,22 +50,22 @@ class DistanceService extends Service {
         this._queue.push(Number(txt))
         this._lastSensorDataTime = performance.now()
       } else {
-        console.log('stdout: ' + txt);
+        this.logger.log('stdout: ' + txt);
       }
     });
     
     this._proc.stderr.on('data', (data) => {
-      console.error('stderr: ' + data.toString());
+      this.logger.error('stderr: ' + data.toString());
     });
     this._proc.on('error', (data) => {
-      console.error('error: ' + data.toString());
+      this.logger.error('error: ' + data.toString());
     });
     
     let proc = this._proc
     this._proc.on('exit', (code) => {
-      console.log('child process exited with code ' + (code || 0).toString());
+      this.logger.log('child process exited with code ' + (code || 0).toString());
       if(!proc.noRespawn) {
-        console.log('respawn in 5sec...')
+        this.logger.log('respawn in 5sec...')
         setTimeout(() => this._respawn(), 5000)
       }
     });
@@ -89,7 +89,7 @@ class DistanceService extends Service {
     }
     const dataAge = Math.max(0, performance.now() - this._lastSensorDataTime)
     if(dataAge > 3000) {
-      console.log("Sensor data is outdated. skipping")
+      this.logger.log("Sensor data is outdated. skipping")
       this._queue = []
       this._lastSensorDataTime = performance.now()
       this._respawn()
@@ -127,20 +127,22 @@ class DistanceService extends Service {
     if(this._isPowerOn  && this._inactivityTimer > this.config.getProp('core.powerOffTime')) {
       // power off
       this._isPowerOn = false
-      console.log("Power HDMI off")
+      this.logger.log("Power HDMI off")
       exec('vcgencmd display_power 0', (err) => console.warn('Unable to turn HDMI off', String(err)))
     } else if(!this._isPowerOn && this._inactivityTimer === 0) {
       // power on
       this._isPowerOn = true
-      console.log("Power HDMI on")
+      this.logger.log("Power HDMI on")
       exec('vcgencmd display_power 1', (err) => console.warn('Unable to turn HDMI off', String(err)))
     }
     if(distance < wakeUpThreshold && !this._isAwake) {
       // wake up
+      this.logger.log("wake up")
       this._isAwake = true
       return {distance, action: 'wakeUp', dataAge}
     } else if(distance > goSleepThreshold && this._isAwake) {
       // go sleep
+      this.logger.log("go sleep")
       this._isAwake = false
       this._distance = distance
       return {distance, action: 'goSleep', dataAge}

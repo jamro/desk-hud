@@ -70,9 +70,9 @@ if(DEMO_MODE) {
   })
   socket.on('distance', async (payload) => {
     if(payload.action) {
-      console.log(`${LOG_PREFIX} Socket message "distance":`, payload)
+      console.log(`[distance] Socket message "distance":`, payload)
     } else {
-      console.debug(`${LOG_PREFIX} Socket message "distance":`, payload)
+      console.debug(`[distance] Socket message "distance":`, payload)
     }
     if(payload.action === 'goSleep') {
       gravityField.goSleep()
@@ -84,10 +84,27 @@ if(DEMO_MODE) {
     }
   })
   socket.on('system', async (payload) => {
-    console.debug(`${LOG_PREFIX} Socket message "system":`, payload)
+    console.debug(`[system] Socket message "system":`, payload)
     gravityField.cpuLoad = payload.cpuLoad
     gravityField.memLoad = payload.memLoad
     gravityField.cpuTemp = payload.cpuTemp
+  })
+  socket.on('log', async (payloads) => {
+    const allowedMethods = {
+      error: true,
+      warn: true,
+      log: true,
+      info: true,
+      debug: true,
+    }
+    for(let payload of payloads) {
+      if(allowedMethods[payload.level]) {
+        const timestamp = new Date(payload.timestamp).toISOString().split("T").pop().replace('Z', '')
+        console[payload.level](`%c[${payload.moduleName}](${timestamp})`, 'background-color:yellow;font-weight:bold', ...payload.args)
+      } else {
+        console.debug(`${LOG_PREFIX} Socket message "log":`, payload)
+      }
+    }
   })
   socket.on('config', function(data) {
     console.log(`${LOG_PREFIX} Socket message "config":`, data)

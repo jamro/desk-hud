@@ -22,7 +22,7 @@ class CalendarService extends GoogleService {
     try {
       this.emit(await this.fetchAll(), socket)
     } catch (err) {
-      console.error(err)
+      this.logger.error(err)
     }
   }
 
@@ -30,7 +30,7 @@ class CalendarService extends GoogleService {
     try {
       this.emit(await this.fetchAll())
     } catch (err) {
-      console.error(err)
+      this.logger.error(err)
     }
   }
 

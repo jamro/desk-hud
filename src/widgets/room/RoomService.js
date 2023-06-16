@@ -109,7 +109,7 @@ class RoomService extends Service {
     const doorEntity = this._entities[doorTarget] || null
 
     if(doorEntity && doorEntity.state === 'on') {
-      console.log(`Door of ${target} open. skipping...`)
+      this.logger.log(`Door of ${target} open. skipping...`)
       return
     }
   
@@ -178,7 +178,7 @@ class RoomService extends Service {
       case 'temperature': return await this.setTemperature(value)
       case 'acMode': return await this.setAcMode(value)
       case 'fanMode': return await this.setFanMode(value)
-      default: console.warn(`Unknown action ${action}`)
+      default: this.logger.warn(`Unknown action ${action}`)
     }
     
   }

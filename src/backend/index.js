@@ -10,17 +10,20 @@ const storage = require('node-persist');
 const DistanceService = require('./services/DistanceService.js');
 const SysMonitorService = require('./services/SysMonitorService.js');
 const services = require('../widgets/services.js');
+const SocketLogger = require('./SocketLogger.js');
 
 (async () => {
   await storage.init()
   
-  const config = new Config()
-  await config.load()
-
   const app = express()
   const server = http.createServer(app);
   const io = new Server(server);
+
+  const config = new Config(new SocketLogger(io))
+  await config.load()
+
   const port = config.getProp('core.port')
+  config.coreLogger.log("Desk HUD started")
   
   const liveReloadServer = livereload.createServer();
   liveReloadServer.server.once("connection", () => {
@@ -39,11 +42,15 @@ const services = require('../widgets/services.js');
   try{
     await Promise.all(serviceInstances.map(s => s.start()))
   } catch(err) {
-    console.error('Unable to start services')
-    console.error(err)
+    config.coreLogger.error('Unable to start services')
+    config.coreLogger.error(err)
   }
   io.on('connection', async (socket) => {
-    console.log("Client connected")
+
+    const logHistory = config.coreLogger.getHistory()
+    config.coreLogger.emit(logHistory)
+
+    config.coreLogger.log("Client connected")
     await socket.emit('config', {
       widgets: {
         dateTime: config.getProp('dateTime')
@@ -59,7 +66,7 @@ const services = require('../widgets/services.js');
   });
   
   server.listen(port, () => {
-    console.log(`app listening on port ${port}`)
+    config.coreLogger.log(`app listening on port ${port}`)
   })
   
 })()

@@ -22,7 +22,7 @@ class TodoService extends GoogleService {
     try {
       this.emit(await this.fetchAll(), socket)
     } catch (err) {
-      console.error(err)
+      this.logger.error(err)
     }
   }
 
@@ -30,7 +30,7 @@ class TodoService extends GoogleService {
     try {
       this.emit(await this.fetchAll())
     } catch (err) {
-      console.error(err)
+      this.logger.error(err)
     }
   }
 
@@ -47,14 +47,14 @@ class TodoService extends GoogleService {
 
   async completeNextAction(taskId) {
     const actionListId = this.config.getProp('google.tasks.actionsId')
-    console.log(`Complete task ${taskId} from list ${actionListId}`)
+    this.logger.log(`Complete task ${taskId} from list ${actionListId}`)
     await this.tasks.tasks.patch({requestBody: {status: 'completed'}, tasklist: actionListId, task: taskId})
     this.emit(await this.fetchAll())
   }
 
   async uncompleteNextAction(taskId) {
     const actionListId = this.config.getProp('google.tasks.actionsId')
-    console.log(`Un-complete task ${taskId} from list ${actionListId}`)
+    this.logger.log(`Un-complete task ${taskId} from list ${actionListId}`)
     await this.tasks.tasks.patch({requestBody: {status: 'needsAction', completed: undefined}, tasklist: actionListId, task: taskId})
     this.emit(await this.fetchAll())
   }

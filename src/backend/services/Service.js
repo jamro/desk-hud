@@ -4,6 +4,11 @@ class Service {
     this._id = id
     this._io = io
     this._config = config
+    this._logger = this.config.coreLogger.createChild(id)
+  }
+
+  get logger() {
+    return this._logger
   }
 
   get id() {
@@ -15,7 +20,7 @@ class Service {
   }
 
   async onMessage(payload) {
-    console.log(`Service "${this._id}" received a message`, payload)
+    this.logger.log(`Service "${this._id}" received a message`, payload)
   }
 
   async welcomeClient(socket) {

@@ -4,8 +4,13 @@ require('dotenv').config()
 
 class Config {
 
-  constructor() {
+  constructor(logger) {
+    this._logger = logger
     this._json = {}
+  }
+
+  get coreLogger() {
+    return this._logger
   }
 
   get isDevMode() {
@@ -22,28 +27,28 @@ class Config {
 
   async load() {
     let configPath = this._getConfigPath()
-    console.log(`Config path: ${configPath}`)
+    this._logger.log(`Config path: ${configPath}`)
     try {
       const rawConfig = await fs.readFile(configPath, "utf-8");
       this._json = JSON.parse(rawConfig)
-      console.log('Configuration loaded successfully')
+      this._logger.log('Configuration loaded successfully')
     } catch(err) {
-      console.log(`--------------------------------------------------------------------`)
-      console.log(`Unable to open configuration file`)
-      console.log(`- Make sure that desk-hud-config.json exists in projet root location`)
-      console.log(`  or DHUD_CONFIG env var is defined and points to config location`)
-      console.log(`- Make sure that config file is a valid JSON`)
-      console.log(`- Follow README.md to create a new config file`)
-      console.log(`--------------------------------------------------------------------`)
+      this._logger.log(`--------------------------------------------------------------------`)
+      this._logger.log(`Unable to open configuration file`)
+      this._logger.log(`- Make sure that desk-hud-config.json exists in projet root location`)
+      this._logger.log(`  or DHUD_CONFIG env var is defined and points to config location`)
+      this._logger.log(`- Make sure that config file is a valid JSON`)
+      this._logger.log(`- Follow README.md to create a new config file`)
+      this._logger.log(`--------------------------------------------------------------------`)
       throw err
     }
   }
 
   async save() {
     let configPath = this._getConfigPath()
-    console.log(`Config path: ${configPath}`)
+    this._logger.log(`Config path: ${configPath}`)
     await fs.writeFile(configPath, JSON.stringify(this._json, null, 2))
-    console.log('Configuration saved successfully')
+    this._logger.log('Configuration saved successfully')
   }
 
   getProp(propPath) {
