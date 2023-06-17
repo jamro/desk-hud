@@ -17,7 +17,7 @@ module.exports = env => ({
   },
   output: {
     filename: 'app.js',
-    path: (env.demo === true || env.demo === 'true') ? path.resolve(__dirname, 'dist', 'demo') : path.resolve(__dirname, 'src', 'backend', 'www', 'js'),
+    path: (env.demo === true || env.demo === 'true') ? path.resolve(__dirname, 'dist', 'demo', 'js') : path.resolve(__dirname, 'src', 'backend', 'www', 'js'),
     clean: true,
   },
   plugins: [
