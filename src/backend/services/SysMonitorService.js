@@ -112,7 +112,7 @@ class SysMonitorService extends Service {
     if(!this._isCpuFanRunning && cpuTemp > 65) {
       // start
       this._startCpuFan()
-    } else if(this._isCpuFanRunning && cpuTemp < 55) {
+    } else if(this._isCpuFanRunning && cpuTemp < 60) {
       // stop
       this._stopCpuFan()
     }
