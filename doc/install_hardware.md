@@ -10,6 +10,7 @@ Necessary hardware:
 - [32GB SD Card with Raspberry Pi OS](https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up/2)
 - [Angle USB-C Cable](https://eu.ugreen.com/collections/cables/products/ugreen-usb-c-to-usb-c-cable-60w-1?variant=40400840556627)
 - [20W USB Charger](https://eu.ugreen.com/collections/chargers/products/power-supply-pd-3-0?variant=40296226586707)
+- [Raspberry Pi 4 Fan and Heatsink](https://www.adafruit.com/product/4794)
 
 ## Assembly hardware
 
@@ -19,7 +20,9 @@ Mount [Raspberry PI](https://www.raspberrypi.com/products/raspberry-pi-4-model-b
 
 ![Raspberry PI + Touch screen](img/rpi.jpg)
 
-Wire [distance sensor](https://www.sparkfun.com/products/17777) to GPIO pins of [Raspberry PI](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/). Connect the GND at first, otherwise, it will affect the normal work of the module.   
+Wire [distance sensor](https://www.sparkfun.com/products/17777) to GPIO pins of [Raspberry PI](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/). Connect the GND at first, otherwise, it will affect the normal work of the module.  
+
+Wire fan to ensure proper cooling of the device. Mount the fan to the case in the place where it can efficiently cool the CPU down. Install the heatsink on Raspberry PI CPU.
 
 ![Wireing](img/wiring.png)
 
