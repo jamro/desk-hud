@@ -25,6 +25,7 @@ export default class GravityField extends PIXI.Container {
     this.memLoad = 0
     this.cpuLoad = 0
     this.cpuTemp = 0
+    this.cpuFanMode = 'off'
     this._widgets = {}
     this._widgetList = []
     this._sleep = !localStorage.getItem('isAwake')
@@ -52,6 +53,7 @@ export default class GravityField extends PIXI.Container {
     this.addChild(this._border)
 
     this._border.on('rotate', (direction) => this._rotateWidgets(direction))
+    this._border.on('cpuFanMode', (...args) => this.emit('cpuFanMode', ...args))
   }
 
   _rotateWidgets(direction) {
@@ -180,6 +182,7 @@ export default class GravityField extends PIXI.Container {
     this._border.cpuLoad = this.cpuLoad
     this._border.memLoad = this.memLoad
     this._border.cpuTemp = this.cpuTemp
+    this._border.cpuFanMode = this.cpuFanMode
     super.render(renderer)
   }
 }

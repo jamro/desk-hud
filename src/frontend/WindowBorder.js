@@ -1,3 +1,4 @@
+import CpuFan from "./CpuFan"
 import IconButton from "./components/IconButton"
 import LineArt from "./components/LineArt"
 import ProgressBar from "./components/ProgressBar"
@@ -14,6 +15,7 @@ export default class WindowBorder extends PIXI.Container {
     this.cpuLoad = 0
     this.memLoad = 0
     this.cpuTemp = 0
+    this.cpuFanMode = 'off'
     this._distanceAnim = 0
 
     this._lines = new LineArt()
@@ -154,7 +156,7 @@ export default class WindowBorder extends PIXI.Container {
     this._memLabel.y = 306
     this._memLabel.x = 820
 
-    this._tempLabel = new TextField('cpu temp:  0.0°c',{
+    this._tempLabel = new TextField('cpu temp:',{
       fontFamily: 'MajorMonoDisplay-Regular',
       fontSize: 8,
       fill: '#888888',
@@ -166,6 +168,24 @@ export default class WindowBorder extends PIXI.Container {
     this.addChild(this._tempLabel)
     this._tempLabel.y = 306
     this._tempLabel.x = 685
+
+    this._fanLabel = new TextField('cpu fan:',{
+      fontFamily: 'MajorMonoDisplay-Regular',
+      fontSize: 8,
+      fill: '#888888',
+      stroke: "#888888",
+      strokeThickness: 0.5,
+      align: 'center',
+    });
+    this._fanLabel.anchor.set(0, 0.5)
+    this.addChild(this._fanLabel)
+    this._fanLabel.y = 293
+    this._fanLabel.x = 685
+
+    this._tempLine = new LineArt()
+    // temp scale 0 - 110
+    this._tempLine.addLine(670-7, 303-125*0.5, 670+7, 303-125*0.5, 1, 0x888888) // 55'C
+    this.addChild(this._tempLine)
 
     this._tempBar = new Thermometer(125, 0.77)
     this.addChild(this._tempBar)
@@ -183,6 +203,21 @@ export default class WindowBorder extends PIXI.Container {
     this._memBar.x = 900
     this._memBar.y = 306
     this._memBar.alpha = 0.75
+
+    this._cpuFan = new CpuFan()
+    this._cpuFan.x = 695
+    this._cpuFan.y = 270
+    this.addChild(this._cpuFan)
+
+    this._cpuFan.interactive = true
+    this._cpuFan.on('pointertap', () => {
+      if(this.cpuFanMode === 'on') {
+        this.emit('cpuFanMode', 'off')
+      } else {
+        this.emit('cpuFanMode', 'on')
+      }
+    })
+
   }
 
   get rotationActive() {
@@ -216,10 +251,21 @@ export default class WindowBorder extends PIXI.Container {
     this._memBar.value = this.memLoad
 
     this._tempLabel.progress = this.progress
-    this._tempLabel.text = `cpu temp: ${(this.cpuTemp).toFixed(1).padStart(5, ' ')}°c`
+    this._tempLabel.text = `cpu temp: ${(this.cpuTemp).toFixed(1).padStart(7, ' ')}°c`
 
     this._tempBar.progress = this.progress
     this._tempBar.value = Math.min(1, this.cpuTemp/110)
+    this._tempLine.progress = this.progress
+    this._cpuFan.progress = this.progress
+    this._fanLabel.progress = this.progress
+    this._fanLabel.text = `fan mode: ${this.cpuFanMode.padStart(9, ' ')}`
+    if(this.cpuFanMode === 'on') {
+      this._cpuFan.speed = 1
+    } else if(this.cpuFanMode === 'off') {
+      this._cpuFan.speed = 0
+    } else {
+      this._cpuFan.speed = 0.5
+    }
   }
 
 }

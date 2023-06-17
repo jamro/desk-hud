@@ -97,6 +97,7 @@ if(DEMO_MODE) {
     gravityField.cpuLoad = payload.cpuLoad
     gravityField.memLoad = payload.memLoad
     gravityField.cpuTemp = payload.cpuTemp
+    gravityField.cpuFanMode = payload.cpuFanMode
   })
   socket.on('log', async (payloads) => {
     const allowedMethods = {
@@ -123,4 +124,14 @@ if(DEMO_MODE) {
       gravityField.routeConfig(key, widgets[key])
     }
   });
+  gravityField.on('cpuFanMode', (mode) => {
+    const msg = {
+      serviceId: 'system', 
+      payload: {
+        action: 'cpuFan',
+        mode
+      }
+    }
+    socket.emit('service', msg)
+  })
 })()
