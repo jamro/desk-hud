@@ -1,11 +1,18 @@
 import GravityField from "./GravityField.js";
 import FontFaceObserver from 'fontfaceobserver'
-import DemoSocket from "./DemoSocket.js";
+import DemoSocket from "./demo/DemoSocket.js";
 import widgets from "../widgets/widgets.js";
 
-const DEMO_MODE = (window.location.hash === '#demo');
-const LOG_PREFIX = '[core]';
+const getDemoMode = () => {
+  if(typeof(BUILD_DEMO_MODE) !== 'undefined' && (BUILD_DEMO_MODE === 'true' || BUILD_DEMO_MODE === true)) {
+    return true
+  } else {
+    return (window.location.hash === '#demo');
+  }
+}
 
+const DEMO_MODE = getDemoMode()
+const LOG_PREFIX = '[core]';
 if(DEMO_MODE) {
   console.log(LOG_PREFIX, "DEMO MODE is turned on")
 }

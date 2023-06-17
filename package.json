@@ -6,6 +6,7 @@
   "scripts": {
     "provision-remote": "pm2 deploy production setup",
     "build": "webpack --config webpack.config.js --mode production",
+    "build-demo": "webpack --config webpack.config.js --mode production --env demo='true'",
     "watch": "webpack --config webpack.config.js --mode development --watch",
     "deploy": "pm2 deploy production",
     "deploy-local": "pm2 start ecosystem.config.js",

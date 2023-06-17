@@ -1,8 +1,9 @@
 const path = require('path');
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
-module.exports = {
+module.exports = env => ({
   entry: './src/frontend/index.js',
   mode: 'production',
   module: {
@@ -16,7 +17,7 @@ module.exports = {
   },
   output: {
     filename: 'app.js',
-    path: path.resolve(__dirname, 'src', 'backend', 'www', 'js'),
+    path: (env.demo === true || env.demo === 'true') ? path.resolve(__dirname, 'dist', 'demo') : path.resolve(__dirname, 'src', 'backend', 'www', 'js'),
     clean: true,
   },
   plugins: [
@@ -29,6 +30,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'build/index.html',
       filename: '../index.html'
+    }),
+    new webpack.DefinePlugin({
+      BUILD_DEMO_MODE: env.demo || false
     })
   ],
-};
+});
