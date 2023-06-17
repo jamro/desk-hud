@@ -4,6 +4,7 @@ import RoomDemoData from "./RoomDemoData"
 import TodoDemoData from "./TodoDemoData"
 import WeatherDemoData from "./WeatherDemoData"
 import DateTimeDemoData from "./DateTimeDemoData"
+import StocksDemoData from "./StocksDemoData"
 
 export default class DemoSocket {
   constructor() {
@@ -13,6 +14,7 @@ export default class DemoSocket {
     this._pomodoroDemo = new PomodoroDemoData()
     this._calendarDemo = new CalendarDemoData()
     this._dateTimeDemo = new DateTimeDemoData()
+    this._stocksDemo = new StocksDemoData()
     
     this._listeners = {}
 
@@ -24,6 +26,7 @@ export default class DemoSocket {
       this._publish('widget', this._calendarDemo.data)
       this._publish('widget', this._roomDemo.data)
       this._publish('widget', this._pomodoroDemo.data)
+      this._publish('widget', this._stocksDemo.data)
     }, 500)
 
     setTimeout(() => {
