@@ -1,4 +1,3 @@
-import MainScreen from '../../frontend/MainScreen.js'
 import Widget from '../../frontend/Widget.js'
 import DotCircle from '../../frontend/circles/DotCircle.js'
 import TickCircle from '../../frontend/circles/TickCircle.js'
