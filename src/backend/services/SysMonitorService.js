@@ -12,6 +12,7 @@ class SysMonitorService extends Service {
     this._loop = null
     this._cpuTempReadFails = 0
     this._cpuFanMode = 'off'
+    this._isCpuFanRunning = false
   }
 
   async start() {
@@ -37,6 +38,9 @@ class SysMonitorService extends Service {
     const result = await this.fetchAll()
     if(result) {
       this.emit(result)
+    }
+    if(result && this._cpuFanMode === 'auto') {
+      this._adjustCpuFan(result.cpuTemp)
     }
   }
 
@@ -79,14 +83,40 @@ class SysMonitorService extends Service {
     if(payload.action === 'cpuFan' && payload.mode === 'on') {
       this.logger.log("Changing CPU fan mode to " + payload.mode)
       this._cpuFanMode = payload.mode
-      exec('raspi-gpio set 14 op dh', (err) => this.logger.warn('Unable turn CPU fan on', String(err)))
+      this._startCpuFan()
       await this.update()
     } else if(payload.action === 'cpuFan' && payload.mode === 'off') {
       this.logger.log("Changing CPU fan mode to " + payload.mode)
       this._cpuFanMode = payload.mode
-      exec('raspi-gpio set 14 op dl', (err) => this.logger.warn('Unable turn CPU fan off', String(err)))
+      this._stopCpuFan()
+      await this.update()
+    } else if(payload.action === 'cpuFan' && payload.mode === 'auto') {
+      this.logger.log("Changing CPU fan mode to " + payload.mode)
+      this._cpuFanMode = payload.mode
       await this.update()
     } 
+  }
+
+  _stopCpuFan() {
+    exec('raspi-gpio set 14 op dl', (err) => this.logger.warn('Unable turn CPU fan off', String(err)))
+    this._isCpuFanRunning = false
+  }
+
+  _startCpuFan() {
+    exec('raspi-gpio set 14 op dh', (err) => this.logger.warn('Unable turn CPU fan on', String(err)))
+    this._isCpuFanRunning = true
+  }
+
+
+  _adjustCpuFan(cpuTemp) {
+    if(!this._isCpuFanRunning && cpuTemp > 65) {
+      // start
+      this._startCpuFan()
+    } else if(this._isCpuFanRunning && cpuTemp < 55) {
+      // stop
+      this._stopCpuFan()
+    }
+
   }
 
 }

@@ -211,10 +211,12 @@ export default class WindowBorder extends PIXI.Container {
 
     this._cpuFan.interactive = true
     this._cpuFan.on('pointertap', () => {
-      if(this.cpuFanMode === 'on') {
-        this.emit('cpuFanMode', 'off')
-      } else {
+      if(this.cpuFanMode === 'off') {
+        this.emit('cpuFanMode', 'auto')
+      } else if(this.cpuFanMode === 'auto') {
         this.emit('cpuFanMode', 'on')
+      } else {
+        this.emit('cpuFanMode', 'off')
       }
     })
 
@@ -264,7 +266,7 @@ export default class WindowBorder extends PIXI.Container {
     } else if(this.cpuFanMode === 'off') {
       this._cpuFan.speed = 0
     } else {
-      this._cpuFan.speed = 0.5
+      this._cpuFan.speed = 0.3
     }
   }
 
