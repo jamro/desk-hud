@@ -287,7 +287,7 @@ export default class WindowBorder extends PIXI.Container {
     } else {
       this._cpuFan.speed = 0.3
     }
-    this._fpsLabel.text = `fps: ${this._fps}`
+    this._fpsLabel.text = `fps: ${this._fps} (${PIXI.RENDERER_TYPE[renderer.type].toLowerCase()})`
     this._fpsLabel.y = 10 + 22*this.progress
     this._frameCount++
   }
