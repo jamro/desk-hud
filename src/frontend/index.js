@@ -42,7 +42,7 @@ if(DEMO_MODE) {
   
   const gravityField = new GravityField()
   if(DEMO_MODE) {
-    gravityField.infoMessage.emptyText = '[Demo Mode]'
+    //gravityField.infoMessage.emptyText = '[Demo Mode]'
   }
   app.stage.addChild(gravityField)
   

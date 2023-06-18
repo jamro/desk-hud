@@ -6,11 +6,41 @@ Desk-HUD is a compact side monitor designed to enhance productivity and convenie
 
 ![Desk view 2](doc/img/desk2.jpg)
 
-![Room Control Preview](doc/img/room_preview.png)
+# Key Features
 
-![Todo List Preview](doc/img/todo_preview.png)
+## Date & Time Widget
 
-![Weather Widget Preview](doc/img/weather_preview.png)
+![Date preview](doc/img/preview_date.png)
+
+![Time preview](doc/img/preview_time.png)
+
+## Weather Widget
+
+![Weather preview](doc/img/preview_weather.png)
+
+## Room Widget
+
+![Covers preview](doc/img/preview_covers.png)
+
+![Airconditioning preview](doc/img/preview_ac.png)
+
+## Calendar Widget
+
+![Calendar preview](doc/img/preview_calendar.png)
+
+## Todo Widget
+
+![Todo preview](doc/img/preview_todo.png)
+
+## Pomodoro Widget
+
+![Pomodoro preview](doc/img/preview_pomodoro.png)
+
+## Stocks Widget
+
+![Stocks preview](doc/img/preview_stocks.png)
+
+
 
 # Demo
 
