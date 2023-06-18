@@ -17,6 +17,13 @@ export default class WindowBorder extends PIXI.Container {
     this.cpuTemp = 0
     this.cpuFanMode = 'off'
     this._distanceAnim = 0
+    this._fps = 0
+    this._frameCount = 0
+
+    setInterval(() => {
+      this._fps = this._frameCount*2
+      this._frameCount = 0
+    }, 500)
 
     this._lines = new LineArt()
     this.addChild(this._lines)
@@ -105,7 +112,6 @@ export default class WindowBorder extends PIXI.Container {
 
     this._rotateForwardButton.on('pointertap', () => this.emit('rotate', +1))
     this._rotateBackButton.on('pointertap', () => this.emit('rotate', -1))
-
 
     this._distanceLabel = new TextField('',{
       fontFamily: 'MajorMonoDisplay-Regular',
@@ -220,6 +226,19 @@ export default class WindowBorder extends PIXI.Container {
       }
     })
 
+    this._fpsLabel = new TextField('fps: ',{
+      fontFamily: 'MajorMonoDisplay-Regular',
+      fontSize: 8,
+      fill: '#888888',
+      stroke: "#888888",
+      strokeThickness: 0.5,
+      align: 'left',
+    });
+    this._fpsLabel.anchor.set(0, 0.5)
+    this._fpsLabel.x = 825
+    this._fpsLabel.y = 32
+    this.addChild(this._fpsLabel)
+    this._fpsLabel.progress = 1
   }
 
   get rotationActive() {
@@ -268,6 +287,9 @@ export default class WindowBorder extends PIXI.Container {
     } else {
       this._cpuFan.speed = 0.3
     }
+    this._fpsLabel.text = `fps: ${this._fps}`
+    this._fpsLabel.y = 10 + 22*this.progress
+    this._frameCount++
   }
 
 }
