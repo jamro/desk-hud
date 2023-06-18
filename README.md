@@ -40,7 +40,13 @@ Desk-HUD is a compact side monitor designed to enhance productivity and convenie
 
 ![Stocks preview](doc/img/preview_stocks.png)
 
+## Distance sensor
 
+![Distance preview](doc/img/preview_distance.png)
+
+## System Monitoring
+
+![System preview](doc/img/preview_system.png)
 
 # Demo
 
