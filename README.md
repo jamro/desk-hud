@@ -14,9 +14,18 @@ Desk-HUD is a compact side monitor designed to enhance productivity and convenie
 
 ![Time preview](doc/img/preview_time.png)
 
+- Clock and calendar
+- Special event countdown
+- Timezones time conversion
+
 ## Weather Widget
 
 ![Weather preview](doc/img/preview_weather.png)
+
+- Current weather
+- Temperature range for today
+- Rain countdown
+- Forecast for upcoming days
 
 ## Room Widget
 
@@ -24,29 +33,63 @@ Desk-HUD is a compact side monitor designed to enhance productivity and convenie
 
 ![Airconditioning preview](doc/img/preview_ac.png)
 
+- Manual control of window covers
+- Window covers scenes: Day, Night, Vide-call (reduced back-light)
+- Monitor batteries of smart devices
+- Open window alerts
+- Air Conditioning control
+- Current room temperature
+- Room temperature history
+
 ## Calendar Widget
 
 ![Calendar preview](doc/img/preview_calendar.png)
+
+- Today's meetings
+- Busy/available timeline
+- Next meeting info
+- Ongoing meeting clock
 
 ## Todo Widget
 
 ![Todo preview](doc/img/preview_todo.png)
 
+- Compatible with [Getting Things Done](https://gettingthingsdone.com/) approach
+- List tasks for today
+- Complete tasks
+- Visualize task completion timeline
+- Task inbox status
+
 ## Pomodoro Widget
 
 ![Pomodoro preview](doc/img/preview_pomodoro.png)
+
+- Timer supporting [Pomodoro technique](https://en.wikipedia.org/wiki/Pomodoro_Technique)
+- Last week history 
 
 ## Stocks Widget
 
 ![Stocks preview](doc/img/preview_stocks.png)
 
+- Current stock price
+- Daily change of the price
+- Last months stock history
+
 ## Distance sensor
 
 ![Distance preview](doc/img/preview_distance.png)
 
+- Darken the screen when no one is around
+- Activate Desk HUD automatically by approaching the desk
+- Power the screen off when inactive
+
 ## System Monitoring
 
 ![System preview](doc/img/preview_system.png)
+
+- Monitor Desk HUD CPU and memory usage
+- Monitor CPU temperature
+- Control CPU fan (on/off/auto)
 
 # Demo
 
