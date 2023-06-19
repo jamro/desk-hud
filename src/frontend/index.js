@@ -1,4 +1,4 @@
-import GravityField from "./GravityField.js";
+import WidgetContainer from "./WidgetContainer.js";
 import FontFaceObserver from 'fontfaceobserver'
 import DemoSocket from "./demo/DemoSocket.js";
 import widgets from "../widgets/widgets.js";
@@ -40,16 +40,16 @@ if(DEMO_MODE) {
   })
   document.body.appendChild(app.view)
   
-  const gravityField = new GravityField()
+  const widgetContainer = new WidgetContainer()
   if(DEMO_MODE) {
-    gravityField.infoMessage.emptyText = '[Demo Mode]'
+    widgetContainer.infoMessage.emptyText = '[Demo Mode]'
   }
-  app.stage.addChild(gravityField)
+  app.stage.addChild(widgetContainer)
   
   const widgetsInstances = widgets.map((Def) => new Def())
   
   widgetsInstances.forEach((w) => {
-    gravityField.addWidget(w)
+    widgetContainer.addWidget(w)
     w.on('service', (msg) => {
       socket.emit('service', msg)
     })
@@ -59,11 +59,11 @@ if(DEMO_MODE) {
   
   socket.on('connect', () => {
     console.log(`${LOG_PREFIX} Socket connected`)
-    gravityField.online = true
+    widgetContainer.online = true
   })
   socket.on('disconnect', () => {
     console.log(`${LOG_PREFIX} Socket disconnected`)
-    gravityField.online = false
+    widgetContainer.online = false
   })
   
   socket.on('widget', function(data) {
@@ -74,7 +74,7 @@ if(DEMO_MODE) {
       payload
     } = data
   
-    gravityField.routeMessage(widgetId, payload)
+    widgetContainer.routeMessage(widgetId, payload)
     console.groupEnd()
   })
   socket.on('distance', async (payload) => {
@@ -84,20 +84,20 @@ if(DEMO_MODE) {
       console.debug(`[distance] Socket message "distance":`, payload)
     }
     if(payload.action === 'goSleep') {
-      gravityField.goSleep()
+      widgetContainer.goSleep()
     } else if(payload.action === 'wakeUp') {
-      gravityField.wakeUp()
+      widgetContainer.wakeUp()
     } 
     if(payload.distance !== undefined) {
-      gravityField.distance = payload.distance
+      widgetContainer.distance = payload.distance
     }
   })
   socket.on('system', async (payload) => {
     console.debug(`[system] Socket message "system":`, payload)
-    gravityField.cpuLoad = payload.cpuLoad
-    gravityField.memLoad = payload.memLoad
-    gravityField.cpuTemp = payload.cpuTemp
-    gravityField.cpuFanMode = payload.cpuFanMode
+    widgetContainer.cpuLoad = payload.cpuLoad
+    widgetContainer.memLoad = payload.memLoad
+    widgetContainer.cpuTemp = payload.cpuTemp
+    widgetContainer.cpuFanMode = payload.cpuFanMode
   })
   socket.on('log', async (payloads) => {
     const allowedMethods = {
@@ -121,10 +121,10 @@ if(DEMO_MODE) {
     const {widgets} = data
     const keys = Object.keys(widgets)
     for(let key of keys) {
-      gravityField.routeConfig(key, widgets[key])
+      widgetContainer.routeConfig(key, widgets[key])
     }
   });
-  gravityField.on('cpuFanMode', (mode) => {
+  widgetContainer.on('cpuFanMode', (mode) => {
     const msg = {
       serviceId: 'system', 
       payload: {
