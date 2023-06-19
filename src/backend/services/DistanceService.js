@@ -140,7 +140,7 @@ class DistanceService extends Service {
       this.logger.log("wake up")
       this._isAwake = true
       return {distance, action: 'wakeUp', dataAge}
-    } else if(distance > goSleepThreshold && this._isAwake) {
+    } else if(this._inactivityTimer > 10000 && this._isAwake) {
       // go sleep
       this.logger.log("go sleep")
       this._isAwake = false
