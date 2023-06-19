@@ -153,7 +153,9 @@ export default class Widget extends PIXI.Container {
         this.main.progress = 0
       }
     }
-    super.render(renderer)
+    if(this.x < 1500) {
+      super.render(renderer)
+    }
   }
 
   msg2state(msg) {
