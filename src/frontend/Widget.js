@@ -21,7 +21,7 @@ export default class Widget extends PIXI.Container {
     this.interactive = true
     this.main = new MainScreen()
     this.dataLoadProgress = 1
-
+    this._lastRenderTime = performance.now()
     this._state = null
 
     this.on('pointertap', () => {
@@ -99,6 +99,10 @@ export default class Widget extends PIXI.Container {
   }
 
   render(renderer) {
+    const dt = performance.now() - this._lastRenderTime
+    this._lastRenderTime = performance.now()
+    const animStep = (Math.min(1, dt/500))
+
     if(this._state && this._state.lastUpdate && this.dataLoadProgress < 1) {
       this.dataLoadProgress = Math.min(1, this.dataLoadProgress + 0.02)
     }
@@ -111,7 +115,7 @@ export default class Widget extends PIXI.Container {
 
     if(this.movement.timeLeft > 0) {
       const {x1, y1, size1, x2, y2, size2} = this.movement
-      this.movement.timeLeft = Math.max(0, this.movement.timeLeft - 0.04)
+      this.movement.timeLeft = Math.max(0, this.movement.timeLeft - animStep)
       const timeLeft = this.movement.timeLeft 
 
       const t1 = rescaleTime(timeLeft, 0, 0.4)

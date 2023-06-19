@@ -30,6 +30,7 @@ export default class GravityField extends PIXI.Container {
     this._widgetList = []
     this._sleep = !localStorage.getItem('isAwake')
     this._online = false
+    this._lastRenderTime = performance.now()
 
     this._sleepToggle = new SleepToggle()
     this._sleepToggle.x = 30
@@ -164,10 +165,14 @@ export default class GravityField extends PIXI.Container {
   }
 
   render(renderer) {
+    const dt = performance.now() - this._lastRenderTime
+    this._lastRenderTime = performance.now()
+    const animStep = (Math.min(1, dt/500))
+
     if(this._sleep) {
-      this.progress = Math.max(0, this.progress - 0.08)
+      this.progress = Math.max(0, this.progress - animStep)
     } else {
-      this.progress = Math.min(1, this.progress + 0.08)
+      this.progress = Math.min(1, this.progress + animStep)
     }
     for(let i=0; i < this._widgetList.length; i++) {
       const widget = this._widgetList[i]
