@@ -43,7 +43,7 @@ export default class ProgressCircle extends PIXI.Container {
     this._canvas.clear()
 
     const r = 100*this.size
-    const da = Math.PI/100
+    const da = Math.PI/20
 
     this._canvas.moveTo(
       r * Math.sin(0),
@@ -57,13 +57,18 @@ export default class ProgressCircle extends PIXI.Container {
     })
 
 
-
-    for(let a=0; a <= Math.PI * 2 * this._presentedValue * this.progress; a+=da) {
+    let a
+    const targetAngle = Math.PI * 2 * this._presentedValue * this.progress
+    for(a=0; a <= targetAngle; a+=da) {
       this._canvas.lineTo(
         r * Math.sin(a),
         -r * Math.cos(a)
       )
     }
+    this._canvas.lineTo(
+      r * Math.sin(targetAngle),
+      -r * Math.cos(targetAngle)
+    )
   }
 
 }

@@ -12,7 +12,7 @@ export default class WidgetContainer extends PIXI.Container {
     super()
     this._slots = [
       { index: 0, x: 810,    y: 165,   size: 1},
-      { index: 1, x: 1080,   y: 155,   size: 1},
+      { index: 1, x: 1080,   y: 165,   size: 1},
       { index: 2, x: 1400,   y: 100,   size: 0.5},
       { index: 3, x: 1265,   y: 100,   size: 0.5},
       { index: 4, x: 1265,   y: 220,   size: 0.5},

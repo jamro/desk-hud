@@ -53,7 +53,7 @@ export default class TitleCircle extends PIXI.Container {
     const r = 100*this.size
     this._label.radius = r
     this._label.fontSize = 6 + 6 * this.size
-    const da = Math.PI/50
+    const da = Math.PI/20
 
     const [startAngle, endAngle] = this._label.startAngleRange
 
