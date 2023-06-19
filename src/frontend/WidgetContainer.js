@@ -6,7 +6,7 @@ import WindowBorder from "./WindowBorder"
 const HELLO = ['hi', 'hello', 'hey there', 'what\'s up?', 'howdy', 'greetings', 'what\'s going on?', 'how\'s everything?', 'good to see you', 'nice to see you', 'what\'s new?', 'look who it is?', 'yo!', 'hello my friend', 'good day']
 const BYE = ['bye, bye...', 'see ya!', 'goodbye', 'have a nice day', 'take care', 'cheers', 'keep in touch', 'have fun', 'have a good one', 'ciao', 'adios', 'peace out', 'catch you later', 'take it easy']
 
-export default class GravityField extends PIXI.Container {
+export default class WidgetContainer extends PIXI.Container {
 
   constructor() {
     super()
