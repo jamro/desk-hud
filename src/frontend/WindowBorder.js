@@ -213,6 +213,7 @@ export default class WindowBorder extends PIXI.Container {
     this._cpuFan = new CpuFan()
     this._cpuFan.x = 695
     this._cpuFan.y = 270
+    this._cpuFan.progress = 1
     this.addChild(this._cpuFan)
 
     this._cpuFan.interactive = true
@@ -277,7 +278,7 @@ export default class WindowBorder extends PIXI.Container {
     this._tempBar.progress = this.progress
     this._tempBar.value = Math.min(1, this.cpuTemp/110)
     this._tempLine.progress = this.progress
-    this._cpuFan.progress = this.progress
+    this._cpuFan.alpha = this.progress
     this._fanLabel.progress = this.progress
     this._fanLabel.text = `fan mode: ${this.cpuFanMode.padStart(9, ' ')}`
     if(this.cpuFanMode === 'on') {
