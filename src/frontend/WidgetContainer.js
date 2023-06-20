@@ -85,7 +85,7 @@ export default class WidgetContainer extends PIXI.Container {
     }
 
     for(let i=2; i < this._widgetList.length; i++) {
-      this._widgetList[i].moveTo(this._slots[i])
+      this._widgetList[i].moveTo(this._slots[i], 0.3)
     }
   }
 

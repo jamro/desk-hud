@@ -85,8 +85,8 @@ export default class Widget extends PIXI.Container {
     this._progress = v
   }
 
-  moveTo(slot) {
-    this.movement.timeLeft = 1
+  moveTo(slot, timePos=0) {
+    this.movement.timeLeft = 1-timePos
     this.movement.x1 = this.x
     this.movement.y1 = this.y
     this.movement.size1 = this.size
