@@ -25,6 +25,7 @@ export default class DragButton extends PIXI.Container {
     this._canvas.moveTo(5, -2)
     this._canvas.lineTo(0, -5)
     this._canvas.lineTo(-5, -2)
+    this._canvas.cacheAsBitmap = true
     this.addChild(this._canvas)
 
     this.interactive = true
@@ -76,8 +77,10 @@ export default class DragButton extends PIXI.Container {
   }
 
   render(renderer) {
-    if(!this.dragging) {
-      this.y += (this._yMin + this._pos * (this._yMax - this._yMin)- this.y)/5
+    const diff = this._yMin + this._pos * (this._yMax - this._yMin)- this.y
+    if(!this.dragging && Math.abs(diff > 1)) {
+      this.y += diff/5
+      console.log(diff)
     }
     super.render(renderer)
   }
