@@ -1,6 +1,7 @@
 import InfoMessage from "./InfoMessage"
 import SleepToggle from "./SleepToggle"
 import WindowBorder from "./WindowBorder"
+import IconButton from "./components/IconButton"
 
 
 const HELLO = ['hi', 'hello', 'hey there', 'what\'s up?', 'howdy', 'greetings', 'what\'s going on?', 'how\'s everything?', 'good to see you', 'nice to see you', 'what\'s new?', 'look who it is?', 'yo!', 'hello my friend', 'good day']
@@ -55,6 +56,16 @@ export default class WidgetContainer extends PIXI.Container {
 
     this._border.on('rotate', (direction) => this._rotateWidgets(direction))
     this._border.on('cpuFanMode', (...args) => this.emit('cpuFanMode', ...args))
+
+    this._reloadButton = new IconButton(0xe863)
+    this._reloadButton.x = 30
+    this._reloadButton.y = 50
+    this._reloadButton.alpha = 0.3
+    this._reloadButton.scale.set(0.7)
+    this._reloadButton.on('pointertap', () => {
+      window.location.reload()
+    })
+    this.addChild(this._reloadButton)
   }
 
   _rotateWidgets(direction) {
@@ -188,6 +199,7 @@ export default class WidgetContainer extends PIXI.Container {
     this._border.memLoad = this.memLoad
     this._border.cpuTemp = this.cpuTemp
     this._border.cpuFanMode = this.cpuFanMode
+    this._reloadButton.alpha = this.progress*0.3
     super.render(renderer)
   }
 }
