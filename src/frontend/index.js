@@ -39,6 +39,7 @@ if(DEMO_MODE) {
       useContextAlpha: false
   })
   document.body.appendChild(app.view)
+  document.getElementById('loading').style.display = 'none'
 
   // possibility to clone containers to increase load for perf tests
   const widgetContainers = Array(1).fill(1).map(_ => new WidgetContainer())
@@ -57,9 +58,8 @@ if(DEMO_MODE) {
         socket.emit('service', msg)
       })
     })
-
-    document.getElementById('loading').style.display = 'none'
     
+    widgetContainer.online = socket.connected
     socket.on('connect', () => {
       console.log(`${LOG_PREFIX} Socket connected`)
       widgetContainer.online = true
