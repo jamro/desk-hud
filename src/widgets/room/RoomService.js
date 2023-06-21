@@ -42,7 +42,7 @@ class RoomService extends Service {
 
     this._connection = await hass.createConnection({ auth });
     hass.subscribeEntities(this._connection, (entities) => {
-
+      this.logger.debug(`Entities event received`, entities)
       const keys = Object.keys(entities).filter(k => myEntitiesMap[k])
       const newEntities = keys
         .map(k => ({
@@ -173,6 +173,7 @@ class RoomService extends Service {
   }
 
   async onMessage({action, target, value}) {
+    this.logger.info(`Message action:${action} received`)
     switch(action) {
       case 'cover': return await this.setCoverPos(target, value)
       case 'temperature': return await this.setTemperature(value)
@@ -186,6 +187,8 @@ class RoomService extends Service {
   async welcomeClient(socket) {
     if(Object.keys(this._entities).length) {
       this.emit(this._entities, socket)
+    } else {
+      this.logger.info("No entities to sent in welcome message. skipping...")
     }
   }
 
