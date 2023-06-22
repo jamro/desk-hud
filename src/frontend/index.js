@@ -43,7 +43,7 @@ if(DEMO_MODE) {
 
   // possibility to clone containers to increase load for perf tests
   const widgetContainers = Array(1).fill(1).map(_ => new WidgetContainer())
-  widgetContainers.forEach(async (widgetContainer) => {
+  for(let widgetContainer of widgetContainers) {
     if(DEMO_MODE) {
       widgetContainer.infoMessage.emptyText = '[Demo Mode]'
     }
@@ -137,5 +137,5 @@ if(DEMO_MODE) {
       }
       socket.emit('service', msg)
     })
-  })
+  }
 })()

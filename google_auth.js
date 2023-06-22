@@ -15,7 +15,7 @@ const SCOPES = [
 const ENV_PATH = path.join(__dirname, '.env');
 const CREDENTIALS_PATH = path.join(process.cwd(), 'credentials.json');
 
-const config = new Config(console.log)
+const config = new Config(console)
 
 async function loadSavedCredentialsIfExist() {
   console.log('loading existing settings')
