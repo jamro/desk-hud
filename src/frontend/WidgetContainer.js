@@ -62,9 +62,7 @@ export default class WidgetContainer extends PIXI.Container {
     this._reloadButton.y = 50
     this._reloadButton.alpha = 0.3
     this._reloadButton.scale.set(0.7)
-    this._reloadButton.on('pointertap', () => {
-      window.location.reload()
-    })
+    this._reloadButton.on('pointertap', () => this.emit('reload'))
     this.addChild(this._reloadButton)
   }
 
@@ -199,7 +197,8 @@ export default class WidgetContainer extends PIXI.Container {
     this._border.memLoad = this.memLoad
     this._border.cpuTemp = this.cpuTemp
     this._border.cpuFanMode = this.cpuFanMode
-    this._reloadButton.alpha = this.progress*0.3
+    this._reloadButton.alpha += (this.progress*0.3 * (this.online ? 1 : 0) - this._reloadButton.alpha)/10
+    this._reloadButton.interactive = this.online
     super.render(renderer)
   }
 }

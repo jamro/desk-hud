@@ -94,6 +94,9 @@ class SysMonitorService extends Service {
       this.logger.log("Changing CPU fan mode to " + payload.mode)
       this._cpuFanMode = payload.mode
       await this.update()
+    } else if(payload.action === 'kill' ) {
+      this.logger.log("Killing the server... should be started back again by PM2")
+      process.exit(0)
     } 
   }
 

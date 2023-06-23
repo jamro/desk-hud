@@ -137,5 +137,14 @@ if(DEMO_MODE) {
       }
       socket.emit('service', msg)
     })
+    widgetContainer.on('reload', (mode) => {
+      const msg = {
+        serviceId: 'system', 
+        payload: {
+          action: 'kill'
+        }
+      }
+      socket.emit('service', msg)
+    })
   }
 })()
