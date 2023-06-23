@@ -99,7 +99,7 @@ export default class ClimateScreen extends PIXI.Container {
     })
     this.addChild(this._fan)
 
-    this._tempChart = new Chart({width: 240, height: 100, scaleMin: 18, scaleMax: 26, tickStep: 1})
+    this._tempChart = new Chart({width: 240, height: 100, scaleMin: 16, scaleMax: 30, tickStep: 2})
     this._tempChart.x = 43
     this._tempChart.y = -65
     this.addChild(this._tempChart)
