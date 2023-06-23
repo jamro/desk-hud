@@ -24,13 +24,13 @@ if(DEMO_MODE) {
     console.log(LOG_PREFIX, `Font "${name}" has been loaded`)
   }
 
-  const socket = DEMO_MODE ? new DemoSocket() : io()
-
   console.groupCollapsed(`${LOG_PREFIX} Loading fonts....`)
   await loadFont('weathericons-regular-webfont')
   await loadFont('MajorMonoDisplay-Regular')
   await loadFont('Material Symbols Outlined')
   console.groupEnd()
+
+  const socket = DEMO_MODE ? new DemoSocket() : io()
   
   const app = new PIXI.Application({
       width: 1480,
