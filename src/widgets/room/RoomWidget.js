@@ -75,8 +75,6 @@ export default class RoomWidget extends Widget {
     })
     this._callButton.on('pointertap', (e) => {
       e.stopPropagation();
-      this.sendMessage({action: 'cover', target: 'cover1', value: 100})
-      this.sendMessage({action: 'cover', target: 'cover2', value: 100})
       this.sendMessage({action: 'cover', target: 'cover3', value: 30})
       this.sendMessage({action: 'cover', target: 'cover4', value: 0})
       this.sendMessage({action: 'cover', target: 'cover5', value: 0})
