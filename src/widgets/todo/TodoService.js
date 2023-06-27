@@ -69,7 +69,9 @@ class TodoService extends GoogleService {
   async _queryTodo(id) {
     const response = await this.tasks.tasks.list({
       tasklist: id,
-      maxResults: 100
+      maxResults: 100,
+      showCompleted:true, 
+      showHidden:true
     });
 
     return response.data.items
