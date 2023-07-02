@@ -24,6 +24,7 @@ curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 sudo apt-get install -y nodejs
 ```
 - Install PM2 `sudo npm install pm2@latest -g`
+- Install PM@ log rotate `pm2 install pm2-logrotate`
 - Create app folder
 ```bash
 sudo mkdir /var/www
