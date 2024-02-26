@@ -97,6 +97,9 @@ To set up Google access keys for integration with Desk-HUD, follow these steps:
 
 Detailed process of obtaining `credentials.json` is described here [here](https://developers.google.com/tasks/quickstart/nodejs)
 
+** Refreshing Access Token **
+If your access token has expired, you need to remove `clientSecret` and `clientToken` from `deck-hud-config.json` and rerun `node ./google_auth.js` script.
+
 ### AlphaVantage
 
 - Visit the AlphaVantage website: Go to the AlphaVantage website at http://www.alphavantage.co.
