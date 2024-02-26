@@ -16,7 +16,7 @@ module.exports = {
   deploy : {
     production : {
       user : 'pi',
-      host : 'raspberrypi.local',
+      host : 'deskhud.local',
       ref  : 'origin/main',
       repo : 'https://github.com/jamro/desk-hud.git',
       path : '/var/www',
