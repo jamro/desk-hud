@@ -25,10 +25,10 @@ class StocksService extends Service {
     this._loop1 = setInterval(() => this.updateIntraDay(), 5*60*1000)
     this._loop2 = setInterval(() => this.updateDaily(), 60*60*1000)
     if(!this._intraDay ) {
-      this.updateIntraDay()
+      await this.updateIntraDay()
     }
     if(!this._daily ) {
-      setTimeout(() => this.updateDaily(), 10000)
+      setTimeout(async () => await this.updateDaily(), 1000)
     }
   }
 
@@ -58,7 +58,6 @@ class StocksService extends Service {
       const symbol = this.config.getProp('alphavantage.symbol')
 
       this._intraDay = await this._fetchIntraDay(apiKey, symbol);
-      
       await storage.setItem('stocks.intraDay', this._intraDay)
 
       const msg = this._createMessage()
