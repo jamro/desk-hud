@@ -69,8 +69,8 @@
       "contact@gmail.com"
     ]
   },
-  "alphavantage": {
-    "apiKey": "demo",
+  "stockdata": {
+    "apiKey": "...",
     "symbol": "IBM"
   }
 }

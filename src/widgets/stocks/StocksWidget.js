@@ -46,33 +46,15 @@ export default class StocksWidget extends Widget {
   }
 
   msg2state(msg) {
-    const intraDayTimeline = Object.keys(msg.intraDay['Time Series (5min)'])
-      .map(id => ({id, timestamp: new Date(id).getTime() }))
-      .sort((a, b) => b.timestamp - a.timestamp)
-    const dailyTimeline = Object.keys(msg.daily['Time Series (Daily)'])
-      .map(id => ({id, timestamp: new Date(id).getTime() }))
-      .sort((a, b) => a.timestamp - b.timestamp)
-
-    let back24Time = intraDayTimeline[0]
-    let dayMs = 1000*60*60*24
-    let diff = dayMs
-
-    for(let t of intraDayTimeline) {
-      const newDiff = Math.abs((intraDayTimeline[0].timestamp - dayMs)- t.timestamp)
-      if(newDiff < diff) {
-        back24Time = t
-        diff = newDiff
-      }
-    }
-
-    const current = Number(msg.intraDay['Time Series (5min)'][intraDayTimeline[0].id]['4. close'])
-    const past = Number(msg.intraDay['Time Series (5min)'][back24Time.id]['1. open'])
+    const current = msg.intraDay.data[0].price;
+    const past = msg.intraDay.data[0].day_open;
+    
     return {
       symbol: msg.symbol,
       current,
       past,
       change: Number((current/past-1).toFixed(3)),
-      history: dailyTimeline.map(d => msg.daily['Time Series (Daily)'][d.id]).map(d => Number(d['4. close']))
+      history: msg.daily.data.map(d => d.close).reverse()
     }
   }
 

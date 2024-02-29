@@ -16,13 +16,20 @@ class StocksService extends Service {
     this._intraDay = await storage.getItem('stocks.intraDay') || null
     this._daily = await storage.getItem('stocks.daily') || null
 
+    if(this._intraDay) {
+      this.logger.log('Intra day data restored from cache')
+    }
+    if(this._daily) {
+      this.logger.log('Intra daily data restored from cache')
+    }
+
     if(this._loop1) {
       clearInterval(this._loop1)
     }
     if(this._loop2) {
       clearInterval(this._loop2)
     }
-    this._loop1 = setInterval(() => this.updateIntraDay(), 5*60*1000)
+    this._loop1 = setInterval(() => this.updateIntraDay(), 20*60*1000)
     this._loop2 = setInterval(() => this.updateDaily(), 60*60*1000)
     if(!this._intraDay ) {
       await this.updateIntraDay()
@@ -30,6 +37,7 @@ class StocksService extends Service {
     if(!this._daily ) {
       setTimeout(async () => await this.updateDaily(), 1000)
     }
+   
   }
 
   _createMessage() {
@@ -37,11 +45,11 @@ class StocksService extends Service {
       this.logger.log('Unable to create full stocks message', {_intraDay: !!this._intraDay,  _daily: !!this._daily})
       return null
     }
-    const symbol = this.config.getProp('alphavantage.symbol')
+    const symbol = this.config.getProp('stockdata.symbol')
     return {
       symbol,
       intraDay: this._intraDay,
-      daily: this._daily
+      daily: this._daily,
     }
   }
 
@@ -54,12 +62,12 @@ class StocksService extends Service {
 
   async updateIntraDay() {
     try {
-      const apiKey = this.config.getProp('alphavantage.apiKey')
-      const symbol = this.config.getProp('alphavantage.symbol')
+      const apiKey = this.config.getProp('stockdata.apiKey')
+      const symbol = this.config.getProp('stockdata.symbol')
 
       this._intraDay = await this._fetchIntraDay(apiKey, symbol);
       await storage.setItem('stocks.intraDay', this._intraDay)
-
+      
       const msg = this._createMessage()
       if(msg) {
         this.emit(msg)
@@ -71,8 +79,8 @@ class StocksService extends Service {
 
   async updateDaily() {
     try {
-      const apiKey = this.config.getProp('alphavantage.apiKey')
-      const symbol = this.config.getProp('alphavantage.symbol')
+      const apiKey = this.config.getProp('stockdata.apiKey')
+      const symbol = this.config.getProp('stockdata.symbol')
 
       this._daily = await this._fetchDaily(apiKey, symbol);
 
@@ -89,10 +97,10 @@ class StocksService extends Service {
 
   async _fetchIntraDay(apiKey, symbol) {
     process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0
-    const url = `http://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=${apiKey}`
-    this.logger.log(`call http://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=${apiKey.substr(0, 2)}...`)
+    const url = `https://api.stockdata.org/v1/data/quote?symbols=${symbol}&api_token=${apiKey}`
+    this.logger.log(`call https://api.stockdata.org/v1/data/quote?symbols=${symbol}&api_token=${apiKey.substr(0, 2)}...`)
     const response = await fetch(url)
-    this.logger.debug('TIME_SERIES_INTRADAY Response received', {ok: response.ok})
+    this.logger.debug('quote Response received', {ok: response.ok})
     const json = await response.json()
     if(json.Note) throw new Error(json.Note)
     return json
@@ -100,10 +108,10 @@ class StocksService extends Service {
 
   async _fetchDaily(apiKey, symbol) {
     process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0
-    const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${symbol}&apikey=${apiKey}`
-    this.logger.log(`call https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${symbol}&apikey=${apiKey.substr(0, 2)}...`)
+    const url = `https://api.stockdata.org/v1/data/eod?symbols=${symbol}&api_token=${apiKey}`
+    this.logger.log(`call https://api.stockdata.org/v1/data/eod?symbols=${symbol}&api_token=${apiKey.substr(0, 2)}...`)
     const response = await fetch(url)
-    this.logger.debug('TIME_SERIES_DAILY_ADJUSTED Response received', {ok: response.ok})
+    this.logger.debug('eod Response received', {ok: response.ok})
     const json = await response.json()
     if(json.Note) throw new Error(json.Note)
     return json

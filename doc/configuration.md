@@ -52,10 +52,9 @@ The configuration for Desk-HUD is stored in a JSON file.
     - `actionsId` (string): The ID of the Google Tasks actions list (see Getting Things Done technique).
   - `calendars` (array): An array of Google Calendars IDs.
 
-- **alphavantage** - allows you to configure the AlphaVantage service integration for Desk-HUD. AlphaVantage provides financial market data and analytics.
-  - `apiKey` (string): The API key for accessing the AlphaVantage service. By default, the value is set to "demo" for testing purposes.
+- **stockdata** - allows you to configure the [StockData](http://www.stockdata.org) service integration for Desk-HUD. StockData provides financial market data and analytics.
+  - `apiKey` (string): The API key for accessing the StockData service.
   - `symbol` (string): The stock symbol or ticker for which you want to fetch data. 
-
 
 
 ## Integrations
@@ -100,10 +99,9 @@ Detailed process of obtaining `credentials.json` is described here [here](https:
 ** Refreshing Access Token **
 If your access token has expired, you need to remove `clientSecret` and `clientToken` from `deck-hud-config.json` and rerun `node ./google_auth.js` script.
 
-### AlphaVantage
+### StockData
 
-- Visit the AlphaVantage website: Go to the AlphaVantage website at http://www.alphavantage.co.
-- Click "Get your free API key today"
-- Access the API documentation: Once you are logged in, navigate to the "API" section or find the "API Documentation" link.
-- Fill the form and click "Generate"
-- After generating the API key, it should be displayed on the screen. Copy the API key and keep it in a secure place.
+- Visit the StockData website: Go to the StockData website at http://www.stockdata.org.
+- Click "Sign In"
+- Crete an account
+- Get API token and copy it to config file
