@@ -29,7 +29,7 @@ class Service {
 
   emit(payload, socket=null) {
     if(this.logger) {
-      this.logger.log(`Emitting event (widgetId:${this._id})`, payload)
+      this.logger.log(`Emitting event (widgetId:${this._id})`)
     }
     (socket || this._io).emit('widget', { widgetId: this._id, payload })
   }
