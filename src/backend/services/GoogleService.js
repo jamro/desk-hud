@@ -14,15 +14,15 @@ class GoogleService extends Service {
       refresh_token: this.config.getProp('google.clientToken'),
     })
 
-    // Function to refresh token
-    this.refreshToken = async () => {
-      const { tokens } = await this.auth.refreshAccessToken()
-      this.auth.credentials = tokens
-    }
-
-    // Set interval to refresh token every 50 minutes
-    setInterval(this.refreshToken, 50 * 60 * 1000)
-
+    this.auth.on('tokens', async (tokens) => {
+      console.log("new google access token received")
+      if (tokens.refresh_token) {
+        console.log("Refreshing google token")
+        this.config.setProp('google.clientToken', tokens.refresh_token)
+        await this.config.save()
+      }
+    });
+    
   }
 
 }

@@ -42,7 +42,7 @@ class RoomService extends Service {
 
     this._connection = await hass.createConnection({ auth });
     hass.subscribeEntities(this._connection, (entities) => {
-      this.logger.debug(`Entities event received`, entities)
+      //this.logger.debug(`Entities event received`, entities)
       const keys = Object.keys(entities).filter(k => myEntitiesMap[k])
       const newEntities = keys
         .map(k => ({
