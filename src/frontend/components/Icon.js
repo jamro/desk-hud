@@ -19,7 +19,7 @@ export default class Icon extends PIXI.Container {
       stroke: 0xffffff,
       align: 'center',
     })
-    this._icon.anchor.set(0.5, 0.40)
+    this._icon.anchor.set(0.5, 0.35)
     this.addChild(this._icon)
   }
 
