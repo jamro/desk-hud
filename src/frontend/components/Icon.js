@@ -14,12 +14,12 @@ export default class Icon extends PIXI.Container {
     this._icon = new PIXI.Text(code ? String.fromCharCode(code) : '', {
       fontFamily: 'Material Symbols Outlined',
       fontSize: size*62,
-      lineHeight: size*62,
+      lineHeight: size*75,
       fill: 0xffffff,
       stroke: 0xffffff,
       align: 'center',
     })
-    this._icon.anchor.set(0.5, 0.42)
+    this._icon.anchor.set(0.5, 0.40)
     this.addChild(this._icon)
   }
 
