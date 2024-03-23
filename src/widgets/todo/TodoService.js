@@ -35,13 +35,28 @@ class TodoService extends GoogleService {
   }
 
   async fetchAll() {
-    const inbox = await this._queryTodo(this.config.getProp('google.tasks.inboxId'))
-    const action = await this._queryTodo(this.config.getProp('google.tasks.actionsId'))
-    const endOfToday = Math.ceil((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
-    const startOfToday = endOfToday - 1000*60*60*24
-    return {
-      inbox: inbox.filter(t => !t.completed && !t.due),
-      action: action.filter(t => ((!t.due || t.due < endOfToday) && (!t.completed || t.completed > startOfToday))),
+    try {
+      const inbox = await this._queryTodo(this.config.getProp('google.tasks.inboxId'))
+      const action = await this._queryTodo(this.config.getProp('google.tasks.actionsId'))
+      const endOfToday = Math.ceil((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
+      const startOfToday = endOfToday - 1000*60*60*24
+      return {
+        inbox: inbox.filter(t => !t.completed && !t.due),
+        action: action.filter(t => ((!t.due || t.due < endOfToday) && (!t.completed || t.completed > startOfToday))),
+        error: null
+      }
+    } catch (error) {
+      if (error.response && error.response.data && (error.response.data.error === 'invalid_grant' || error.response.data.error_description.includes('Token has been expired or revoked'))) {
+        this.logger.error('Token has been expired or revoked.')
+        this.logger.error(error)
+        return {
+          inbox: [],
+          action: [],
+          error: 'token_expired'
+        }
+      } else {
+        throw error
+      }
     }
   }
 

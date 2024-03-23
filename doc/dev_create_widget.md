@@ -209,3 +209,19 @@ export default class MemoryWidget extends Widget {
 ```
 
 ![Usage history integrated](img/dev_mem_main.png)
+
+## Error messages
+
+```js
+class MemoryService extends Service {
+
+  update() {
+    // turn widget into error state and show message
+    this.emit({error: "My error message"})
+    
+    // clear error message
+    this.emit({error: null})
+  }
+}
+
+```

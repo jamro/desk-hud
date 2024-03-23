@@ -99,13 +99,15 @@ export default class CalendarWidget extends Widget {
     calendarPage.addChild(this._calendarScreen)
   }
 
-  msg2state(events) {
+  msg2state(msg) {
+    const events = msg.allEvents
     const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
 
     const newState = {}
     newState.allEvents = events.filter(e => e.start < today + 7*24*60*60*1000)
     newState.todayEvents = newState.allEvents.filter(e => e.start < today + 24*60*60*1000 && !e.allDay)
     newState.todayEventsLeft = newState.todayEvents.filter(e => e.end >= new Date().getTime())
+    newState.error = msg.error
     return newState
   }
 

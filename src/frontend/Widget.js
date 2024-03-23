@@ -1,5 +1,6 @@
 import MainScreen from "./MainScreen"
 import TitleCircle from "./circles/TitleCircle"
+import Icon from "./components/Icon"
 
 export default class Widget extends PIXI.Container {
 
@@ -8,6 +9,8 @@ export default class Widget extends PIXI.Container {
     this._id = id
     this._container = new PIXI.Container()
     super.addChild(this._container)
+    this._overlay = new PIXI.Container()
+    super.addChild(this._overlay)
     this._title = title
     this._frame = new TitleCircle(title)
     this.addChild(this._frame)
@@ -39,6 +42,14 @@ export default class Widget extends PIXI.Container {
       size2: 1,
       flickTime: 0
     }
+
+    this._errorBg = new PIXI.Graphics()
+    this._overlay.addChild(this._errorBg)
+    this._errorBg.beginFill(0x000000, 0.8)
+    this._errorBg.drawCircle(0, 0, 90)
+    this._errorIcon = new Icon(0xe000, 2, true)
+    this._errorIcon.color = 0xff0000
+    this._overlay.addChild(this._errorIcon)
   }
 
   get state() {
@@ -110,6 +121,17 @@ export default class Widget extends PIXI.Container {
     this._bg.scale.set(this.size)
     this._frame.size = this.size
     this._frame.progress = this._progress
+    if(this._state?.error ) {
+      this._errorIcon.scale.set(this.progress*this.size)
+      this._errorBg.scale.set(this.size)
+      this._errorBg.alpha = this.progress
+      this._errorIcon.visible = true
+      this._errorBg.visible = true
+    } else {
+      this._errorIcon.visible = false
+      this._errorBg.visible = false
+    }
+    this.main.error = this._state?.error
 
     const rescaleTime = (t, min, max) => Math.min(1, Math.max(0, t - min)/(max-min))
 

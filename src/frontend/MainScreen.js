@@ -1,3 +1,4 @@
+import ErrorScreen from './ErrorScreen.js'
 import DiamondButton from './components/DiamondButton.js'
 import LineArt from './components/LineArt.js'
 import TextField from './components/TextField.js'
@@ -6,12 +7,12 @@ export default class MainScreen extends PIXI.Container {
 
   constructor() {
     super()
+    this._error - null
     this.progress = 0
     this.statusLeftText = null
     this.statusRightText = null
 
     this._frame = new LineArt()
-   
     this._frame.addSequence([
       295, -90,
       295, 120,
@@ -82,6 +83,9 @@ export default class MainScreen extends PIXI.Container {
     
     this.addChild(this._frame)
 
+    this._errorScreen = new ErrorScreen()
+    this.addChild(this._errorScreen )
+
     this._titleLabel = new TextField('>> widget <<', {
       fontFamily: 'MajorMonoDisplay-Regular',
       fontSize:11,
@@ -145,6 +149,15 @@ export default class MainScreen extends PIXI.Container {
     this.activateTab(0)
   }
 
+  get error() {
+    return this._error
+  }
+
+  set error(v) {
+    this._error = v
+    this._errorScreen.message = v
+  }
+
   activateTab(index) {
     this._tabButtons.forEach((t, i) => t.active = (i === index))
     if(this._page) {
@@ -184,6 +197,13 @@ export default class MainScreen extends PIXI.Container {
     this._tabButtons.forEach(t => {
       t.progress = this.progress
     })
+
+    this._pages.forEach(p => {
+      p.visible = !this.error
+    })
+    this._errorScreen.progress = this.progress
+    this._errorScreen.visible = this.error
+    
   }
 
 }

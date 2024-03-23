@@ -5,7 +5,6 @@ import DotCluster from '../../frontend/components/DotCluster.js'
 import ScaleCircle from '../../frontend/circles/ScaleCircle.js'
 import ProgressCircle from '../../frontend/circles/ProgressCircle.js'
 import TodoListScreen from './TodoListScreen.js'
-import MainScreen from '../../frontend/MainScreen.js'
 
 export default class TodoWidget extends Widget {
   constructor() {
@@ -64,6 +63,7 @@ export default class TodoWidget extends Widget {
     newState.inboxList = tasks.inbox
     newState.actionList = tasks.action
     newState.todayLeft = newState.actionList.filter(t => t.status === 'needsAction')
+    newState.error = tasks.error
 
     const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
     this._timeline.setPoints(newState.actionList.map(i => i.completed ? i.completed - today : null))  
