@@ -3,8 +3,8 @@ const storage = require('node-persist');
 
 class PomodoroService extends Service {
 
-  constructor(config, io) {
-    super(config, io, 'pomodoro')
+  constructor(config, io, webApp) {
+    super(config, io, webApp, 'pomodoro')
     this._history = []
   }
 

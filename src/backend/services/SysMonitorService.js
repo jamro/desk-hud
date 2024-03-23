@@ -7,8 +7,8 @@ const path = require('path')
 
 class SysMonitorService extends Service {
 
-  constructor(config, io) {
-    super(config, io, 'system')
+  constructor(config, io, webApp) {
+    super(config, io, webApp, 'system')
     this._loop = null
     this._cpuTempReadFails = 0
     this._cpuFanMode = 'off'

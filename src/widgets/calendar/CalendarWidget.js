@@ -5,6 +5,7 @@ import ArchText from '../../frontend/components/ArchText.js';
 import GaugePointer from '../../frontend/components/GaugePointer.js';
 import TextField from '../../frontend/components/TextField.js';
 import CalendarScreen from './CalendarScreen.js';
+import AuthErrorScreen from './lib/AuthErrorScreen.js';
 
 export default class CalendarWidget extends Widget {
   constructor() {
@@ -97,9 +98,15 @@ export default class CalendarWidget extends Widget {
    
     this._calendarScreen = new CalendarScreen()
     calendarPage.addChild(this._calendarScreen)
+
+    this.main.setCustomErrorScreen(new AuthErrorScreen(() => this.sendMessage({action: 'auth'})))
   }
 
   msg2state(msg) {
+    if(msg.authUrl) {
+      window.location.href = msg.authUrl
+      return  {}
+    }
     const events = msg.allEvents
     const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
 

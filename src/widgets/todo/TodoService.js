@@ -3,8 +3,8 @@ const { google } = require('googleapis');
 
 class TodoService extends GoogleService {
 
-  constructor(config, io) {
-    super(config, io, 'todo')
+  constructor(config, io, webApp) {
+    super(config, io, webApp, 'todo')
     this._loop = null
 
     this.tasks = google.tasks({ version: 'v1', auth: this.auth });
@@ -54,6 +54,12 @@ class TodoService extends GoogleService {
           action: [],
           error: 'token_expired'
         }
+      } else if(error.response && error.response.data) {
+        return {
+          inbox: [],
+          action: [],
+          error: error.response.data.error + ': ' + error.response.data.error_description
+        }
       } else {
         throw error
       }
@@ -78,6 +84,7 @@ class TodoService extends GoogleService {
     switch(action) {
       case 'completeNextAction': return await this.completeNextAction(id)
       case 'uncompleteNextAction': return await this.uncompleteNextAction(id)
+      default: return super.onMessage({action, id})
     }
   }
 

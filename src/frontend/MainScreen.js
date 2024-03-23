@@ -149,6 +149,12 @@ export default class MainScreen extends PIXI.Container {
     this.activateTab(0)
   }
 
+  setCustomErrorScreen(screen) {
+    this.removeChild(this._errorScreen)
+    this._errorScreen = screen
+    this.addChild(this._errorScreen)
+  }
+
   get error() {
     return this._error
   }

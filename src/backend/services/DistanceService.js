@@ -5,8 +5,8 @@ const path = require('path')
 
 class DistanceService extends Service {
 
-  constructor(config, io) {
-    super(config, io, 'distance')
+  constructor(config, io, webApp) {
+    super(config, io, webApp, 'distance')
     this._loop = null
     this._proc = null
     this._queue = []

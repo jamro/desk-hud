@@ -35,7 +35,7 @@ const SocketLogger = require('./SocketLogger.js');
   app.use(connectLiveReload());
   app.use(express.static(path.join(__dirname, 'www')))
   
-  const serviceInstances = services.map((Def) => new Def(config, io))
+  const serviceInstances = services.map((Def) => new Def(config, io, app))
   serviceInstances.push(new DistanceService(config, io))
   serviceInstances.push(new SysMonitorService(config, io))
  

@@ -4,8 +4,8 @@ const storage = require('node-persist');
 
 class StocksService extends Service {
 
-  constructor(config, io) {
-    super(config, io, 'stocks')
+  constructor(config, io, webApp) {
+    super(config, io, webApp, 'stocks')
     this._loop1 = null
     this._loop2 = null
     this._intraDay = null

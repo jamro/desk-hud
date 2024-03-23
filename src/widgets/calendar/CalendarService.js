@@ -3,8 +3,8 @@ const { google } = require('googleapis');
 
 class CalendarService extends GoogleService {
 
-  constructor(config, io) {
-    super(config, io, 'calendar')
+  constructor(config, io, webApp) {
+    super(config, io, webApp, 'calendar')
     this._loop = null
 
     this.calendar = google.calendar({ version: 'v3', auth: this.auth });
@@ -79,6 +79,11 @@ class CalendarService extends GoogleService {
         return {
           allEvents: [],
           error: 'token_expired'
+        }
+      } else if(error.response && error.response.data) {
+        return {
+          allEvents: [],
+          error: error.response.data.error + ': ' + error.response.data.error_description
         }
       } else {
         throw error

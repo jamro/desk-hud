@@ -5,6 +5,7 @@ import DotCluster from '../../frontend/components/DotCluster.js'
 import ScaleCircle from '../../frontend/circles/ScaleCircle.js'
 import ProgressCircle from '../../frontend/circles/ProgressCircle.js'
 import TodoListScreen from './TodoListScreen.js'
+import AuthErrorScreen from '../calendar/lib/AuthErrorScreen.js'
 
 export default class TodoWidget extends Widget {
   constructor() {
@@ -55,9 +56,16 @@ export default class TodoWidget extends Widget {
       this.sendMessage({action: 'uncompleteNextAction', id})
     })
 
+    this.main.setCustomErrorScreen(new AuthErrorScreen(() => this.sendMessage({action: 'auth'})))
+
   }
 
   msg2state(tasks) {
+    if(tasks.authUrl) {
+      window.location.href = tasks.authUrl
+      return  {}
+    }
+
     const newState = {}
     newState.lastUpdate = new Date().getTime()
     newState.inboxList = tasks.inbox

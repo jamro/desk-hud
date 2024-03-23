@@ -3,8 +3,8 @@ const fetch = require('node-fetch');
 
 class WeatherService extends Service {
 
-  constructor(config, io) {
-    super(config, io, 'weather')
+  constructor(config, io, webApp) {
+    super(config, io, webApp, 'weather')
     this._loop = null
   }
 

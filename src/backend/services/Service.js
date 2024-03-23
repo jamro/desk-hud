@@ -1,8 +1,9 @@
 class Service {
 
-  constructor(config, io, id) {
+  constructor(config, io, webApp, id) {
     this._id = id
     this._io = io
+    this._webApp = webApp
     this._config = config
     this._logger = this.config.coreLogger.createChild(id)
   }

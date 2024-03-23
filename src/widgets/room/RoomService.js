@@ -5,8 +5,8 @@ globalThis.WebSocket = require("ws");
 
 class RoomService extends Service {
 
-  constructor(config, io) {
-    super(config, io, 'room')
+  constructor(config, io, webApp) {
+    super(config, io, webApp, 'room')
     this._loop = null
     this._entities = {}
     this._connection = null
