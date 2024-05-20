@@ -40,7 +40,18 @@ export default class WebcamWidget extends Widget {
     this.addChild(this.videoMask);
     this._videoContainer.mask = this.videoMask;
 
-    this.hls = new Hls();
+    this.hls = new Hls({
+      lowLatencyMode: true,
+      maxBufferLength: 3,
+      maxMaxBufferLength: 3,
+      liveSyncDurationCount: 1, 
+      liveMaxLatencyDurationCount: 3,
+      liveDurationInfinity: true,
+      liveBackBufferLength: 0,   // No back-buffer to minimize latency
+      maxBufferHole: 0.1,        // Reduce the acceptable buffer hole size
+      enableWorker: true,
+      startFragPrefetch: true,   // Prefetch the next fragment for smoother playback
+    });
     this.hls.attachMedia(this.video);
     this.video.addEventListener('loadedmetadata', () => {
       setTimeout(() => {
@@ -77,17 +88,28 @@ export default class WebcamWidget extends Widget {
       e.stopPropagation();
 
       // seek to live edge
-      const buffered = this.video.buffered;
-      const liveSyncPosition = this.hls.liveSyncPosition;
-      if (liveSyncPosition !== undefined) {
-        this.video.currentTime = liveSyncPosition;
-      } else if (buffered.length > 0) {
-        this.video.currentTime = buffered.end(buffered.length - 1);
-      }
-      this.video.play();
+      this._fastForwardVideo();
       this._videoPlaying = true
     })
 
+    setInterval(() => {
+      if(this._videoPlaying) {
+        this._fastForwardVideo()
+        this.video.play();
+      }
+    }, 10000)
+
+  }
+
+  _fastForwardVideo() {
+    const buffered = this.video.buffered;
+    const liveSyncPosition = this.hls.liveSyncPosition;
+    if (liveSyncPosition !== undefined) {
+      this.video.currentTime = liveSyncPosition;
+    } else if (buffered.length > 0) {
+      this.video.currentTime = buffered.end(buffered.length - 1);
+    }
+    this.video.play();
   }
 
   onConfig(config) {

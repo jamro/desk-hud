@@ -43,7 +43,7 @@ class WebcamService extends Service {
         .addOptions([
             '-codec: copy',
             '-start_number 0',
-            '-hls_time 10',
+            '-hls_time 1',
             '-hls_list_size 10',
             '-hls_flags delete_segments', // Automatically delete old segments
             '-f hls'
