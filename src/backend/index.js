@@ -53,7 +53,11 @@ const SocketLogger = require('./SocketLogger.js');
     config.coreLogger.log("Client connected")
     await socket.emit('config', {
       widgets: {
-        dateTime: config.getProp('dateTime')
+        dateTime: config.getProp('dateTime'),
+        webcam: {
+          name: config.getProp('webcam.name'),
+          areas: config.getProp('webcam.areas')
+        }
       }
     })
     await Promise.all(serviceInstances.map(s => s.welcomeClient(socket)))

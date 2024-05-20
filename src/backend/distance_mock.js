@@ -304,7 +304,8 @@ let i = 0
 setInterval(() => {
   //if(Math.random() > 0.99) throw new Error('Some test error')
   if(data[i]) {
-    console.log(data[i])
+    //console.log(data[i])
+    console.log(20)
   }
   i++
   i = i % data.length

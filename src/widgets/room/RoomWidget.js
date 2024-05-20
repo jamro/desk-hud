@@ -1,4 +1,3 @@
-import MainScreen from '../../frontend/MainScreen.js'
 import Widget from '../../frontend/Widget.js'
 import IconButton from '../../frontend/components/IconButton.js'
 import LineArt from '../../frontend/components/LineArt.js'

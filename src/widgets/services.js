@@ -1,3 +1,4 @@
+const WebcamService = require("../backend/services/WebcamService")
 const CalendarService = require("./calendar/CalendarService")
 const PomodoroService = require("./pomodoro/PomodoroService")
 const RoomService = require("./room/RoomService")
@@ -12,5 +13,6 @@ const services = [
   CalendarService,
   TodoService,
   PomodoroService,
+  WebcamService
 ]
 module.exports = services

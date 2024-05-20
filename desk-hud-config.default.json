@@ -72,5 +72,29 @@
   "stockdata": {
     "apiKey": "...",
     "symbol": "IBM"
+  },
+  "webcam": {
+    "name": "Webcam",
+    "areas": [
+      {
+        "cameraX": 0,
+        "cameraY": 100,
+        "viewX": 0,
+        "viewY": 0,
+        "width": 580,
+        "height": 200,
+        "scale": 0.35
+      },
+      {
+        "cameraX": 480,
+        "cameraY": 520,
+        "viewX": 220,
+        "viewY": -90,
+        "width": 140,
+        "height": 30,
+        "scale": 0.45
+      }
+    ],
+    "rtsp": "rtsp://user:pass@192.168.1.123/stream1"
   }
 }

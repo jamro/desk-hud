@@ -1,6 +1,5 @@
 # Install Guide - Software
 
-
 ## Setup project on local machine
 
 - Clone reporistory `git clone https://github.com/jamro/desk-hud.git`
