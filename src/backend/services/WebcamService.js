@@ -44,9 +44,13 @@ class WebcamService extends Service {
             '-codec: copy',
             '-start_number 0',
             '-hls_time 1',
-            '-hls_list_size 10',
+            '-hls_list_size 3',
             '-hls_flags delete_segments', // Automatically delete old segments
-            '-f hls'
+            '-f hls',
+            '-fflags nobuffer',       // Reduce buffer for live input
+            '-flags low_delay',       // Enable low-latency decoding
+            '-strict experimental',   // Allow experimental settings
+            '-tune zerolatency'       // Tune for low-latency encoding
         ])
         .output(path.join(hlsOutputPath, 'stream.m3u8'))
         .on('end', () => {
@@ -57,12 +61,15 @@ class WebcamService extends Service {
           reject('FFmpeg process finished')
         })
         .on('start', (cmd) => {
-          this.logger.log('FFmpeg process started:', cmd);
+          this.logger.log('FFmpeg process started: ', cmd);
         })
         .on('progress', (progress) => {
-          this.isReady = true
           this.timemark = progress.timemark
-          //this.emitStatus()
+          const gotReady = !this.isReady
+          this.isReady = true
+          if(gotReady) {
+            this.emitStatus()
+          }
         })
         .on('error', (err, stdout, stderr) => {
           this.logger.error('Error in FFmpeg process:', err);

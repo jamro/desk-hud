@@ -42,8 +42,8 @@ export default class WebcamWidget extends Widget {
 
     this.hls = new Hls({
       lowLatencyMode: true,
-      maxBufferLength: 3,
-      maxMaxBufferLength: 3,
+      maxBufferLength: 1,
+      maxMaxBufferLength: 1,
       liveSyncDurationCount: 1, 
       liveMaxLatencyDurationCount: 3,
       liveDurationInfinity: true,
