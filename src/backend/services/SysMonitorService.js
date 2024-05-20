@@ -96,7 +96,8 @@ class SysMonitorService extends Service {
       await this.update()
     } else if(payload.action === 'kill' ) {
       this.logger.log("Killing the server... should be started back again by PM2")
-      process.exit(0)
+      process.kill(process.pid, 'SIGTERM');
+      setTimeout(() => process.exit(0), 1000)
     } 
   }
 

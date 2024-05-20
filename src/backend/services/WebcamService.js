@@ -9,6 +9,8 @@ class WebcamService extends Service {
     super(config, io, webApp, 'webcam')
     this.isReady = false
     this.timemark = ''
+    this.ffmpegProcess = null;
+    this.setupShutdownHandlers();
   }
 
   async start() {
@@ -21,7 +23,7 @@ class WebcamService extends Service {
     }
     fs.mkdirSync(hlsOutputPath, { recursive: true });
 
-    const rtspUrl =  this.config.getProp('webcam.rtsp')
+    const rtspUrl = this.config.getProp('webcam.rtsp')
     
     setTimeout(async () => {
       while(true) {
@@ -34,12 +36,11 @@ class WebcamService extends Service {
         await new Promise((resolve) => setTimeout(resolve, 1000))
       }
     })
-
   }
 
   async connnectStream(url, hlsOutputPath) {
     return await new Promise((resolve, reject) => {
-      ffmpeg(url)
+      this.ffmpegProcess = ffmpeg(url)
         .addOptions([
             '-codec: copy',
             '-start_number 0',
@@ -84,6 +85,19 @@ class WebcamService extends Service {
     })
   }
 
+  setupShutdownHandlers() {
+    const shutdown = () => {
+      if (this.ffmpegProcess) {
+        this.ffmpegProcess.kill('SIGINT');
+        this.ffmpegProcess = null;
+      }
+    };
+
+    process.on('SIGINT', shutdown);
+    process.on('SIGTERM', shutdown);
+    process.on('exit', shutdown);
+  }
+
   async welcomeClient(socket) {
     this.emitStatus(socket)
   }
@@ -91,8 +105,6 @@ class WebcamService extends Service {
   emitStatus(socket=null) {
     this.emit({ ready: this.isReady, timemark: this.timemark }, socket)
   }
-
-
 }
 
 module.exports = WebcamService
