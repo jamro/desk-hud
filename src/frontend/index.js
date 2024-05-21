@@ -35,10 +35,11 @@ if(DEMO_MODE) {
   const app = new PIXI.Application({
       width: 1480,
       height: 320,
-      antialias: false,
+      antialias: true,
       useContextAlpha: false
   })
   document.body.appendChild(app.view)
+  PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
   document.getElementById('loading').style.display = 'none'
 
   // possibility to clone containers to increase load for perf tests

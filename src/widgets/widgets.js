@@ -9,13 +9,14 @@ import StocksWidget from './stocks'
 import WebcamWidget from './webcam'
 
 const widgets = [
+  WebcamWidget,
   DateTimeWidget,
   WeatherWidget,
   RoomWidget,
   CalendarWidget,
   TodoWidget,
   PomodoroWidget,
-  WebcamWidget,
+
   StocksWidget,
   
 ]

@@ -22,6 +22,8 @@ export default class WebcamWidget extends Widget {
     this._videoPlaying = false
 
     this.video = document.createElement('video');
+    this.video.autoplay = true;
+    this.video.loop = true;
     this.video.style.position = 'absolute';
     this.video.style.width = '800px';
     this.video.style.height = '600px';
@@ -42,8 +44,8 @@ export default class WebcamWidget extends Widget {
 
     this.hls = new Hls({
       lowLatencyMode: true,
-      maxBufferLength: 1,
-      maxMaxBufferLength: 1,
+      maxBufferLength: 2,
+      maxMaxBufferLength: 2,
       liveSyncDurationCount: 1, 
       liveMaxLatencyDurationCount: 3,
       liveDurationInfinity: true,
