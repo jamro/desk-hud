@@ -95,6 +95,11 @@
         "scale": 0.45
       }
     ],
-    "rtsp": "rtsp://user:pass@192.168.1.123/stream1"
+    "stream": {
+      "rtsp": "rtsp://user:pass@192.168.1.123/stream1",
+      "segmentSize": 5,
+      "segmentCount": 5,
+      "buffer": 15
+    }
   }
 }

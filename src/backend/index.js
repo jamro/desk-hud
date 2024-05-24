@@ -56,7 +56,10 @@ const SocketLogger = require('./SocketLogger.js');
         dateTime: config.getProp('dateTime'),
         webcam: {
           name: config.getProp('webcam.name'),
-          areas: config.getProp('webcam.areas')
+          areas: config.getProp('webcam.areas'),
+          stream: {
+            buffer: config.getProp('webcam.stream.buffer')
+          }
         }
       }
     })

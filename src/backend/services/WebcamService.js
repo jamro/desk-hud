@@ -23,12 +23,14 @@ class WebcamService extends Service {
     }
     fs.mkdirSync(hlsOutputPath, { recursive: true });
 
-    const rtspUrl = this.config.getProp('webcam.rtsp')
+    const rtspUrl = this.config.getProp('webcam.stream.rtsp')
+    const segmentSize = this.config.getProp('webcam.stream.segmentSize') || 1
+    const segmentCount = this.config.getProp('webcam.stream.segmentCount') || 3
     
     setTimeout(async () => {
       while(true) {
         try {
-          await this.connnectStream(rtspUrl, hlsOutputPath)
+          await this.connnectStream(rtspUrl, hlsOutputPath, segmentSize, segmentCount)
         } catch(err) {
           this.logger.error('Error connecting to stream:', err)
         }
@@ -38,14 +40,14 @@ class WebcamService extends Service {
     })
   }
 
-  async connnectStream(url, hlsOutputPath) {
+  async connnectStream(url, hlsOutputPath, segmentSize, segmentCount) {
     return await new Promise((resolve, reject) => {
       this.ffmpegProcess = ffmpeg(url)
         .addOptions([
             '-codec: copy',
             '-start_number 0',
-            '-hls_time 1',
-            '-hls_list_size 3',
+            `-hls_time ${segmentSize}`,
+            `-hls_list_size ${segmentCount}`,
             '-hls_flags delete_segments', // Automatically delete old segments
             '-f hls',
             '-fflags nobuffer',       // Reduce buffer for live input

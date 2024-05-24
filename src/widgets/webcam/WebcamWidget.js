@@ -42,10 +42,37 @@ export default class WebcamWidget extends Widget {
     this.addChild(this.videoMask);
     this._videoContainer.mask = this.videoMask;
 
+    this._statusLabel = new ArchText()
+    this._statusLabel.positionOffset = 4.71
+    this._statusLabel.alignOffset = 0
+    this.addChild(this._statusLabel)
+
+    this._playButton = new IconButton(0xe037)
+
+    this.addChild(this._playButton)
+    this._playButton.visible = false
+
+  }
+
+  _fastForwardVideo() {
+    const buffered = this.video.buffered;
+    const liveSyncPosition = this.hls.liveSyncPosition;
+    if (liveSyncPosition !== undefined) {
+      this.video.currentTime = liveSyncPosition;
+    } else if (buffered.length > 0) {
+      this.video.currentTime = buffered.end(buffered.length - 1);
+    }
+    this.video.play();
+  }
+
+  onConfig(config) {
+    this.main.title = config.name
+    this._streamScreen.areas = config.areas
+
     this.hls = new Hls({
       lowLatencyMode: true,
-      maxBufferLength: 2,
-      maxMaxBufferLength: 2,
+      maxBufferLength: config.stream.buffer || 2,
+      maxMaxBufferLength: config.stream.buffer || 2,
       liveSyncDurationCount: 1, 
       liveMaxLatencyDurationCount: 3,
       liveDurationInfinity: true,
@@ -76,16 +103,6 @@ export default class WebcamWidget extends Widget {
       }, 1000)
     });
 
-    this._statusLabel = new ArchText()
-    this._statusLabel.positionOffset = 4.71
-    this._statusLabel.alignOffset = 0
-    this.addChild(this._statusLabel)
-
-    this._playButton = new IconButton(0xe037)
-
-    this.addChild(this._playButton)
-    this._playButton.visible = false
-
     this._playButton.on('pointertap', (e) => {
       e.stopPropagation();
 
@@ -100,23 +117,6 @@ export default class WebcamWidget extends Widget {
         this.video.play();
       }
     }, 10000)
-
-  }
-
-  _fastForwardVideo() {
-    const buffered = this.video.buffered;
-    const liveSyncPosition = this.hls.liveSyncPosition;
-    if (liveSyncPosition !== undefined) {
-      this.video.currentTime = liveSyncPosition;
-    } else if (buffered.length > 0) {
-      this.video.currentTime = buffered.end(buffered.length - 1);
-    }
-    this.video.play();
-  }
-
-  onConfig(config) {
-    this.main.title = config.name
-    this._streamScreen.areas = config.areas
   }
 
   onNotReady() {

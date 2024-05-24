@@ -4,7 +4,7 @@ module.exports = {
   apps : [{
     name: "desk-hud",
     script: 'src/backend/index.js',
-    //watch: '.',
+    watch: '.',
     ignore_watch : [
       'src/backend/www/hls',
     ],
