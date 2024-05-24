@@ -107,6 +107,7 @@ export default class CalendarWidget extends Widget {
       window.location.href = msg.authUrl
       return  {}
     }
+    console.log("#####", msg)
     const events = msg.allEvents
     const today = Math.floor((new Date().getTime())/(1000*60*60*24))*(1000*60*60*24) + new Date().getTimezoneOffset()*60000
 
