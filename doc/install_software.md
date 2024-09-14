@@ -4,7 +4,7 @@
 
 - Clone reporistory `git clone https://github.com/jamro/desk-hud.git`
 - Enter project folter `cd desk-hud`
-- Install dependencies `init i`
+- Install dependencies `npm i`
 - Rename `desk-hud-config.default.json` to `desk-hud-config.json` and fill missing data. See detailed instructions in [Configuration section](./configuration.md)
 
 ## Configuration of Raspberry PI
