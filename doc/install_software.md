@@ -37,7 +37,7 @@ DHUD_CONFIG=/home/pi/desk-hud-config.json
 - Expand filesystem `sudo raspi-config` > `Advanced Options` > `Expand Filesystem`
 - Edit `/boot/config.txt` and replace `dtoverlay=vc4-kms-v3d` by `dtoverlay=vc4-fkms-v3d` to enable hdmi monitor control
 - Disable screen saver `xset s off`
-- On you rlocal machine
+- On your local machine
   - copy config to Raspberry PI: `scp desk-hud-config.json pi@deskhud.local:/home/pi/desk-hud-config.json `
   - provision remote host `npm run provision-remote`
   - deploy `npm run deploy`

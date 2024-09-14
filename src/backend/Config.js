@@ -22,6 +22,7 @@ class Config {
     if(!configPath) {
       configPath = path.resolve(__dirname, '..', '..', 'desk-hud-config.json')
     }
+    configPath = configPath.trim();
     return configPath
   }
 

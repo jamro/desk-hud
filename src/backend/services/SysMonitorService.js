@@ -23,7 +23,7 @@ class SysMonitorService extends Service {
     this._loop = setInterval(() => this.update(), 3000)
     this.update()
 
-    exec('raspi-gpio set 14 op dl', (err) => this.logger.warn('Unable turn CPU fan off', String(err)))
+    exec('pinctrl set 14 op dl', (err) => this.logger.warn('Unable turn CPU fan off', String(err)))
   }
 
 
@@ -102,12 +102,12 @@ class SysMonitorService extends Service {
   }
 
   _stopCpuFan() {
-    exec('raspi-gpio set 14 op dl', (err) => this.logger.warn('Unable turn CPU fan off', String(err)))
+    exec('pinctrl set 14 op dl', (err) => this.logger.warn('Unable turn CPU fan off', String(err)))
     this._isCpuFanRunning = false
   }
 
   _startCpuFan() {
-    exec('raspi-gpio set 14 op dh', (err) => this.logger.warn('Unable turn CPU fan on', String(err)))
+    exec('pinctrl set 14 op dh', (err) => this.logger.warn('Unable turn CPU fan on', String(err)))
     this._isCpuFanRunning = true
   }
 

@@ -3,7 +3,7 @@
 ## Shopping List
 
 Necessary hardware:
-- [Raspberry PI 5](https://www.raspberrypi.com/products/raspberry-pi-5/) (or Raspberry PI 4 Model B)
+- [Raspberry PI 5](https://www.raspberrypi.com/products/raspberry-pi-5/)
 - [Waveshare 11.9inch HDMI touch screen](https://www.waveshare.com/11.9inch-hdmi-lcd.htm)
 - [SparkFun Ultrasonic Distance Sensor - HC-SR04](https://www.sparkfun.com/products/17777)
 - [Jumper Wires female-female](https://blog.sparkfuneducation.com/what-is-jumper-wire)
