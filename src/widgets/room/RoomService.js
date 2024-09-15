@@ -15,7 +15,7 @@ class RoomService extends Service {
 
   async start() {
 
-    async function createConnectionWithTimeout(auth, timeout = 5000) {
+    const createConnectionWithTimeout = async(auth, timeout = 5000) => {
       // Create a timeout promise
       const timeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error(`Connection to hass timed out after ${timeout}ms`)), timeout)
