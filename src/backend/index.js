@@ -48,7 +48,17 @@ const SocketLogger = require('./SocketLogger.js');
       notStarted.forEach(s => config.coreLogger.warn(`Service ${s.id} did not start after ${startingDuration} seconds`))
 
     }, 5000)
-    await Promise.all(serviceInstances.map(s => s.start()))
+
+    await Promise.all(serviceInstances.map(s => new Promise(async (resolve, reject) => {
+      try {
+        await s.start()
+        s.started = true
+        resolve()
+      } catch(err) {
+        reject(err)
+      }
+    }
+    )))
   } catch(err) {
     config.coreLogger.error('Unable to start services')
     config.coreLogger.error(err)

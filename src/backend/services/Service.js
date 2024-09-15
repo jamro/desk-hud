@@ -35,10 +35,6 @@ class Service {
     (socket || this._io).emit('widget', { widgetId: this._id, payload })
   }
 
-  async start() {
-
-  }
-
 }
 
 module.exports = Service
