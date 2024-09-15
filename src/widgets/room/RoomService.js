@@ -3,6 +3,7 @@ const hass = require("home-assistant-js-websocket");
 const storage = require('node-persist');
 globalThis.WebSocket = require("ws");
 
+
 class RoomService extends Service {
 
   constructor(config, io, webApp) {
@@ -13,6 +14,21 @@ class RoomService extends Service {
   }
 
   async start() {
+
+    async function createConnectionWithTimeout(auth, timeout = 5000) {
+      // Create a timeout promise
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error(`Connection to hass timed out after ${timeout}ms`)), timeout)
+      );
+    
+      // Race between the connection attempt and the timeout
+      this._connection = await Promise.race([
+          hass.createConnection({ auth }),
+          timeoutPromise
+      ]);
+    
+      return this._connection;
+    }
 
     const auth = hass.createLongLivedTokenAuth(
       this.config.getProp('hass.url'),
@@ -40,7 +56,7 @@ class RoomService extends Service {
     myEntitiesMap[ this.config.getProp('hass.entities.door2Battery')] = 'door2Battery'
     myEntitiesMap[ this.config.getProp('hass.entities.door3Battery')] = 'door3Battery'
 
-    this._connection = await hass.createConnection({ auth });
+    this._connection = await createConnectionWithTimeout(auth)
     hass.subscribeEntities(this._connection, (entities) => {
       //this.logger.debug(`Entities event received`, entities)
       const keys = Object.keys(entities).filter(k => myEntitiesMap[k])
