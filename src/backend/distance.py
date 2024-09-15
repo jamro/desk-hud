@@ -8,30 +8,38 @@ lastDistance = 0
 PIN_TRIGGER = 4  # GPIO4
 PIN_ECHO = 17    # GPIO17
 
-def checkDistance(line_trigger, line_echo):
+def checkDistance(line_trigger, line_echo, timeout=0.3):
     global pulse_start_time, pulse_end_time
     line_trigger.set_value(1)
     time.sleep(0.00001)
     line_trigger.set_value(0)
 
-    # Wait for the echo pin to go high
+    start_time = time.time()
+
+    # Wait for the echo pin to go high with timeout
     while line_echo.get_value() == 0:
         pulse_start_time = time.time()
+        if time.time() - start_time > timeout:
+            return round(timeout*1000)
 
-    # Wait for the echo pin to go low
+    # Wait for the echo pin to go low with timeout
     while line_echo.get_value() == 1:
         pulse_end_time = time.time()
+        if time.time() - start_time > timeout:
+            return round(timeout*1000)
 
+    # Calculate the pulse duration
     pulse_duration = pulse_end_time - pulse_start_time
     current = round(pulse_duration * 17241, 2)
     current = min(300, max(30, current))
-
     time.sleep(max(0.03, 0.06 - pulse_duration))
 
     return current
 
+time.sleep(1)
+
 try:
-    chip = gpiod.Chip('gpiochip0')
+    chip = gpiod.Chip('gpiochip4')
 
     line_trigger = chip.get_line(PIN_TRIGGER)
     line_echo = chip.get_line(PIN_ECHO)
