@@ -39,11 +39,21 @@ const SocketLogger = require('./SocketLogger.js');
   serviceInstances.push(new DistanceService(config, io))
   serviceInstances.push(new SysMonitorService(config, io))
  
+  let watchDog
   try{
+    const servicesStartingTime  = performance.now()
+    watchDog = setInterval(() => {
+      const startingDuration = Math.round((performance.now() - servicesStartingTime) / 1000)
+      const notStarted = serviceInstances.filter(s => !s.started)
+      notStarted.forEach(s => config.coreLogger.warn(`Service ${s.id} did not start after ${startingDuration} seconds`))
+
+    }, 5000)
     await Promise.all(serviceInstances.map(s => s.start()))
   } catch(err) {
     config.coreLogger.error('Unable to start services')
     config.coreLogger.error(err)
+  } finally {
+    if(watchDog) clearInterval(watchDog)
   }
   io.on('connection', async (socket) => {
 
