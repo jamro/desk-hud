@@ -11,6 +11,7 @@ Necessary hardware:
 - [Angle USB-C Cable](https://eu.ugreen.com/collections/cables/products/ugreen-usb-c-to-usb-c-cable-60w-1?variant=40400840556627)
 - [20W USB Charger](https://eu.ugreen.com/collections/chargers/products/power-supply-pd-3-0?variant=40296226586707)
 - [Raspberry Pi 4 Fan and Heatsink](https://www.adafruit.com/product/4794)
+- [3D printed fan mount](stl/desk-hud-fan-mount.stl) (Optional)
 
 ## Assembly hardware
 
@@ -25,6 +26,10 @@ Wire [distance sensor](https://www.sparkfun.com/products/17777) to GPIO pins of 
 Wire fan to ensure proper cooling of the device. Mount the fan to the case in the place where it can efficiently cool the CPU down. Install the heatsink on Raspberry PI CPU.
 
 ![Wireing](img/wiring.png)
+
+3D print the [fan mount](stl/desk-hud-fan-mount.stl) and mount it to the case.
+
+![Fan mount](img/fan_mount.jpg)
 
 Power up Raspberry PI by connecting to USB charger. Make sure that touch screen is working correctly. It may have wrong orientation. Fix it using "Rotate Touch" button on the back of the screen 
 
