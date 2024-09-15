@@ -45,12 +45,12 @@ DHUD_CONFIG=/home/pi/desk-hud-config.json
 
 
 ## Enable auto start after boot
-  - connect to Raspberry PI: `ssh pi@deskhud.local`
+- connect to Raspberry PI: `ssh pi@deskhud.local`
 - make sure PM2 starts automatically after boot `pm2 startup`
-- edit autostart: `sudo nano /etc/xdg/lxsession/LXDE-pi/autostart` and add following lines
+- edit autostart: `nano ~/.config/wayfire.ini` and add following lines
 ```
-@chromium-browser --kiosk http://localhost:3000/
-@unclutter -idle 0.1 -root
+[autostart]
+command = chromium-browser --kiosk http://localhost:3000/
 ```
 - Reload of the page may be necessary sine Desk-HUD server may not be immediately available 
 
