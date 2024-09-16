@@ -3,6 +3,9 @@ const spawn = require('child_process').spawn
 const exec = require('child_process').exec
 const path = require('path')
 
+const HDMI_ON_COMMAND = `sudo chvt 7; sudo sh -c 'echo "0" > /sys/class/graphics/fb0/blank'`
+const HDMI_OFF_COMMAND = `sudo chvt 1; sudo sh -c 'echo "1" > /sys/class/graphics/fb0/blank'`
+
 class DistanceService extends Service {
 
   constructor(config, io, webApp) {
@@ -128,12 +131,12 @@ class DistanceService extends Service {
       // power off
       this._isPowerOn = false
       this.logger.log("Power HDMI off")
-      exec('vcgencmd display_power 0', (err) => this.logger.warn('Unable to turn HDMI off', String(err)))
+      exec(HDMI_OFF_COMMAND, (err) => this.logger.warn('Unable to turn HDMI off', String(err)))
     } else if(!this._isPowerOn && this._inactivityTimer === 0) {
       // power on
       this._isPowerOn = true
       this.logger.log("Power HDMI on")
-      exec('vcgencmd display_power 1', (err) => this.logger.warn('Unable to turn HDMI on', String(err)))
+      exec(HDMI_ON_COMMAND, (err) => this.logger.warn('Unable to turn HDMI on', String(err)))
     }
     if(distance < wakeUpThreshold && !this._isAwake) {
       // wake up
