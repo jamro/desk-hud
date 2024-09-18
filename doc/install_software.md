@@ -35,10 +35,9 @@ sudo chown pi /var/www
 DHUD_CONFIG=/home/pi/desk-hud-config.json 
 ```
 - Expand filesystem `sudo raspi-config` > `Advanced Options` > `Expand Filesystem`
-- Edit `/boot/firmware/config.txt` and replace `dtoverlay=vc4-kms-v3d` by `dtoverlay=vc4-fkms-v3d` to enable hdmi monitor control
 - Disable screen saver `xset s off` (on a Terminal running on Raspberry PI Desktop)
 - On your local machine
-  - copy config to Raspberry PI: `scp desk-hud-config.json pi@deskhud.local:/home/pi/desk-hud-config.json `
+  - copy config to Raspberry PI: `scp desk-hud-config.json pi@deskhud.local:/home/pi/desk-hud-config.json`
   - provision remote host `npm run provision-remote`
   - deploy `npm run deploy`
 - on Raspberry Pi Desktop, open web browser, go to http://localhost:3000 and go full screen
